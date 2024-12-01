@@ -18,7 +18,7 @@ public class Jwt {
     @Id
     @GeneratedValue(generator = "uuid",strategy = GenerationType.AUTO)
     private UUID id;
-    @Column(unique = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT",unique = true )
     private String valeur;
     private boolean desactive;
     private boolean expire;

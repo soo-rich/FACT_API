@@ -9,6 +9,7 @@ import com.soosmart.facts.enumpack.TypeDeRole;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
 import com.soosmart.facts.service.UtilisateurService;
+import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,10 +32,10 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
 
 
     @Override
-    public Utilisateur createSuprerAdmin(String email, String username, String password) {
+    public void createSuprerAdmin(String email, String username, String password) {
         Optional<Utilisateur> superAdmin = this.utilisateurDAO.findByRole_Libelle(TypeDeRole.SUPER_ADMIN);
         if (superAdmin.isPresent()) {
-            return superAdmin.get();
+           throw new EntityExistsException("Super Admin Existe");
         } else {
             Utilisateur utilisateur = Utilisateur.builder()
                     .email(email)
@@ -48,7 +49,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                     .actif(true)
                     .build();
             if (this.verifierUtilisateurEmail(utilisateur)) {
-                return  this.utilisateurDAO.save(utilisateur);
+                this.utilisateurDAO.save(utilisateur);
             } else {
                 throw new RuntimeException("Email invalide");
             }

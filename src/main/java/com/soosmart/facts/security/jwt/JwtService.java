@@ -123,8 +123,8 @@ public class JwtService {
 
     private Claims getAllClaimsFromToken(String token){
         return Jwts.parser()
-                .decryptWith(
-                        Keys.hmacShaKeyFor(Decoders.BASE64.decode(ENCRYPTION_KEY))
+                .setSigningKey(
+                        this.getKey()
                 ).build()
                 .parseSignedClaims(token)
                 .getPayload();

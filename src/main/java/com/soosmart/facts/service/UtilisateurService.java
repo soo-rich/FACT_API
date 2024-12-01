@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface UtilisateurService extends UserDetailsService {
 
-    Utilisateur createSuprerAdmin(String email, String username, String password);
+    void createSuprerAdmin(String email, String username, String password);
     List<ResponseUtilisateur> findAll();
     Utilisateur findByEmail(String email);
     Utilisateur findByUsername(String username);
