@@ -34,9 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
         String username = null;
         Boolean isTokenExpired = true;
 
-
-        System.out.println("debut du filter "+request.getHeader("Authorization"));
-
         try {
             final String authorizationHeader = request.getHeader("Authorization");
 
