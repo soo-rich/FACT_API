@@ -3,10 +3,14 @@ package com.soosmart.facts.mapper;
 import com.soosmart.facts.dto.Article.ArticleDTO;
 import com.soosmart.facts.dto.articleQuantite.ArticleQuantiteDTO;
 import com.soosmart.facts.dto.client.ClientDTO;
-import com.soosmart.facts.dto.proforma.ProformaDTO;
+import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
+import com.soosmart.facts.dto.dossier.facture.FactureDto;
+import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.entity.*;
+import com.soosmart.facts.entity.dossier.Bordereau;
+import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.entity.user.Utilisateur;
 import org.springframework.stereotype.Component;
@@ -98,6 +102,41 @@ public class ResponseMapper {
                 proforma.getCreate_at(),
                 proforma.getSignedBy(),
                 proforma.getAdopted()
+        );
+    }
+
+    public BorderauDto responseBorderauDto(Bordereau borderau){
+        if (borderau==null){
+            return null;
+        }
+        return new BorderauDto(
+                borderau.getId(),
+                borderau.getProforma().getReference(),
+                borderau.getProforma().getNumero(),
+                borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                borderau.getProforma().getTotal_ht(),
+                borderau.getProforma().getTotal_ttc(),
+                borderau.getProforma().getTotal_tva(),
+                borderau.getProforma().getClient().getNom(),
+                borderau.getProforma().getCreate_at()
+        );
+    }
+
+    public FactureDto responseFactureDto(Facture facture){
+        if (facture==null){
+            return null;
+        }
+        return new FactureDto(
+                facture.getId(),
+                facture.getReference(),
+                facture.getNumero(),
+                facture.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                facture.getProforma().getTotal_ht(),
+                facture.getProforma().getTotal_ttc(),
+                facture.getProforma().getTotal_tva(),
+                facture.getProforma().getClient().getNom(),
+                facture.getProforma().getCreate_at(),
+                facture.getSignedBy()
         );
     }
 }

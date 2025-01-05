@@ -1,4 +1,4 @@
-package com.soosmart.facts.dto.proforma;
+package com.soosmart.facts.dto.dossier.proforma;
 
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 

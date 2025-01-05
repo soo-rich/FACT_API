@@ -19,5 +19,9 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
     Optional<Proforma> findByNumero(String numero);
 
+    List<Proforma> findAllByDeletedIsFalse();
+
     List<Proforma> findAllByReference(String reference);
+
+    Optional<Proforma> findByReference(String reference);
 }

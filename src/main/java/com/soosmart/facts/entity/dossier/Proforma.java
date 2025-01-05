@@ -1,8 +1,11 @@
 package com.soosmart.facts.entity.dossier;
 
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -12,7 +15,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @DiscriminatorValue("PROFORMA")
 public class Proforma extends Document {
-
 
 
     @Override

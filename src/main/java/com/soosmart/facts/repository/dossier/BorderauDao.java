@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -14,4 +15,6 @@ public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
     Long countBordereauxCreateToday(Instant startOfDay, Instant endOfDay);
 
     Bordereau findByNumero(String numero);
+
+    Optional<Bordereau> findAllByDeletedIsFalse();
 }

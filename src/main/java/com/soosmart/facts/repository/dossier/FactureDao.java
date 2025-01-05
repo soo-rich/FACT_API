@@ -15,4 +15,6 @@ public interface FactureDao extends JpaRepository<Facture, UUID> {
     Long countFacturesCreateToday(Instant startOfDay, Instant endOfDay);
 
     Optional<Facture> findByNumero(String numero);
+
+    Optional<Facture> findAllByDeletedIsFalse();
 }
