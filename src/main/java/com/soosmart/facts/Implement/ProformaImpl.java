@@ -12,7 +12,7 @@ import com.soosmart.facts.repository.ProjetDAO;
 import com.soosmart.facts.repository.dossier.ProformaDao;
 import com.soosmart.facts.service.ArticleQuantiteService;
 import com.soosmart.facts.service.ProformaService;
-import com.soosmart.facts.utils.Generateur;
+import com.soosmart.facts.utils.NumeroGenerateur;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ProformaImpl implements ProformaService {
     private final ClientDAO clientRepository;
     private final ArticleQuantiteService articleQuantiteService;
     private final ResponseMapper responseMapper;
-    private final Generateur generateur;
+    private final NumeroGenerateur numeroGenerateur;
 
 
     @Override
@@ -38,7 +38,7 @@ public class ProformaImpl implements ProformaService {
         Optional<Projet> projet = this.projetRepository.findById(saveProformaDTO.projet_id()).stream().findFirst();
         if (projet.isPresent()) {
             Proforma proforma = Proforma.builder()
-                    .numero(this.generateur.GenerateproformaNumero())
+                    .numero(this.numeroGenerateur.GenerateproformaNumero())
                     .reference(saveProformaDTO.reference())
                     .projet(projet.get())
                     .client(projet.get().getClient())
@@ -51,7 +51,7 @@ public class ProformaImpl implements ProformaService {
                 throw new EntityExistsException("Client not found");
             }
             Proforma proforma = Proforma.builder()
-                    .numero(this.generateur.GenerateproformaNumero())
+                    .numero(this.numeroGenerateur.GenerateproformaNumero())
                     .client(client.get())
                     .reference(saveProformaDTO.reference())
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
@@ -74,7 +74,7 @@ public class ProformaImpl implements ProformaService {
         Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
         if (proforma.isPresent()) {
             Proforma proformanew = Proforma.builder()
-                    .numero(this.generateur.GenerateproformaNumero())
+                    .numero(this.numeroGenerateur.GenerateproformaNumero())
                     .reference(proforma.get().getReference())
                     .projet(proforma.get().getProjet())
                     .client(proforma.get().getClient())
