@@ -1,7 +1,11 @@
-package com.soosmart.facts.entity;
+package com.soosmart.facts.entity.dossier;
 
+import com.soosmart.facts.entity.ArticleQuantite;
+import com.soosmart.facts.entity.Client;
+import com.soosmart.facts.entity.Projet;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,17 +15,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "document_type", discriminatorType =  DiscriminatorType.STRING)
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Proforma {
+public abstract class Document {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid")
     private UUID id;
 
-    private String reference; // le nom que portera la pro
+    String reference; // le nom que portera la pro
     @Column(unique = true)
     private String numero; // le numero de la profoma sa reference
     private String signedBy; // le nom de la personne qui a signé la proforma
@@ -47,9 +53,4 @@ public class Proforma {
 
     @UpdateTimestamp
     private Instant update_at;
-
-    @Override
-    public String toString() {
-        return this.reference;
-    }
 }

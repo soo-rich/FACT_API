@@ -7,6 +7,7 @@ import com.soosmart.facts.dto.proforma.ProformaDTO;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.entity.*;
+import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.entity.user.Utilisateur;
 import org.springframework.stereotype.Component;
 

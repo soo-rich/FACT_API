@@ -1,10 +1,10 @@
 package com.soosmart.facts.entity;
 
+import com.soosmart.facts.entity.dossier.Proforma;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.time.Instant;
 import java.util.List;

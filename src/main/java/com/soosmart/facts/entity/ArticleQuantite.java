@@ -1,5 +1,6 @@
 package com.soosmart.facts.entity;
 
+import com.soosmart.facts.entity.dossier.Proforma;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
