@@ -1,12 +1,12 @@
 package com.soosmart.facts.mapper;
 
 import com.soosmart.facts.dto.Article.ArticleDTO;
+import com.soosmart.facts.dto.articleQuantite.ArticleQuantiteDTO;
 import com.soosmart.facts.dto.client.ClientDTO;
+import com.soosmart.facts.dto.proforma.ProformaDTO;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
-import com.soosmart.facts.entity.Article;
-import com.soosmart.facts.entity.Client;
-import com.soosmart.facts.entity.Projet;
+import com.soosmart.facts.entity.*;
 import com.soosmart.facts.entity.user.Utilisateur;
 import org.springframework.stereotype.Component;
 
@@ -66,6 +66,37 @@ public class ResponseMapper {
                 projet.getClient().getNom(),
                 projet.getCreate_at(),
                 projet.getUpdate_at()
+        );
+    }
+
+    public ArticleQuantiteDTO responseArticleQuantiteDTO(ArticleQuantite articleQuantite){
+        if (articleQuantite==null){
+            return null;
+        }
+        return new ArticleQuantiteDTO(
+                articleQuantite.getId(),
+                articleQuantite.getArticle().getLibelle(),
+                articleQuantite.getQuantite(),
+                articleQuantite.getPrix_article()
+        );
+    }
+
+    public ProformaDTO responseProformaDTO(Proforma proforma){
+        if (proforma==null){
+            return null;
+        }
+        return new ProformaDTO(
+                proforma.getId(),
+                proforma.getReference(),
+                proforma.getNumero(),
+                proforma.getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                proforma.getTotal_ht(),
+                proforma.getTotal_ttc(),
+                proforma.getTotal_tva(),
+                proforma.getClient().getNom(),
+                proforma.getCreate_at(),
+                proforma.getSignedBy(),
+                proforma.getAdopted()
         );
     }
 }

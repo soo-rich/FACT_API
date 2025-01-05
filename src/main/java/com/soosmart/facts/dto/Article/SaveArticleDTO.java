@@ -2,7 +2,7 @@ package com.soosmart.facts.dto.Article;
 
 public record SaveArticleDTO(
         String libelle,
-        Double prix
+        Float prix
 ) {
     public SaveArticleDTO{
         if (libelle==null || libelle.isBlank()){

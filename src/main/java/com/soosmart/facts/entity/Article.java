@@ -17,7 +17,7 @@ public class Article {
     @GeneratedValue(generator = "uuid", strategy = GenerationType.AUTO )
     private UUID id;
     private String libelle;
-    private Double prix_unitaire;
+    private Float prix_unitaire;
     @CreationTimestamp
     @Column(updatable = false)
     private Instant create_at;

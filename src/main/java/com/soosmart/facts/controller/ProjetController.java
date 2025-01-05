@@ -6,6 +6,7 @@ import com.soosmart.facts.dto.project.UpdateProjet;
 import com.soosmart.facts.service.ProjetService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/projet")
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,value="/projet")
 @AllArgsConstructor
 public class ProjetController {
     private ProjetService projetService;

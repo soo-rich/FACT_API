@@ -1,38 +1,37 @@
 package com.soosmart.facts.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Projet {
+public class ArticleQuantite {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid")
     private UUID id;
 
-    private String projet_type;
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    @Builder.Default
-    private Boolean offre = false;
+    @ManyToOne
+    @JoinColumn(name = "proforma_id")
+    private Proforma proforma;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
+    @JoinColumn(name = "article_id")
+    private Article article;
 
-    @OneToMany
-    private List<Proforma> proformaList;
+    private Integer quantite;
+
+    private Float prix_article;
 
     @CreationTimestamp
     @Column(updatable = false)

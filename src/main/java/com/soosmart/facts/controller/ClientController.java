@@ -14,28 +14,28 @@ import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "client", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "client")
 public class ClientController {
     private final ClientService clientService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping()
     public ResponseEntity<List<ClientDTO>> listResponseEntity(){
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.list());
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     public ResponseEntity<ClientDTO> save(@RequestBody SaveClientDTO saveClientDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(this.clientService.save(saveClientDTO));
     }
 
-    @PutMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "{id}" )
     public ResponseEntity<ClientDTO> update(@PathVariable UUID id, @RequestBody SaveClientDTO saveClientDTO){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.clientService.update(id, saveClientDTO));
     }
 
     @PatchMapping(path = "{id}")
-    public ResponseEntity<Boolean> changePotiential(@PathVariable UUID id){
-        return ResponseEntity.ok(this.clientService.changePotential(id));
+    public ResponseEntity<ClientDTO> changePotiential(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.clientService.changePotential(id));
     }
 
     @DeleteMapping("{id}")

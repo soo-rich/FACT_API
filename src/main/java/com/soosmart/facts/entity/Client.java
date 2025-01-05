@@ -23,7 +23,8 @@ public class Client {
     private String nom;
     private String sigle;
     private String telephone;
-    private Boolean potentiel;
+    @Builder.Default
+    private Boolean potentiel = false;
 
     @CreationTimestamp
     @Column(updatable = false)

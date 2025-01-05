@@ -11,7 +11,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +25,24 @@ import java.util.function.Function;
 
 @Service
 @Transactional
-@AllArgsConstructor
 public class JwtService {
-    private static final String ENCRYPTION_KEY = "3ef6489927d9ca000164de101a2ff75221780e2eb52fdccf4fce5c429b7d2f22917b32a0cc0bb179a28452e7e1c85371653b4e67ebd46cce4d76f1277080";
+
+    @Value("${my.secretkey}")
+    private  String ENCRYPTION_KEY;
     private static final String TOKEN_INVALIDE = "Token invalide";
     private static final String REFRESH_TOKEN_INVALIDE = "Refresh token invalide";
     public static final String BEARER = "bearer";
     public static final String REFRESH = "refresh";
     private final UtilisateurService utilisateurService;
-    private JwtDAO jwtDAO;
+    private final JwtDAO jwtDAO;
     private final UtilisateurConnecteServie utilisateurConnecteServie;
+
+    public JwtService(UtilisateurService utilisateurService, JwtDAO jwtDAO, UtilisateurConnecteServie utilisateurConnecteServie) {
+        this.utilisateurService = utilisateurService;
+        this.jwtDAO = jwtDAO;
+        this.utilisateurConnecteServie = utilisateurConnecteServie;
+    }
+
 
     public Jwt tokenByValue(String token) {
         return this.jwtDAO.findByValeurAndDesactiveAndExpire(token, false, false)
