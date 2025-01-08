@@ -111,14 +111,14 @@ public class ResponseMapper {
         }
         return new BorderauDto(
                 borderau.getId(),
-                borderau.getProforma().getReference(),
-                borderau.getProforma().getNumero(),
+                borderau.getReference(),
+                borderau.getNumero(),
                 borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
                 borderau.getProforma().getTotal_ht(),
                 borderau.getProforma().getTotal_ttc(),
                 borderau.getProforma().getTotal_tva(),
                 borderau.getProforma().getClient().getNom(),
-                borderau.getProforma().getCreate_at()
+                borderau.getCreate_at()
         );
     }
 
@@ -130,12 +130,12 @@ public class ResponseMapper {
                 facture.getId(),
                 facture.getReference(),
                 facture.getNumero(),
-                facture.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
-                facture.getProforma().getTotal_ht(),
-                facture.getProforma().getTotal_ttc(),
-                facture.getProforma().getTotal_tva(),
-                facture.getProforma().getClient().getNom(),
-                facture.getProforma().getCreate_at(),
+                facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                facture.getBordereau().getProforma().getTotal_ht(),
+                facture.getBordereau().getProforma().getTotal_ttc(),
+                facture.getBordereau().getProforma().getTotal_tva(),
+                facture.getBordereau().getProforma().getClient().getNom(),
+                facture.getBordereau().getProforma().getCreate_at(),
                 facture.getSignedBy()
         );
     }

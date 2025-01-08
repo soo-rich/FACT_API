@@ -33,13 +33,8 @@ public class BordereuImpl implements BordereauService {
             Bordereau bordereau = Bordereau.builder()
                     .numero(this.numeroGenerateur.GenerateBordereauNumero())
                     .reference(save.getReference())
-                    .articleQuantiteList(save.getArticleQuantiteList())
-                    .projet(save.getProjet())
-                    .client(save.getClient())
-                    .total_ht(save.getTotal_ht())
-                    .total_ttc(save.getTotal_ttc())
-                    .total_tva(save.getTotal_tva())
-                    .proforma(save).build();
+                    .proforma(save)
+                    .build();
             return this.responseMapper.responseBorderauDto(this.borderauRepository.save(bordereau));
 
         } else {

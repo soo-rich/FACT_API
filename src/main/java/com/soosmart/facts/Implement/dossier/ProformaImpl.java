@@ -44,7 +44,7 @@ public class ProformaImpl implements ProformaService {
                     .reference(saveProformaDTO.reference())
                     .projet(projet.get())
                     .client(projet.get().getClient())
-                    .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom()+" "+this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
+                    .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
                     .build();
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
@@ -64,7 +64,7 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public String updateProformaReference( String reference) {
+    public String updateProformaReference(String reference) {
         this.proformaRepository.findAllByReference(reference).forEach(proforma -> {
             proforma.setReference(reference);
             this.proformaRepository.save(proforma);
@@ -99,7 +99,6 @@ public class ProformaImpl implements ProformaService {
                 this.proformaRepository.save(proforma.get());
             } catch (Exception exception) {
                 System.out.println("Cause -> \n" + exception.getCause() + "\nmessage ->\n" + exception.getMessage());
-                ;
             }
         }
     }
@@ -125,7 +124,7 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public ProformaDTO signerProforma(UUID id,String who_signed) {
+    public ProformaDTO signerProforma(UUID id, String who_signed) {
         Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
         if (proforma.isPresent()) {
             proforma.get().setSignedBy(who_signed);
@@ -139,7 +138,7 @@ public class ProformaImpl implements ProformaService {
     public ProformaDTO signedbywhoconnectProforma(UUID id) {
         Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
         if (proforma.isPresent()) {
-            proforma.get().setSignedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom()+" "+this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom());
+            proforma.get().setSignedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom());
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma.get()));
         } else {
             throw new EntityExistsException("Proforma not found");
