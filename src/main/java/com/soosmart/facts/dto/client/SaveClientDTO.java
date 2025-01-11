@@ -1,5 +1,7 @@
 package com.soosmart.facts.dto.client;
 
+import com.soosmart.facts.exceptions.dto.DtoArgumentRquired;
+
 public record SaveClientDTO(
         String lieu,
         String nom,
@@ -9,7 +11,7 @@ public record SaveClientDTO(
 ) {
     public SaveClientDTO {
         if (lieu.isBlank() || nom.isBlank() || sigle.isBlank() || telephone.isBlank()) {
-            throw new IllegalArgumentException("il manque des donne");
+            throw new DtoArgumentRquired("il manque des donne");
         }
     }
 }
