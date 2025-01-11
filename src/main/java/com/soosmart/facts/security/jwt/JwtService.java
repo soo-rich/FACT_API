@@ -4,6 +4,9 @@ import com.soosmart.facts.dto.user.authentication.RefreshTokenDTO;
 import com.soosmart.facts.entity.jwt.Jwt;
 import com.soosmart.facts.entity.jwt.RefreshToken;
 import com.soosmart.facts.entity.user.Utilisateur;
+import com.soosmart.facts.exceptions.RefresTokenExpire;
+import com.soosmart.facts.exceptions.RefreshTokenInvalid;
+import com.soosmart.facts.exceptions.TokenInvalid;
 import com.soosmart.facts.repository.jwt.JwtDAO;
 import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
@@ -46,7 +49,7 @@ public class JwtService {
 
     public Jwt tokenByValue(String token) {
         return this.jwtDAO.findByValeurAndDesactiveAndExpire(token, false, false)
-                .orElseThrow(() -> new RuntimeException("Token invalide"));
+                .orElseThrow(() -> new TokenInvalid(TOKEN_INVALIDE));
     }
 
     /**
@@ -150,10 +153,10 @@ public class JwtService {
     public Map<String, String> refreshToken(RefreshTokenDTO refreshTokenRequest){
         final String refreshToken = refreshTokenRequest.refresh();
         final Jwt jwt = this.jwtDAO.findByRefreshTokenValue(refreshToken)
-                .orElseThrow(() -> new RuntimeException(REFRESH_TOKEN_INVALIDE));
+                .orElseThrow(() -> new RefreshTokenInvalid(REFRESH_TOKEN_INVALIDE));
 
         if (jwt.getRefreshToken().getExpired()||jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())){
-            throw new RuntimeException("Refresh token expiré");
+            throw new RefresTokenExpire("Refresh token expiré");
         }
         this.disableToken(jwt.getUtilisateur());
         return this.generateToken(jwt.getUtilisateur().getUsername());
