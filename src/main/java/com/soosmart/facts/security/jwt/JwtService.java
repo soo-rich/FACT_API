@@ -75,7 +75,7 @@ public class JwtService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .value(UUID.randomUUID().toString())
                 .expired(false)
-                .expirationDate(Instant.now().minusMillis( 60 * 60 * 1000 * 2))// 2 heures
+                .expirationDate(Instant.now().plusMillis( 60 * 60 * 1000 * 2))// 2 heures
                 .build();
 
         Jwt jwt = Jwt.builder()
