@@ -1,7 +1,6 @@
 package com.soosmart.facts.security.config;
 
 import com.soosmart.facts.security.jwt.JwtFilter;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,11 +21,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@AllArgsConstructor
-public class ConfigurationSecurityApplication {
+public class  ConfigurationSecurityApplication {
     private final BCryptPasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final JwtFilter jwtFilter;
+
+    public ConfigurationSecurityApplication(BCryptPasswordEncoder passwordEncoder, UserDetailsService userDetailsService, JwtFilter jwtFilter)
+    {
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception
@@ -38,7 +43,7 @@ public class ConfigurationSecurityApplication {
                     corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:4200"));
                     corsConfiguration.setAllowedMethods(java.util.List.of("*"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
-                    corsConfiguration.setMaxAge(java.time.Duration.ofMinutes(5L));
+                    corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)

@@ -18,6 +18,7 @@ import com.soosmart.facts.service.UtilisateurService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -163,9 +164,9 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username)  {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.utilisateurDAO
                 .findByUsername(username)
-                .orElseThrow(() -> new EntityNotFound("Aucun utilisateur trouve avec cet Username ou Email"));
+                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur trouve avec cet Username ou Email"));
     }
 }

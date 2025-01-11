@@ -4,7 +4,6 @@ package com.soosmart.facts.controller;
 import com.soosmart.facts.dto.Article.ArticleDTO;
 import com.soosmart.facts.dto.Article.SaveArticleDTO;
 import com.soosmart.facts.service.ArticleService;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "article")
-@AllArgsConstructor
 public class ArticleController {
-    private ArticleService articleService;
+    private final ArticleService articleService;
+
+    public ArticleController(ArticleService articleService) {
+        this.articleService = articleService;
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ArticleDTO> save(@RequestBody SaveArticleDTO articleDTO) {
@@ -32,7 +34,7 @@ public class ArticleController {
 
     @PutMapping("{id}")
     public ResponseEntity<ArticleDTO> update(@PathVariable UUID id, @RequestBody SaveArticleDTO articleDTO) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.articleService.update_article(id,articleDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(this.articleService.update_article(id, articleDTO));
     }
 
     @DeleteMapping("{id}")

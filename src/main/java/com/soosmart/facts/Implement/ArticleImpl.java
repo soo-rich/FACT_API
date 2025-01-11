@@ -16,11 +16,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class ArticleImpl implements ArticleService {
 
-    private ArticleDAO articleDAO;
-    private ResponseMapper responseMapper;
+    private final ArticleDAO articleDAO;
+    private final ResponseMapper responseMapper;
+
+    public ArticleImpl(ArticleDAO articleDAO, ResponseMapper responseMapper) {
+        this.articleDAO = articleDAO;
+        this.responseMapper = responseMapper;
+    }
 
     @Override
     public ArticleDTO save_article(SaveArticleDTO articleDTO) {
