@@ -6,14 +6,18 @@ import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
 import com.soosmart.facts.entity.user.Role;
 import com.soosmart.facts.entity.user.Utilisateur;
 import com.soosmart.facts.enumpack.TypeDeRole;
+import com.soosmart.facts.exceptions.EntityNotFound;
+import com.soosmart.facts.exceptions.NotSameId;
+import com.soosmart.facts.exceptions.user.BadEmail;
+import com.soosmart.facts.exceptions.user.EmailExiste;
+import com.soosmart.facts.exceptions.user.SuperAdminExeciste;
+import com.soosmart.facts.exceptions.user.UsernameExiste;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
 import com.soosmart.facts.service.UtilisateurService;
-import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +39,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     public void createSuprerAdmin(String email, String username, String password) {
         Optional<Utilisateur> superAdmin = this.utilisateurDAO.findByRole_Libelle(TypeDeRole.SUPER_ADMIN);
         if (superAdmin.isPresent()) {
-           throw new EntityExistsException("Super Admin Existe");
+           throw new SuperAdminExeciste("Super Admin Existe");
         } else {
             Utilisateur utilisateur = Utilisateur.builder()
                     .email(email)
@@ -51,7 +55,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
             if (this.verifierUtilisateurEmail(utilisateur)) {
                 this.utilisateurDAO.save(utilisateur);
             } else {
-                throw new RuntimeException("Email invalide");
+                throw new BadEmail("Email invalide");
             }
         }
     }
@@ -66,13 +70,13 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     @Override
     public Utilisateur findByEmail(String email) {
         Optional<Utilisateur> utilisateur = this.utilisateurDAO.findByEmail(email);
-        return utilisateur.orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        return utilisateur.orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé"));
 
     }
 
     @Override
     public Utilisateur findByUsername(String username) {
-        return this.utilisateurDAO.findByUsername(username).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        return this.utilisateurDAO.findByUsername(username).orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé"));
     }
 
     @Override
@@ -105,7 +109,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                     save.getCreatedAt()
             );
         } else {
-            throw new RuntimeException("Email invalide");
+            throw new BadEmail("Email invalide");
         }
     }
 
@@ -113,7 +117,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     public Utilisateur update(UUID id, UpdateUtilisateurDTO utilisateur) {
 
         if (!utilisateur.id().toString().equals(id.toString())) {
-            throw new RuntimeException("Id invalide");
+            throw new NotSameId("Id invalide");
         } else {
 
             Optional<Utilisateur> user = this.utilisateurDAO.findById(utilisateur.id()).stream().findFirst();
@@ -126,7 +130,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
 
                 return this.utilisateurDAO.save(userUpdate);
             } else {
-                throw new RuntimeException("Utilisateur non trouvé");
+                throw new EntityNotFound("Utilisateur non trouvé");
             }
         }
     }
@@ -138,11 +142,11 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
 
     private Boolean verifierUtilisateurEmail(Utilisateur utilisateur) {
         if (!utilisateur.getEmail().contains("@") || !utilisateur.getEmail().contains(".")) {
-            throw new IllegalArgumentException("Email invalide");
+            throw new BadEmail("Email invalide");
         } else {
             Optional<Utilisateur> userEmail = this.utilisateurDAO.findByEmail(utilisateur.getEmail());
             if (userEmail.isPresent()) {
-                throw new RuntimeException("Email existe deja");
+                throw new EmailExiste("Email existe deja");
             } else {
                 return verifierUtilisateurUsername(utilisateur);
             }
@@ -152,16 +156,16 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     private Boolean verifierUtilisateurUsername(Utilisateur utilisateur) {
         Optional<Utilisateur> user = this.utilisateurDAO.findByUsername(utilisateur.getUsername());
         if (user.isPresent()) {
-            throw new RuntimeException("Username existe deja");
+            throw new UsernameExiste("Username existe deja");
         } else {
             return true;
         }
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username)  {
         return this.utilisateurDAO
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur trouve avec cet Username ou Email"));
+                .orElseThrow(() -> new EntityNotFound("Aucun utilisateur trouve avec cet Username ou Email"));
     }
 }
