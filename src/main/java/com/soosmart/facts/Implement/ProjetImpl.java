@@ -5,6 +5,7 @@ import com.soosmart.facts.dto.project.SaveProjetDTO;
 import com.soosmart.facts.dto.project.UpdateProjet;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.entity.Projet;
+import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.repository.ProjetDAO;
@@ -45,7 +46,7 @@ public class ProjetImpl implements ProjetService {
                     .build())
             );
         }else {
-            throw new EntityExistsException("Client not found");
+            throw new EntityNotFound("Client not found");
         }
 
     }
@@ -61,7 +62,7 @@ public class ProjetImpl implements ProjetService {
             return this.responseMapper.responseProjetDTO(this.projetRepository.save(projetNew));
         }
         else {
-            throw new EntityExistsException("Projet not found");
+            throw new EntityNotFound("Projet not found");
         }
     }
 
@@ -76,7 +77,7 @@ public class ProjetImpl implements ProjetService {
             return projetNew.getOffre();
         }
         else {
-            throw new EntityExistsException("Projet not found");
+            throw new EntityNotFound("Projet not found");
         }
     }
 

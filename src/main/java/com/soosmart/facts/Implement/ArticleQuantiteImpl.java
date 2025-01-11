@@ -2,6 +2,7 @@ package com.soosmart.facts.Implement;
 
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.entity.ArticleQuantite;
+import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.repository.ArticleDAO;
 import com.soosmart.facts.repository.ArticleQuantiteDAO;
 import com.soosmart.facts.service.ArticleQuantiteService;
@@ -37,7 +38,7 @@ public class ArticleQuantiteImpl implements ArticleQuantiteService {
 
                                     },
                                     () -> {
-                                        throw new RuntimeException("Article not found");
+                                        throw new EntityNotFound("Article not found");
                                     }
                             );
                 }

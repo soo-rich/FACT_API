@@ -3,7 +3,7 @@ package com.soosmart.facts.Implement;
 import com.soosmart.facts.dto.Article.ArticleDTO;
 import com.soosmart.facts.dto.Article.SaveArticleDTO;
 import com.soosmart.facts.entity.Article;
-import com.soosmart.facts.exceptions.article.ArticleNotFound;
+import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ArticleDAO;
 import com.soosmart.facts.service.ArticleService;
@@ -45,7 +45,7 @@ public class ArticleImpl implements ArticleService {
 
             return this.responseMapper.responseArticleDTO(this.articleDAO.save(articleupdate));
         }
-        throw new ArticleNotFound("Article not found");
+        throw new EntityNotFound("Article not found");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ArticleImpl implements ArticleService {
             this.articleDAO.delete(article.get());
             return true;
         }
-        throw new ArticleNotFound("Article not found");
+        throw new EntityNotFound("Article not found");
 
     }
 }

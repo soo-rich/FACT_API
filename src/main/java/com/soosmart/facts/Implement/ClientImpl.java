@@ -3,6 +3,7 @@ package com.soosmart.facts.Implement;
 import com.soosmart.facts.dto.client.ClientDTO;
 import com.soosmart.facts.dto.client.SaveClientDTO;
 import com.soosmart.facts.entity.Client;
+import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.service.ClientService;
@@ -72,7 +73,7 @@ public class ClientImpl implements ClientService {
             client.get().setPotentiel(!client.get().getPotentiel());
             return this.responseMapper.responseClientDTO(this.clientDAO.save(client.get()));
         } else {
-            throw new EntityExistsException("ce Client n'existe pas");
+            throw new EntityNotFound("ce Client n'existe pas");
         }
 
     }
