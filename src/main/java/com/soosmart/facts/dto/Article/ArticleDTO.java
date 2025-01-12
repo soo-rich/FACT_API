@@ -5,6 +5,6 @@ import java.util.UUID;
 public record ArticleDTO(
         UUID id,
         String libelle,
-        Float prix_unitaiare
+        Float prix_unitaire
 ) {
 }
