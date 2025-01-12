@@ -7,7 +7,6 @@ import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ArticleDAO;
 import com.soosmart.facts.service.ArticleService;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class ArticleImpl implements ArticleService {
     @Override
     public ArticleDTO save_article(SaveArticleDTO articleDTO) {
 
-        Article article = Article.builder().libelle(articleDTO.libelle()).prix_unitaire(articleDTO.prix()).build();
+        Article article = Article.builder().libelle(articleDTO.libelle()).prix_unitaire(articleDTO.prix_unitaire()).build();
         Article save = this.articleDAO.save(article);
         return this.responseMapper.responseArticleDTO(save);
     }
@@ -45,7 +44,7 @@ public class ArticleImpl implements ArticleService {
         if (articleOld.isPresent()) {
             Article articleupdate = articleOld.get();
             articleupdate.setLibelle(articleDTO.libelle());
-            articleupdate.setPrix_unitaire(articleDTO.prix());
+            articleupdate.setPrix_unitaire(articleDTO.prix_unitaire());
 
             return this.responseMapper.responseArticleDTO(this.articleDAO.save(articleupdate));
         }
