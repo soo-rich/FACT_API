@@ -146,6 +146,19 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
         this.utilisateurDAO.deleteById(id);
     }
 
+    @Override
+    public Boolean activateUser(UUID id) {
+        Optional<Utilisateur> user = this.utilisateurDAO.findById(id);
+        if (user.isPresent()) {
+            Utilisateur utilisateur = user.get();
+            utilisateur.setActif(!utilisateur.getActif());
+            this.utilisateurDAO.save(utilisateur);
+            return utilisateur.getActif();
+        } else {
+            throw new EntityNotFound("Utilisateur non trouvé");
+        }
+    }
+
     private Boolean verifierUtilisateurEmail(Utilisateur utilisateur) {
         if (!utilisateur.getEmail().contains("@") || !utilisateur.getEmail().contains(".")) {
             throw new BadEmail("Email invalide");

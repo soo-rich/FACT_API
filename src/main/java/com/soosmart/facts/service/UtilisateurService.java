@@ -19,6 +19,7 @@ public interface UtilisateurService extends UserDetailsService {
     ResponseUtilisateur save(SaveUtilisateurDTO utilisateur);
     ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur);
     void delete(UUID id);
+    Boolean activateUser(UUID id);
 
     UserDetails loadUserByUsername(String username);
 }

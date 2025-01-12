@@ -37,6 +37,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("{id}/activate")
+    public ResponseEntity<Boolean> activateUser(@PathVariable("id") UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body( this.utilisateurService.activateUser(id));
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<ResponseUtilisateur> updateUser(@PathVariable("id")UUID id, @Valid @RequestBody UpdateUtilisateurDTO updateUtilisateurDTO) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.utilisateurService.update(id, updateUtilisateurDTO));

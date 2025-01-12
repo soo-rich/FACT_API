@@ -17,7 +17,6 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.*;
@@ -26,16 +25,22 @@ import static org.springframework.http.HttpStatus.*;
 @ControllerAdvice
 public class ApplicationControllerAdvice {
 
-    @ResponseStatus(BAD_REQUEST)
+   /* @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public @ResponseBody ExceptionDto handleValidationExceptions(MethodArgumentNotValidException ex) {
         return new ExceptionDto(BAD_REQUEST, ex.getMessage());
+    }*/
+
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(value = {RefreshTokenInvalid.class})
+    public @ResponseBody ExceptionDto refreshtokeninvalid(RefreshTokenInvalid ex) {
+        return new ExceptionDto(FORBIDDEN, ex.getMessage());
     }
 
-    @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(value = {RefreshTokenInvalid.class, RefresTokenExpire.class})
-    public @ResponseBody ExceptionDto refreshtokeninvalid(RefreshTokenInvalid ex, RefresTokenExpire ex2) {
-        return new ExceptionDto(BAD_REQUEST, ex.getMessage() + "  " + ex2.getMessage());
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(value = {RefresTokenExpire.class})
+    public @ResponseBody ExceptionDto refreshtokeninvalid(RefresTokenExpire ex) {
+        return new ExceptionDto(FORBIDDEN, ex.getMessage());
     }
 
     @ResponseStatus(FORBIDDEN)
