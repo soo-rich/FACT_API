@@ -11,5 +11,5 @@ public interface ClientService {
     ClientDTO save(SaveClientDTO saveClientDTO);
     ClientDTO update(UUID id, SaveClientDTO saveClientDTO);
     Boolean delete(UUID id);
-    ClientDTO changePotential(UUID id);
+    Boolean changePotential(UUID id);
 }

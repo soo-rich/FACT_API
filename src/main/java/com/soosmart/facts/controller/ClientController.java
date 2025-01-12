@@ -33,8 +33,8 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.clientService.update(id, saveClientDTO));
     }
 
-    @PatchMapping(path = "{id}")
-    public ResponseEntity<ClientDTO> changePotiential(@PathVariable UUID id){
+    @GetMapping(path = "{id}")
+    public ResponseEntity<Boolean> changePotiential(@PathVariable UUID id){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.clientService.changePotential(id));
     }
 

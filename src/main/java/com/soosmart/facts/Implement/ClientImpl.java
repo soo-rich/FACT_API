@@ -67,11 +67,11 @@ public class ClientImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO changePotential(UUID id) {
+    public Boolean changePotential(UUID id) {
         Optional<Client> client = this.clientDAO.findById(id).stream().findFirst();
         if (client.isPresent()) {
             client.get().setPotentiel(!client.get().getPotentiel());
-            return this.responseMapper.responseClientDTO(this.clientDAO.save(client.get()));
+            return this.clientDAO.save(client.get()).getPotentiel();
         } else {
             throw new EntityNotFound("ce Client n'existe pas");
         }
