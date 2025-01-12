@@ -54,12 +54,12 @@ public class ApplicationControllerAdvice {
         return new ExceptionDto(FORBIDDEN, exception.getMessage());
     }
 
-    @ResponseStatus(FORBIDDEN)
+    @ResponseStatus(UNAUTHORIZED)
     @ExceptionHandler(value = AccessDeniedException.class)
     public @ResponseBody
     ExceptionDto badCredentialsException(AccessDeniedException exception) {
 
-        return new ExceptionDto(FORBIDDEN, "Accès refusé");
+        return new ExceptionDto(UNAUTHORIZED, "Accès refusé");
     }
 
     @ResponseStatus(UNAUTHORIZED)
