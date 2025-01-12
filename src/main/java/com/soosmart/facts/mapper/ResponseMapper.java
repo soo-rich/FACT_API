@@ -30,7 +30,8 @@ public class ResponseMapper {
                 utilisateur.getEmail(),
                 utilisateur.getUsername(),
                 utilisateur.getRole().getLibelle().name(),
-                utilisateur.getCreatedAt()
+                utilisateur.getCreatedAt(),
+                utilisateur.getActif()
         );
     }
 

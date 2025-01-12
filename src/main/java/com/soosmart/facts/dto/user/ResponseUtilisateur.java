@@ -14,6 +14,7 @@ public record ResponseUtilisateur(
         String email,
         String username,
         String role,
-        Instant dateCreation
+        Instant dateCreation,
+        Boolean actif
 ) {
 }

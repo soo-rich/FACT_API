@@ -14,10 +14,10 @@ public interface UtilisateurService extends UserDetailsService {
 
     void createSuprerAdmin(String email, String username, String password);
     List<ResponseUtilisateur> findAll();
-    Utilisateur findByEmail(String email);
-    Utilisateur findByUsername(String username);
+    ResponseUtilisateur findByEmail(String email);
+    ResponseUtilisateur findByUsername(String username);
     ResponseUtilisateur save(SaveUtilisateurDTO utilisateur);
-    Utilisateur update(UUID id, UpdateUtilisateurDTO utilisateur);
+    ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur);
     void delete(UUID id);
 
     UserDetails loadUserByUsername(String username);

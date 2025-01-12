@@ -69,15 +69,19 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     }
 
     @Override
-    public Utilisateur findByEmail(String email) {
-        Optional<Utilisateur> utilisateur = this.utilisateurDAO.findByEmail(email);
-        return utilisateur.orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé"));
+    public ResponseUtilisateur findByEmail(String email) {
+        Optional<Utilisateur> utilisateur =this.utilisateurDAO.findByEmail(email);
+        if (utilisateur.isPresent()) {
+            return this.responseMapper.responseUtilisateur(utilisateur.get());
+        } else {
+            throw new EntityNotFound("Utilisateur non trouvé");
+        }
 
     }
 
     @Override
-    public Utilisateur findByUsername(String username) {
-        return this.utilisateurDAO.findByUsername(username).orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé"));
+    public ResponseUtilisateur findByUsername(String username) {
+        return this.responseMapper.responseUtilisateur(this.utilisateurDAO.findByUsername(username).orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé")));
     }
 
     @Override
@@ -107,7 +111,8 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                     save.getEmail(),
                     save.getUsername(),
                     save.getRole().getLibelle().name(),
-                    save.getCreatedAt()
+                    save.getCreatedAt(),
+                    save.getActif()
             );
         } else {
             throw new BadEmail("Email invalide");
@@ -115,7 +120,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     }
 
     @Override
-    public Utilisateur update(UUID id, UpdateUtilisateurDTO utilisateur) {
+    public ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur) {
 
         if (!utilisateur.id().toString().equals(id.toString())) {
             throw new NotSameId("Id invalide");
@@ -129,7 +134,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                 userUpdate.setEmail(utilisateur.email());
                 userUpdate.setNumero(utilisateur.numero());
 
-                return this.utilisateurDAO.save(userUpdate);
+                return this.responseMapper.responseUtilisateur(this.utilisateurDAO.save(userUpdate));
             } else {
                 throw new EntityNotFound("Utilisateur non trouvé");
             }
