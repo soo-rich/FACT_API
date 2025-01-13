@@ -1,6 +1,7 @@
 package com.soosmart.facts.dto.user.authentication;
 
 import com.soosmart.facts.exceptions.dto.DtoArgumentRquired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 
 public record AuthenticationDTO(
         String username,
@@ -8,10 +9,10 @@ public record AuthenticationDTO(
 ) {
     public AuthenticationDTO {
         if (username == null || username.isBlank()) {
-            throw new DtoArgumentRquired("Username cannot be null or empty");
+            throw new HttpMessageNotReadableException("Username cannot be null or empty");
         }
         if (password == null || password.isBlank()) {
-            throw new DtoArgumentRquired("Password cannot be null or empty");
+            throw new HttpMessageNotReadableException("Password cannot be null or empty");
         }
     }
 
