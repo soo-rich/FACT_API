@@ -14,6 +14,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -143,6 +144,17 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = {DtoArgumentRquired.class})
     public @ResponseBody
     ExceptionDto dtorequire(final DtoArgumentRquired exception) {
+
+        return new ExceptionDto(
+                BAD_REQUEST,
+                exception.getMessage()
+        );
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public @ResponseBody
+    ExceptionDto httpMessageNotReadableException(final HttpMessageNotReadableException exception) {
 
         return new ExceptionDto(
                 BAD_REQUEST,
