@@ -162,13 +162,23 @@ public class ApplicationControllerAdvice {
     }
 
     @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = {EmailExiste.class, UsernameExiste.class})
+    @ExceptionHandler(value =  UsernameExiste.class)
     public @ResponseBody
-    ExceptionDto emailExiste(final EmailExiste exception, final UsernameExiste exception2) {
+    ExceptionDto usernameExiste(final UsernameExiste exception) {
 
         return new ExceptionDto(
                 CONFLICT,
-                exception.getMessage() + "  " + exception2.getMessage()
+                 exception.getMessage()
+        );
+    }
+
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(value = EmailExiste.class)
+    public @ResponseBody
+    ExceptionDto emailExiste(final EmailExiste exception) {
+        return new ExceptionDto(
+                CONFLICT,
+                exception.getMessage()
         );
     }
 
