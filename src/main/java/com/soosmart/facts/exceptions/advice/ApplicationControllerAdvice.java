@@ -155,11 +155,19 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public @ResponseBody
     ExceptionDto httpMessageNotReadableException(final HttpMessageNotReadableException exception) {
+        int index = exception.getMessage().indexOf("problem: ");
+        if (index != -1) {
+            return new ExceptionDto(
+                    BAD_REQUEST,
+                    exception.getMessage().substring(index + "problem: ".length())
+            );
+        } else {
+            return new ExceptionDto(
+                    BAD_REQUEST,
+                    "Erreur de lecture"
+            );
+        }
 
-        return new ExceptionDto(
-                BAD_REQUEST,
-                exception.getMessage()
-        );
     }
 
     @ResponseStatus(NOT_FOUND)
@@ -174,13 +182,13 @@ public class ApplicationControllerAdvice {
     }
 
     @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value =  UsernameExiste.class)
+    @ExceptionHandler(value = UsernameExiste.class)
     public @ResponseBody
     ExceptionDto usernameExiste(final UsernameExiste exception) {
 
         return new ExceptionDto(
                 CONFLICT,
-                 exception.getMessage()
+                exception.getMessage()
         );
     }
 
