@@ -35,7 +35,7 @@ public class ArticleImpl implements ArticleService {
 
     @Override
     public List<ArticleDTO> list_article() {
-        return this.articleDAO.findAll().stream().map(this.responseMapper::responseArticleDTO).collect(Collectors.toList());
+        return this.articleDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseArticleDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -56,7 +56,8 @@ public class ArticleImpl implements ArticleService {
 
         Optional<Article> article = this.articleDAO.findById(id).stream().findFirst();
         if (article.isPresent()) {
-            this.articleDAO.delete(article.get());
+            article.get().setSupprimer(true);
+            this.articleDAO.save(article.get());
             return true;
         }
         throw new EntityNotFound("Article not found");

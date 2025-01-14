@@ -24,6 +24,9 @@ public class Article {
     @UpdateTimestamp
     private Instant update_at;
 
+    @Builder.Default
+    private Boolean supprimer = false;
+
     @Override
     public String toString(){
         return this.libelle;

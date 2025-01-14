@@ -13,12 +13,17 @@ import com.soosmart.facts.exceptions.user.UsernameExiste;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.sql.SQLException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -213,4 +218,21 @@ public class ApplicationControllerAdvice {
         );
     }
 
+    @ResponseStatus(CONFLICT)
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    public @ResponseBody
+    ExceptionDto sqlExceptionHelper(final DataIntegrityViolationException exception) {
+
+        return new ExceptionDto(
+                CONFLICT,
+                "certaines données sont déjà utilisées"
+        );
+    }
+
+
+@ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public @ResponseBody ExceptionDto handleNoHandlerFoundException(NoHandlerFoundException exception) {
+        return new ExceptionDto(NOT_FOUND, "Route not found");
+    }
 }
