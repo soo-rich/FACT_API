@@ -24,7 +24,7 @@ public class ClientImpl implements ClientService {
 
     @Override
     public List<ClientDTO> list() {
-        return this.clientDAO.findAll().stream().map(
+        return this.clientDAO.findAllBySupprimerIsFalse().stream().map(
                 this.responseMapper::responseClientDTO
         ).toList();
     }
@@ -59,7 +59,9 @@ public class ClientImpl implements ClientService {
     @Override
     public Boolean delete(UUID id) {
         try {
-            this.clientDAO.delete(this.clientDAO.getReferenceById(id));
+            Client referenceById = this.clientDAO.getReferenceById(id);
+            referenceById.setSupprimer(true);
+            this.clientDAO.save(referenceById);
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);

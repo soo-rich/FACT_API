@@ -33,6 +33,10 @@ public class Client {
     @UpdateTimestamp
     private Instant update_at;
 
+
+    @Builder.Default
+    private Boolean supprimer = false;
+
     @Override
     public String toString() {
         return this.nom;
