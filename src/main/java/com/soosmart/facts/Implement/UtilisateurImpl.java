@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,9 +64,14 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
 
     @Override
     public List<ResponseUtilisateur> findAll() {
-        return this.utilisateurDAO.findAll().stream().map(
-                responseMapper::responseUtilisateur
-        ).collect(Collectors.toList());
+        List<Utilisateur> utilisateurList = this.utilisateurDAO.findAll();
+        List <ResponseUtilisateur> responseUtilisateurs = new ArrayList<>();
+        for (Utilisateur utilisateur : utilisateurList) {
+            if (!utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
+                responseUtilisateurs.add(this.responseMapper.responseUtilisateur(utilisateur));
+            }
+        }
+        return responseUtilisateurs;
     }
 
     @Override
