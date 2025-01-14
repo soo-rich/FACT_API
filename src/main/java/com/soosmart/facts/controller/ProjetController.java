@@ -34,7 +34,7 @@ public class ProjetController {
         return ResponseEntity.status(HttpStatus.OK).body(this.projetService.update(id, updateProjet));
     }
 
-    @PatchMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Boolean> changeOffre(@PathVariable UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(this.projetService.changeOffre(id));
     }
