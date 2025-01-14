@@ -42,7 +42,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 tokenEntity = this.jwtService.tokenByValue(token);
                 isTokenExpired = this.jwtService.isTokenExpired(token);
                 username = this.jwtService.extractUsername(token);
-                System.out.println(username);
             }
 
             if (
