@@ -28,6 +28,10 @@ public class proformaController {
     public ResponseEntity<List<String>> getProformasNumereList() {
         return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNumereList());
     }
+    @GetMapping("/not-adoped")
+    public ResponseEntity<List<ProformaDTO>> getProformasNotAdapted() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNotAdopted());
+    }
 
 
     @PostMapping()

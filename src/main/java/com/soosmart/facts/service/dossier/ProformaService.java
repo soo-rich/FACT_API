@@ -14,6 +14,7 @@ public interface ProformaService {
     void deleteProforma(String numero);
     ProformaDTO getProforma(String numero);
     List<ProformaDTO> getProformas();
+    List<ProformaDTO> getProformasNotAdopted();
     List<String> getProformasNumereList();
     ProformaDTO signerProforma(UUID id, String who_signed);
     ProformaDTO signedbywhoconnectProforma(UUID id);

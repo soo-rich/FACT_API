@@ -37,18 +37,23 @@ public class ProformaImpl implements ProformaService {
 
     @Override
     public ProformaDTO saveProforma(SaveProformaDTO saveProformaDTO) {
-        Optional<Projet> projet = this.projetRepository.findById(saveProformaDTO.projet_id()).stream().findFirst();
-        if (projet.isPresent()) {
-            Proforma proforma = Proforma.builder()
-                    .numero(this.numeroGenerateur.GenerateproformaNumero())
-                    .reference(saveProformaDTO.reference())
-                    .projet(projet.get())
-                    .client(projet.get().getClient())
-                    .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
-                    .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
-                    .build();
-            return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
-        } else {
+        if (saveProformaDTO.projet_id() != null) {
+            Optional<Projet> projet = this.projetRepository.findById(saveProformaDTO.projet_id()).stream().findFirst();
+            Proforma proforma1 = new Proforma();
+            if (projet.isPresent()) {
+                Proforma proforma = Proforma.builder()
+                        .numero(this.numeroGenerateur.GenerateproformaNumero())
+                        .reference(saveProformaDTO.reference())
+                        .projet(projet.get())
+                        .client(projet.get().getClient())
+                        .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
+                        .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
+                        .build();
+                proforma1 = this.CalculateProformaTotal(proforma);
+            }return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma1));
+
+        } else if
+        (saveProformaDTO.client_id() != null) {
             Optional<Client> client = this.clientRepository.findById(saveProformaDTO.client_id()).stream().findFirst();
             if (client.isEmpty()) {
                 throw new EntityExistsException("Client not found");
@@ -60,6 +65,9 @@ public class ProformaImpl implements ProformaService {
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
                     .build();
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
+        }
+        else {
+            throw new EntityExistsException("Projet or Client not found");
         }
     }
 
@@ -119,6 +127,11 @@ public class ProformaImpl implements ProformaService {
     @Override
     public List<ProformaDTO> getProformas() {
         return this.proformaRepository.findAllByDeletedIsFalse().stream().map(this.responseMapper::responseProformaDTO).toList();
+    }
+
+    @Override
+    public List<ProformaDTO> getProformasNotAdopted() {
+        return this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse().stream().map(this.responseMapper::responseProformaDTO).toList();
     }
 
     @Override
