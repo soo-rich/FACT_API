@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ProformaService {
     ProformaDTO saveProforma(SaveProformaDTO saveProformaDTO);
-    String updateProformaReference(String reference);
+    String updateProformaReference(UUID id, String newReference);
     ProformaDTO updateProformaArticleQuantite(UUID id,  List<SaveArticleQuantiteDTO> articleQuantiteslist);
     void deleteProforma(String numero);
     ProformaDTO getProforma(String numero);

@@ -40,9 +40,10 @@ public class proformaController {
         return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProforma(numero));
     }
 
-    @PutMapping("{reference}")
-    public ResponseEntity<String> updateProformaReference(@PathVariable String reference) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.updateProformaReference(reference));
+    @GetMapping("reference/{id}")
+    public ResponseEntity<Void> updateProformaReference(@PathVariable UUID id, @RequestParam("ref") String newReference) {
+        this.proformaService.updateProformaReference(id, newReference);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("{id}")

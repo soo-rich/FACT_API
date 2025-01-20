@@ -64,12 +64,15 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public String updateProformaReference(String reference) {
-        this.proformaRepository.findAllByReference(reference).forEach(proforma -> {
-            proforma.setReference(reference);
-            this.proformaRepository.save(proforma);
-        });
-        return "Reference updated";
+    public String updateProformaReference(UUID id, String newReference) {
+        Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
+        if (proforma.isPresent()) {
+            proforma.get().setReference(newReference);
+            this.proformaRepository.save(proforma.get());
+            return "Reference updated";
+        } else {
+            throw new EntityExistsException("Proforma not found");
+        }
     }
 
     @Override
