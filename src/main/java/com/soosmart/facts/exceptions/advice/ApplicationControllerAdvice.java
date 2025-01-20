@@ -226,7 +226,7 @@ public class ApplicationControllerAdvice {
 
         return new ExceptionDto(
                 CONFLICT,
-                "certaines données sont déjà utilisées"
+                "Cela existe déjà"
         );
     }
 
