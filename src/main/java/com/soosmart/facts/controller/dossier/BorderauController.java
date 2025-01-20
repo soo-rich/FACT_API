@@ -31,7 +31,7 @@ public class BorderauController {
     }
 
     @PostMapping
-    public ResponseEntity<BorderauDto> saveBorderau(@RequestParam("id") UUID id_proforma) {
+    public ResponseEntity<BorderauDto> saveBorderau(@RequestBody UUID id_proforma) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bordereauService.saveBordereau(id_proforma));
     }
 
