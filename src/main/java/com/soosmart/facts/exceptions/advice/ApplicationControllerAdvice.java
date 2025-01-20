@@ -15,6 +15,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -234,5 +235,16 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(NoHandlerFoundException.class)
     public @ResponseBody ExceptionDto handleNoHandlerFoundException(NoHandlerFoundException exception) {
         return new ExceptionDto(NOT_FOUND, "Route not found");
+    }
+
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = {IncorrectResultSizeDataAccessException.class})
+    public @ResponseBody
+    ExceptionDto incorrectResultSizeDataAccessException(final IncorrectResultSizeDataAccessException exception) {
+        System.out.println(exception.getMessage());
+        return new ExceptionDto(
+                INTERNAL_SERVER_ERROR,
+                exception.getMessage()
+        );
     }
 }
