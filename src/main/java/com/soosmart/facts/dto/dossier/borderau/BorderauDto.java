@@ -15,6 +15,7 @@ public record BorderauDto(
         Float total_ttc,
         Float total_tva,
         String client,
+        Boolean adopte,
         Instant date
 ) {
 }

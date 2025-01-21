@@ -119,6 +119,7 @@ public class ResponseMapper {
                 borderau.getProforma().getTotal_ttc(),
                 borderau.getProforma().getTotal_tva(),
                 borderau.getProforma().getClient().getNom(),
+                borderau.getAdopted(),
                 borderau.getCreate_at()
         );
     }
