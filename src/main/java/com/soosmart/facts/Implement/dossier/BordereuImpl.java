@@ -73,4 +73,11 @@ public class BordereuImpl implements BordereauService {
             throw new EntityExistsException("Bordereau not found");
         }
     }
+
+    @Override
+    public BorderauDto getBordereauByNumero(String numero) {
+        return this.responseMapper.responseBorderauDto(this.borderauRepository.findByNumero(numero).stream().findFirst().orElseThrow(
+                () -> new EntityExistsException("Bordereau not found")
+        ));
+    }
 }

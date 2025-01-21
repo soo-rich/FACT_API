@@ -15,7 +15,7 @@ public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
     @Query("SELECT count(b) FROM Bordereau b WHERE b.create_at >= :startOfDay and b.create_at < :endOfDay")
     Long countBordereauxCreateToday(Instant startOfDay, Instant endOfDay);
 
-    Bordereau findByNumero(String numero);
+    Optional<Bordereau> findByNumero(String numero);
 
     List<Bordereau> findAllByDeletedIsFalse();
 
