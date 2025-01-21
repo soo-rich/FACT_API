@@ -18,4 +18,6 @@ public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
     Bordereau findByNumero(String numero);
 
     List<Bordereau> findAllByDeletedIsFalse();
+
+    List<Bordereau> findAllByDeletedIsFalseAndAdoptedIsFalse();
 }

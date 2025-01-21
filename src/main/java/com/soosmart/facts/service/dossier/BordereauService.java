@@ -8,6 +8,7 @@ import java.util.UUID;
 public interface BordereauService {
 BorderauDto saveBordereau(UUID id_proforma);
 List<BorderauDto> getBordereauAll();
+List<BorderauDto> getBordereauAllNotAdopted();
 BorderauDto getBordereau(UUID id);
 void deleteBordereau(UUID id);
 }

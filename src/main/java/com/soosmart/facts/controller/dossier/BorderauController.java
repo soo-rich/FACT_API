@@ -24,6 +24,10 @@ public class BorderauController {
     public ResponseEntity<List<BorderauDto>> getBorderauAll() {
         return ResponseEntity.status(HttpStatus.OK).body(this.bordereauService.getBordereauAll());
     }
+    @GetMapping("not-use")
+    public ResponseEntity<List<BorderauDto>> getBorderauAllNotAdopt() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.bordereauService.getBordereauAllNotAdopted());
+    }
 
     @GetMapping("{id}")
     public ResponseEntity<BorderauDto> getBorderau(@PathVariable UUID id) {
