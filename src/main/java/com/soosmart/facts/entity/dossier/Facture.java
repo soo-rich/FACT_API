@@ -19,8 +19,6 @@ public class Facture extends Document {
     @OneToOne
     Bordereau bordereau;
 
-    @OneToOne
-    Proforma proforma;
 
     @Override
     public String toString() {

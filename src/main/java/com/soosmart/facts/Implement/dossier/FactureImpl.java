@@ -66,10 +66,11 @@ public class FactureImpl implements FactureService {
             Optional<Proforma> proforma = this.proformaRepository.findByReference((bordereau.get().getReference())).stream().findFirst();
             if (proforma.isPresent()) {
                 if (proforma.get().getReference().equalsIgnoreCase(bordereau.get().getReference())) {
+                    bordereau.get().setAdopted(true);
+                    this.borderauDao.save(bordereau.get());
                     return this.responseMapper.responseFactureDto(this.factureDao.save(Facture.builder()
                                     .numero(this.numeroGenerateur.GenerateFactureNumero())
                                     .reference(proforma.get().getReference())
-//                                    .proforma(proforma.get())
                                     .bordereau(bordereau.get())
                                     .signedBy(proforma.get().getSignedBy())
                                     .build()

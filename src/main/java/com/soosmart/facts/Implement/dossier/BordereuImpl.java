@@ -50,6 +50,13 @@ public class BordereuImpl implements BordereauService {
     }
 
     @Override
+    public List<BorderauDto> getBordereauAllNotAdopted() {
+        return this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse().stream().map(
+                this.responseMapper::responseBorderauDto
+        ).toList();
+    }
+
+    @Override
     public BorderauDto getBordereau(UUID id) {
         return this.responseMapper.responseBorderauDto(this.borderauRepository.findById(id).stream().findFirst().orElseThrow(
                 () -> new EntityExistsException("Bordereau not found")
