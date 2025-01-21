@@ -1,6 +1,8 @@
 package com.soosmart.facts.Implement.report;
 
 import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
+import com.soosmart.facts.dto.dossier.facture.FactureDto;
+import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.service.dossier.FactureService;
 import com.soosmart.facts.service.dossier.ProformaService;
@@ -23,13 +25,16 @@ public class ReportImpl implements ReportService {
         String type = numero.substring(0, 2);
         switch (type) {
             case "FP":
-                this.proformaService.getProforma(numero);
+                ProformaDTO proforma = this.proformaService.getProforma(numero);
+                System.out.println(proforma);
                 break;
             case "BL":
-                BorderauDto borderauDto = this.bordereauService.getBordereauByNumero(numero);
+                BorderauDto borderau = this.bordereauService.getBordereauByNumero(numero);
+                System.out.println(borderau);
                 break;
             case "FA":
-               this. factureService.getFacture(numero);
+                FactureDto facture = this.factureService.getFacture(numero);
+                System.out.println(facture);
                 break;
             default:
                 throw new IllegalArgumentException("Type de Document non reconnu");
