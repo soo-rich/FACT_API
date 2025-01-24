@@ -161,6 +161,16 @@ public class ProformaImpl implements ProformaService {
         }
     }
 
+    @Override
+    public Proforma getProformaEntity(String numero) {
+        Optional<Proforma> proforma = this.proformaRepository.findByNumero(numero);
+        if (proforma.isPresent()) {
+            return proforma.get();
+        } else {
+            throw new EntityExistsException("Proforma not found");
+        }
+    }
+
 
     private Proforma CalculateProformaTotal(Proforma proforma) {
         var objectStream = proforma.getArticleQuantiteList()
