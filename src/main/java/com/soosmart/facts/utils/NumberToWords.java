@@ -9,7 +9,7 @@ public class NumberToWords {
     private static final String[] teens = {"dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"};
     private static final String[] tens = {"", "dix", "vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingt", "quatre-vingt-dix"};
 
-    public static String convertNumberToWords(Object number) {
+    public String convertNumberToWords(Object number) {
         if (number instanceof Integer) {
             return convertIntegerToWords((Integer) number);
         } else if (number instanceof Float) {
@@ -19,14 +19,14 @@ public class NumberToWords {
         }
     }
 
-    private static String convertIntegerToWords(int number) {
+    private  String convertIntegerToWords(int number) {
         if (number == 0) {
             return "zéro";
         }
         return convert(number);
     }
 
-    private static String convertFloatToWords(float number) {
+    private  String convertFloatToWords(float number) {
         int integerPart = (int) number;
         int decimalPart = (int) ((number - integerPart) * 100);
         String words = convertIntegerToWords(integerPart);
