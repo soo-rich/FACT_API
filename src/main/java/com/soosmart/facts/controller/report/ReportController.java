@@ -2,7 +2,9 @@ package com.soosmart.facts.controller.report;
 
 import com.soosmart.facts.service.report.ReportService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +19,20 @@ public class ReportController {
 
     @GetMapping("{numero}")
     public ResponseEntity<?> generatereport(@PathVariable String numero){
-        this.reportService.GenerateReport(numero);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        byte[] bytes = this.reportService.GenerateReport(numero);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=proforma.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(bytes.length)
+                .body(bytes);
     }
 
-    @GetMapping("{numero}/download")
-    public ResponseEntity<?> downloadReport(@PathVariable String numero){
-        this.reportService.DownloadReport(numero);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @GetMapping("test")
+    public ResponseEntity<byte[]> test(){
+        return ResponseEntity.status(HttpStatus.OK).
+                header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=text.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(this.reportService.text());
     }
+
 }

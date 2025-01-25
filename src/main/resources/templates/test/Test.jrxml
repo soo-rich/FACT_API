@@ -1,0 +1,26 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Test" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa86de89-bcd6-4c92-b47b-f6c8dc3db776">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Empty Adapter"/>
+	<field name="myname" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch"/>
+	<pageHeader height="35" splitType="Stretch"/>
+	<columnHeader height="61" splitType="Stretch"/>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<element kind="staticText" uuid="6f9c211e-784c-4e1f-a42c-a6cccb13b109" x="0" y="0" width="185" height="125" forecolor="#1E17EB" backcolor="#213CEB" fontSize="18.0" hTextAlign="Center" vTextAlign="Middle">
+				<text><![CDATA[Bonjour]]></text>
+			</element>
+			<element kind="textField" uuid="35149f66-4959-4515-895c-84c2ce1bfd2f" x="185" y="0" width="185" height="125" forecolor="#1E17EB" backcolor="#213CEB" fontSize="18.0" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{myname}.toUpperCase()]]></expression>
+			</element>
+			<element kind="textField" uuid="72af4db3-31e9-41f2-981d-858d2fe67c6a" x="370" y="0" width="185" height="125" forecolor="#1E17EB" backcolor="#213CEB" fontSize="18.0" pattern="MMMMM dd, yyyy" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[new java.util.Date()]]></expression>
+			</element>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
