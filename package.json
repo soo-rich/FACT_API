@@ -1,0 +1,23 @@
+{
+  "name": "facts",
+  "version": "1.0.0",
+  "description": "faire des facture ",
+  "homepage": "https://github.com/soo-essoklina-ulrich/FACT_API#readme",
+  "bugs": {
+    "url": "https://github.com/soo-essoklina-ulrich/FACT_API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soo-essoklina-ulrich/FACT_API.git"
+  },
+  "license": "ISC",
+  "author": "SOO ESSOKLINA ULRICH",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.1"
+  }
+}
