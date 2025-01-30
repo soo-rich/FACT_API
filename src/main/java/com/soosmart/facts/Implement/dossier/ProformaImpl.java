@@ -48,6 +48,7 @@ public class ProformaImpl implements ProformaService {
                         .client(projet.get().getClient())
                         .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
                         .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
+                        .role(this.utilisateurConnecteServie.getUtilisateurConnecte().getRole().getLibelle().name())
                         .build();
                 proforma1 = this.CalculateProformaTotal(proforma);
             }return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma1));
