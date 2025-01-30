@@ -1,6 +1,7 @@
 package com.soosmart.facts.service.dossier;
 
 import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
+import com.soosmart.facts.entity.dossier.Bordereau;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,4 +18,6 @@ public interface BordereauService {
     void deleteBordereau(UUID id);
 
     BorderauDto getBordereauByNumero(String numero);
+
+    Bordereau getBordereauEntity(String numero);
 }

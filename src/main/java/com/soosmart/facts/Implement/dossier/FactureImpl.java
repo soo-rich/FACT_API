@@ -46,6 +46,13 @@ public class FactureImpl implements FactureService {
     }
 
     @Override
+    public Facture getFactureEntity(String numero) {
+        return this.factureDao.findByNumero(numero).stream().findFirst().orElseThrow(
+                () -> new IllegalArgumentException("Facture not found")
+        );
+    }
+
+    @Override
     public List<FactureDto> getFactureAll() {
         return this.factureDao.findAllByDeletedIsFalse().stream().map(
                 this.responseMapper::responseFactureDto

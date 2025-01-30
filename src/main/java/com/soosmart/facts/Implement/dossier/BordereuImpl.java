@@ -80,4 +80,11 @@ public class BordereuImpl implements BordereauService {
                 () -> new EntityExistsException("Bordereau not found")
         ));
     }
+
+    @Override
+    public Bordereau getBordereauEntity(String numero) {
+        return this.borderauRepository.findByNumero(numero).stream().findFirst().orElseThrow(
+                () -> new EntityExistsException("Bordereau not found")
+        );
+    }
 }

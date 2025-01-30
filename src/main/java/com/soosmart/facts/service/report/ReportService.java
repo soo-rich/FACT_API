@@ -9,5 +9,4 @@ public interface ReportService {
     byte[] preparedataandGenerateForProforma(Proforma proforma);
     byte[] preparedataandGenerateForBordeau(Bordereau bordereau);
     byte[] preparedataandGenerateForFacture(Facture facture);
-    byte[] text();
 }

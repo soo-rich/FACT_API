@@ -26,7 +26,7 @@ public abstract class Document {
     private String numero; // le numero de la profoma sa reference
 
     private String signedBy; // le nom de la personne qui a signé la proforma
-
+    private String role; // le role de la personne qui a signé la proforma
     @CreationTimestamp
     @Column(updatable = false)
     private Instant create_at;

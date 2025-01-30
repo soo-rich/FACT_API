@@ -27,12 +27,12 @@ public class ReportController {
                 .body(bytes);
     }
 
-    @GetMapping("test")
-    public ResponseEntity<byte[]> test(){
+    @GetMapping("test/{numero}")
+    public ResponseEntity<byte[]> test(@PathVariable String numero){
         return ResponseEntity.status(HttpStatus.OK).
                 header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=text.pdf")
                 .contentType(MediaType.APPLICATION_PDF)
-                .body(this.reportService.text());
+                .body(this.reportService.GenerateReport(numero));
     }
 
 }
