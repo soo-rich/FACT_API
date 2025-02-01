@@ -18,7 +18,7 @@ public class ReportController {
     private final ReportService reportService;
 
     @GetMapping("{numero}")
-    public ResponseEntity<?> generatereport(@PathVariable String numero){
+    public ResponseEntity<?> generatereport(@PathVariable String numero) {
         byte[] bytes = this.reportService.GenerateReport(numero);
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=proforma.pdf")
@@ -28,7 +28,7 @@ public class ReportController {
     }
 
     @GetMapping("test/{numero}")
-    public ResponseEntity<byte[]> test(@PathVariable String numero){
+    public ResponseEntity<byte[]> test(@PathVariable String numero) {
         return ResponseEntity.status(HttpStatus.OK).
                 header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=text.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

@@ -1,5 +1,6 @@
 package com.soosmart.facts.Implement.report;
 
+import com.soosmart.facts.dto.report.ArticleQuantiteReportDTO;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
@@ -9,12 +10,16 @@ import com.soosmart.facts.service.dossier.FactureService;
 import com.soosmart.facts.service.dossier.ProformaService;
 import com.soosmart.facts.service.report.ReportService;
 import com.soosmart.facts.utils.NumberToWords;
+import com.soosmart.facts.utils.report.PdfGeneration;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +30,7 @@ public class ReportImpl implements ReportService {
     private final FactureService factureService;
     private final NumberToWords numberToWords;
     private final ResponseMapper responseMapper;
+    private final PdfGeneration pdfGeneration;
 
     @Override
     public byte[] GenerateReport(String numero) {
@@ -44,17 +50,31 @@ public class ReportImpl implements ReportService {
     public byte[] preparedataandGenerateForProforma(Proforma proforma) {
 
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
 
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
 
+
         Context context = new Context();
-        context.setVariable("to", "Baeldung");
+        context.setVariable("numero", proforma.getNumero());
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(proforma.getCreate_at())));
+        context.setVariable("ref", proforma.getReference());
+        context.setVariable("items", proforma.getArticleQuantiteList().stream().map(
+                articleQuantite -> new ArticleQuantiteReportDTO(
+                        articleQuantite.getArticle().getLibelle(),
+                        articleQuantite.getQuantite(),
+                        articleQuantite.getArticle().getPrix_unitaire()
+                )).toList());
 
-        templateEngine.process("proforma", context);
-
+        try {
+            String htmlContent = templateEngine.process("proforma", context);
+            return this.pdfGeneration.generatePdfFromHtml(htmlContent, proforma.getNumero());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return new byte[0];
     }
 

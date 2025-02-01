@@ -1,0 +1,347 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FACTURE PROFROMA</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif, Calibri;
+
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .client-lieu {
+            float: right;
+        }
+
+        .client {
+            width: 200px;
+            overflow-wrap: break-word;
+        }
+
+        .lieu {
+            text-transform: uppercase;
+        }
+
+
+        .table-id {
+            border-collapse: collapse;
+            border: solid 1px;
+            align-content: center;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .table-id > tbody > tr > td {
+            border: solid 2px;
+        }
+
+        .table-detail {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-detail > tbody {
+            border: 2px solid;
+        }
+
+        .table-detail > tbody > tr > td {
+            border-left: 2px solid;
+            border-right: 2px solid;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+
+        .table-detail tbody td, .table-detail tbody tr {
+            min-height: 100px;
+            height: 50px;
+            border: none;
+        }
+
+        .table-header {
+            background-color: #cbcbcb;
+            font-weight: bold;
+            text-align: center;
+            border: solid 2px;
+        }
+
+        .table-header td {
+            border: solid 2px;
+        }
+
+        .table-price {
+            text-align: right;
+        }
+
+        .table-price-middle {
+            text-align: center;
+        }
+
+        .table-tr-total > td {
+
+            border: 2px solid;
+        }
+
+        .total-brand-color {
+            background: #cbcbcb;
+            font-weight: bolder;
+        }
+
+        .price_letter {
+            text-transform: capitalize;
+            font-weight: bolder;
+        }
+
+        .terme {
+            font-style: italic;
+        }
+
+        .terme-title {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .terme > p {
+            /*    espacement entre les ligne */
+            line-height: 1.4;
+            /*    definir un taille de 8*/
+            font-size: 13px;
+        }
+
+        .indent {
+            display: block;
+            margin-left: 80px; /* Décale "40% à la livraison" vers la droite */
+        }
+
+        .signature {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .signature > p {
+            text-align: center;
+            font-weight: bolder;
+        }
+
+        @media print {
+            margin: 23mm 15mm 18mm;
+            table {
+                page-break-after: avoid;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div>
+        <div class="client-lieu">
+            <p class="client">Client au non de tel errewfwrgrgre je suis la odnne jeknklkro pihv o</p>
+            <p class="lieu">LOME togo</p>
+        </div>
+
+    </div>
+    <div>
+        <h1>FACTURE PROFROMA</h1>
+        <table class="table-id">
+            <thead class="table-header">
+            <tr>
+                <td>Numero</td>
+                <td>Date</td>
+                <td>Reference</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text=""></td>
+                <td>12/12/2021</td>
+                <td style="max-width: 600px"><span style="width: 400px ; overflow-wrap: break-word; color: red">lorem ipsum dolor sit
+                    amet, consectetur adipisicing elit. Adipisci alias amet aperiam
+                    lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias amet aperiam</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table-detail" style="margin-top: 10px">
+            <thead class="table-header">
+            <tr>
+                <td>Réf.</td>
+                <td>DESIGNATION</td>
+                <td style="width: 12%">PU</td>
+                <td style="width: 5%">QTE</td>
+                <td style="width: 12%">TOTAL</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4</td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr> <tr>
+                <td>1</td>
+                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
+                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
+                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
+                </td>
+                <td class="table-price">385000</td>
+                <td style="text-align: center">4</td>
+                <td class="table-price">1 540 000</td>
+            </tr>
+            </tbody>
+
+        </table>
+
+        <table style="border-collapse: collapse; width: 100% ; margin-top: 30px">
+            <tr class="table-tr-total ">
+
+                <td  style="border: none"></td>
+                <td  style="border: none"></td>
+                <td class="total-brand-color" style="width: 12%">Total HT</td>
+                <td class="total-brand-color table-price-middle" style="width: 5%">-</td>
+                <td class="table-price total-brand-color" style="width: 12%">4 620 000</td>
+            </tr>
+            <tr class="table-tr-total">
+
+                <td  style="border: none"></td>
+                <td  style="border: none"></td>
+                <td style="width: 12%">TVA</td>
+                <td class="table-price-middle" style="width: 5%">18%</td>
+                <td class="table-price" style="width: 12%">4 620 000</td>
+            </tr>
+            <tr class="table-tr-total">
+
+                <td  style="border: none"></td>
+                <td  style="border: none"></td>
+                <td class="total-brand-color" style="width: 12%">Total TTC</td>
+                <td class="total-brand-color table-price-middle" style="width: 5%" ></td>
+                <td class="table-price total-brand-color" style="width: 12%">4 620 000</td>
+            </tr>
+        </table>
+
+    </div>
+    <div>
+        <p>Arrêtée la présente facture à la somme de <span class="price_letter">quatre millions six cent vingt mille francs CFA</span>
+        </p>
+    </div>
+    <div class="terme">
+        <p>
+            <span class="terme-title">Termes et conditions standards:</span><br>
+            Payement : 60% à la commande
+            <span class="indent">40% à la livraison</span>
+            Délai de livraison : 2 semaines <br>
+            Validité de l'offre : 90 jours
+        </p>
+    </div>
+    <div>
+        <div class="signature">
+            <p>Signature</p>
+            <p>Signature</p>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -6,7 +6,10 @@ import com.soosmart.facts.entity.dossier.Proforma;
 
 public interface ReportService {
     byte[] GenerateReport(String numero);
+
     byte[] preparedataandGenerateForProforma(Proforma proforma);
+
     byte[] preparedataandGenerateForBordeau(Bordereau bordereau);
+
     byte[] preparedataandGenerateForFacture(Facture facture);
 }
