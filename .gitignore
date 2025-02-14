@@ -34,3 +34,6 @@ build/
 *.log
 
 node_modules/
+
+/all facture generate
+src/main/resources/pdf/
