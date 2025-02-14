@@ -3,7 +3,8 @@ package com.soosmart.facts.service;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
-import com.soosmart.facts.entity.user.Utilisateur;
+import com.soosmart.facts.dto.user.authentication.ChangePasswordDTO;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -20,6 +21,8 @@ public interface UtilisateurService extends UserDetailsService {
     ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur);
     void delete(UUID id);
     Boolean activateUser(UUID id);
-
+    ResponseUtilisateur userconnecte();
     UserDetails loadUserByUsername(String username);
+
+    void changePassword(@Valid ChangePasswordDTO changePasswordDTO);
 }

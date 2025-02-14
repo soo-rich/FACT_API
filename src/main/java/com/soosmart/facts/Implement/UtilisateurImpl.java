@@ -3,6 +3,7 @@ package com.soosmart.facts.Implement;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
+import com.soosmart.facts.dto.user.authentication.ChangePasswordDTO;
 import com.soosmart.facts.entity.user.Role;
 import com.soosmart.facts.entity.user.Utilisateur;
 import com.soosmart.facts.enumpack.TypeDeRole;
@@ -14,6 +15,7 @@ import com.soosmart.facts.exceptions.user.SuperAdminExeciste;
 import com.soosmart.facts.exceptions.user.UsernameExiste;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
+import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +37,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     private final UtilisateurDAO utilisateurDAO;
     private ResponseMapper responseMapper;
     private BCryptPasswordEncoder passwordEncoder;
+    private final UtilisateurConnecteServie utilisateurConnecteServie;
 
 
     @Override
@@ -165,6 +168,11 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
         }
     }
 
+    @Override
+    public ResponseUtilisateur userconnecte() {
+        return this.responseMapper.responseUtilisateur(this.utilisateurConnecteServie.getUtilisateurConnecte());
+    }
+
     private Boolean verifierUtilisateurEmail(Utilisateur utilisateur) {
         if (!utilisateur.getEmail().contains("@") || !utilisateur.getEmail().contains(".")) {
             throw new BadEmail("Email invalide");
@@ -192,5 +200,18 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
         return this.utilisateurDAO
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur trouve avec cet Username ou Email"));
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDTO changePasswordDTO) {
+        Utilisateur utilisateur = this.utilisateurConnecteServie.getUtilisateurConnecte();
+        if (utilisateur == null) {
+            throw new EntityNotFound("Utilisateur non trouvé");
+        }
+        if (!passwordEncoder.matches(changePasswordDTO.oldPassword(), utilisateur.getMdp())) {
+            throw new EntityNotFound("Mot de passe incorrect");
+        }
+        utilisateur.setMdp(passwordEncoder.encode(changePasswordDTO.newPassword()));
+        this.utilisateurDAO.save(utilisateur);
     }
 }

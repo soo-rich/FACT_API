@@ -4,7 +4,9 @@ package com.soosmart.facts.controller;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
+import com.soosmart.facts.dto.user.authentication.ChangePasswordDTO;
 import com.soosmart.facts.entity.user.Utilisateur;
+import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,17 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<ResponseUtilisateur> inscription(@Valid @RequestBody SaveUtilisateurDTO saveUtilisateurDTO) {
         return ResponseEntity.status(200).body(this.utilisateurService.save(saveUtilisateurDTO));
+    }
+
+    @GetMapping("me")
+    public ResponseEntity<ResponseUtilisateur> getMe() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.userconnecte());
+    }
+
+    @PostMapping("change-password")
+    public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+        this.utilisateurService.changePassword(changePasswordDTO);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
