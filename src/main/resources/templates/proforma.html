@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FACTURE PROFROMA</title>
 
     <style>
@@ -14,10 +14,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-        }
-
-        .client-lieu {
-            float: right;
         }
 
         .client {
@@ -39,7 +35,7 @@
         }
 
         .table-id > tbody > tr > td {
-            border: solid 2px;
+            border: solid 1px;
         }
 
         .table-detail {
@@ -69,11 +65,13 @@
             background-color: #cbcbcb;
             font-weight: bold;
             text-align: center;
-            border: solid 2px;
+            border: solid 1px;
+            padding: 5px 2px 5px 2px;
         }
 
         .table-header td {
-            border: solid 2px;
+            border: solid 1px;
+            padding: 5px 2px 5px 2px;
         }
 
         .table-price {
@@ -85,7 +83,6 @@
         }
 
         .table-tr-total > td {
-
             border: 2px solid;
         }
 
@@ -129,7 +126,6 @@
             text-align: center;
             font-weight: bolder;
         }
-
         @media print {
             margin: 23mm 15mm 18mm;
             table {
@@ -143,11 +139,10 @@
 <div class="container">
 
     <div>
-        <div class="client-lieu">
-            <p class="client">Client au non de tel errewfwrgrgre je suis la odnne jeknklkro pihv o</p>
-            <p class="lieu">LOME togo</p>
+        <div style="float:right;">
+            <p th:text="${client}" class="client"></p>
+            <p th:text="${adresse}" class="lieu"></p>
         </div>
-
     </div>
     <div>
         <h1>FACTURE PROFROMA</h1>
@@ -161,11 +156,10 @@
             </thead>
             <tbody>
             <tr>
-                <td th:text=""></td>
-                <td>12/12/2021</td>
-                <td style="max-width: 600px"><span style="width: 400px ; overflow-wrap: break-word; color: red">lorem ipsum dolor sit
-                    amet, consectetur adipisicing elit. Adipisci alias amet aperiam
-                    lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci alias amet aperiam</span>
+                <td th:text="${numero}"></td>
+                <td th:text="${date}"></td>
+                <td style="max-width: 600px">
+                <span th:text="${reference}" style="width: 400px ; overflow-wrap: break-word; color: red"></span>
                 </td>
             </tr>
             </tbody>
@@ -181,114 +175,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4</td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
-            </tr> <tr>
-                <td>1</td>
-                <td>HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP
-                    LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante
-                    laser monochrome Recto-verso A4HP LaserJet Pro M501dn Imprimante laser monochrome Recto-verso A4
-                </td>
-                <td class="table-price">385000</td>
-                <td style="text-align: center">4</td>
-                <td class="table-price">1 540 000</td>
+            <tr th:each="art, iterStat : ${articles}">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td th:text="${art.article}"></td>
+                <td th:text="${ art.prix_article}" class="table-price"></td>
+                <td  th:text="${art.quantite}" style="text-align: center"></td>
+                <td th:text="${art.quantite * art.prix_article}" class="table-price"></td>
             </tr>
             </tbody>
 
@@ -301,7 +193,7 @@
                 <td  style="border: none"></td>
                 <td class="total-brand-color" style="width: 12%">Total HT</td>
                 <td class="total-brand-color table-price-middle" style="width: 5%">-</td>
-                <td class="table-price total-brand-color" style="width: 12%">4 620 000</td>
+                <td th:text="${totalht}" class="table-price total-brand-color" style="width: 12%"></td>
             </tr>
             <tr class="table-tr-total">
 
@@ -309,7 +201,7 @@
                 <td  style="border: none"></td>
                 <td style="width: 12%">TVA</td>
                 <td class="table-price-middle" style="width: 5%">18%</td>
-                <td class="table-price" style="width: 12%">4 620 000</td>
+                <td th:text="${tva}" class="table-price" style="width: 12%"></td>
             </tr>
             <tr class="table-tr-total">
 
@@ -317,28 +209,28 @@
                 <td  style="border: none"></td>
                 <td class="total-brand-color" style="width: 12%">Total TTC</td>
                 <td class="total-brand-color table-price-middle" style="width: 5%" ></td>
-                <td class="table-price total-brand-color" style="width: 12%">4 620 000</td>
+                <td th:text="${totalttc}" class="table-price total-brand-color" style="width: 12%"></td>
             </tr>
         </table>
 
     </div>
     <div>
-        <p>Arrêtée la présente facture à la somme de <span class="price_letter">quatre millions six cent vingt mille francs CFA</span>
+        <p>Arrêtée la présente facture à la somme de <span th:text="${totalttcword}" class="price_letter"></span>
         </p>
     </div>
     <div class="terme">
         <p>
-            <span class="terme-title">Termes et conditions standards:</span><br>
+            <span class="terme-title">Termes et conditions standards:</span><br></br>
             Payement : 60% à la commande
             <span class="indent">40% à la livraison</span>
-            Délai de livraison : 2 semaines <br>
+            Délai de livraison : 2 semaines <br></br>
             Validité de l'offre : 90 jours
         </p>
     </div>
     <div>
         <div class="signature">
-            <p>Signature</p>
-            <p>Signature</p>
+            <p th:text="${sign}"></p>
+            <p th:text="${role}"></p>
         </div>
     </div>
 

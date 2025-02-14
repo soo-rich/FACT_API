@@ -20,8 +20,22 @@ public class ReportController {
     @GetMapping("{numero}")
     public ResponseEntity<?> generatereport(@PathVariable String numero) {
         byte[] bytes = this.reportService.GenerateReport(numero);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename="+numero+".pdf");
         return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=proforma.pdf")
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(bytes.length)
+                .body(bytes);
+    }
+
+    @GetMapping("download/{numero}")
+    public ResponseEntity<?> download(@PathVariable String numero) {
+        byte[] bytes = this.reportService.GenerateReport(numero);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename="+numero+".pdf");
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .contentLength(bytes.length)
                 .body(bytes);
@@ -29,8 +43,10 @@ public class ReportController {
 
     @GetMapping("test/{numero}")
     public ResponseEntity<byte[]> test(@PathVariable String numero) {
-        return ResponseEntity.status(HttpStatus.OK).
-                header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=text.pdf")
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename="+numero+".pdf");
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(headers)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(this.reportService.GenerateReport(numero));
     }

@@ -4,7 +4,6 @@ import com.soosmart.facts.dto.report.ArticleQuantiteReportDTO;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
-import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.service.dossier.FactureService;
 import com.soosmart.facts.service.dossier.ProformaService;
@@ -18,8 +17,10 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +30,6 @@ public class ReportImpl implements ReportService {
     private final BordereauService bordereauService;
     private final FactureService factureService;
     private final NumberToWords numberToWords;
-    private final ResponseMapper responseMapper;
     private final PdfGeneration pdfGeneration;
 
     @Override
@@ -49,10 +49,21 @@ public class ReportImpl implements ReportService {
     @Override
     public byte[] preparedataandGenerateForProforma(Proforma proforma) {
 
+        List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = proforma.getArticleQuantiteList().stream().map(
+                articleQuantite -> new ArticleQuantiteReportDTO(
+                        articleQuantite.getArticle().getLibelle(),
+                        articleQuantite.getQuantite(),
+                        articleQuantite.getArticle().getPrix_unitaire()
+                )).toList();
+
+        System.out.println(articleQuantiteReportDTOS);
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        templateResolver.setOrder(1);
+        templateResolver.setCheckExistence(true);
 
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
@@ -61,17 +72,22 @@ public class ReportImpl implements ReportService {
         Context context = new Context();
         context.setVariable("numero", proforma.getNumero());
         context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(proforma.getCreate_at())));
-        context.setVariable("ref", proforma.getReference());
-        context.setVariable("items", proforma.getArticleQuantiteList().stream().map(
-                articleQuantite -> new ArticleQuantiteReportDTO(
-                        articleQuantite.getArticle().getLibelle(),
-                        articleQuantite.getQuantite(),
-                        articleQuantite.getArticle().getPrix_unitaire()
-                )).toList());
+        context.setVariable("reference", proforma.getReference());
+
+        context.setVariable("articles", articleQuantiteReportDTOS);
+
+        context.setVariable("totalht", proforma.getTotal_ht());
+        context.setVariable("tva", proforma.getTotal_tva());
+        context.setVariable("totalttc", proforma.getTotal_ttc());
+        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(proforma.getTotal_ttc()));
+        context.setVariable("sign", proforma.getSignedBy());
+        context.setVariable("role", proforma.getRole());
+        context.setVariable("client", proforma.getClient().getNom());
+        context.setVariable("adresse", proforma.getClient().getLieu());
 
         try {
             String htmlContent = templateEngine.process("proforma", context);
-            return this.pdfGeneration.generatePdfFromHtml(htmlContent, proforma.getNumero());
+            return this.pdfGeneration.generatePdfFromHtml(htmlContent);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -86,5 +102,10 @@ public class ReportImpl implements ReportService {
     @Override
     public byte[] preparedataandGenerateForFacture(Facture facture) {
         return new byte[0];
+    }
+
+    @Override
+    public byte[] DownloadReport(String numero) {
+        return this.pdfGeneration.downloadDossier(numero);
     }
 }

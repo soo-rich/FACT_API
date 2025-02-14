@@ -12,4 +12,6 @@ public interface ReportService {
     byte[] preparedataandGenerateForBordeau(Bordereau bordereau);
 
     byte[] preparedataandGenerateForFacture(Facture facture);
+
+    byte[] DownloadReport(String numero);
 }
