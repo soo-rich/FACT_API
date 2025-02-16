@@ -55,8 +55,6 @@ public class ReportImpl implements ReportService {
                         articleQuantite.getQuantite(),
                         articleQuantite.getArticle().getPrix_unitaire()
                 )).toList();
-
-        System.out.println(articleQuantiteReportDTOS);
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("templates/");
         templateResolver.setSuffix(".html");
