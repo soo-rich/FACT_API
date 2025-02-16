@@ -25,15 +25,4 @@ public class ReportController {
                 .contentLength(bytes.length)
                 .body(bytes);
     }
-
-    @GetMapping("test/{numero}")
-    public ResponseEntity<byte[]> test(@PathVariable String numero) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename="+numero+".pdf");
-        return ResponseEntity.status(HttpStatus.OK)
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(this.reportService.GenerateReport(numero));
-    }
-
 }
