@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReportController {
     private final ReportService reportService;
 
-    @PostMapping("{numero}")
+    @GetMapping("{numero}")
     public ResponseEntity<byte[]> generatereport(@PathVariable String numero) {
         byte[] bytes = this.reportService.GenerateReport(numero);
         HttpHeaders headers = new HttpHeaders();
