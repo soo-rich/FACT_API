@@ -11,7 +11,7 @@ public class ArticleQuantiteReportDTO {
         super();
     }
 
-    public ArticleQuantiteReportDTO(String article, Integer quantite, Integer prix_article, Integer montant) {
+    public ArticleQuantiteReportDTO(String article, Integer quantite, Integer prix_article) {
         super();
         this.article = article;
         this.quantite = quantite;
@@ -43,7 +43,7 @@ public class ArticleQuantiteReportDTO {
     }
 
     public Integer getMontant() {
-        return montant;
+        return montant = this.prix_article * this.quantite;
     }
 
     public void setMontant(Integer montant) {
