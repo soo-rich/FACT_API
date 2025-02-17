@@ -35,8 +35,7 @@ public class UserController {
 
     @PostMapping("change-password")
     public ResponseEntity<?> changePassword(@RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
-        this.utilisateurService.changePassword(changePasswordDTO);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.changePassword(changePasswordDTO));
     }
 
 

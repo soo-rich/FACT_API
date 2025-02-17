@@ -24,5 +24,5 @@ public interface UtilisateurService extends UserDetailsService {
     ResponseUtilisateur userconnecte();
     UserDetails loadUserByUsername(String username);
 
-    void changePassword(@Valid ChangePasswordDTO changePasswordDTO);
+    Boolean changePassword(@Valid ChangePasswordDTO changePasswordDTO);
 }

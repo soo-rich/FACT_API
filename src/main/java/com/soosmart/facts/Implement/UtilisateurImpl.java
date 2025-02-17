@@ -203,7 +203,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     }
 
     @Override
-    public void changePassword(ChangePasswordDTO changePasswordDTO) {
+    public Boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         Utilisateur utilisateur = this.utilisateurConnecteServie.getUtilisateurConnecte();
         if (utilisateur == null) {
             throw new EntityNotFound("Utilisateur non trouvé");
@@ -213,5 +213,6 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
         }
         utilisateur.setMdp(passwordEncoder.encode(changePasswordDTO.newPassword()));
         this.utilisateurDAO.save(utilisateur);
+        return true;
     }
 }
