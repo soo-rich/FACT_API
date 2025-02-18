@@ -5,8 +5,6 @@ import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
 import com.soosmart.facts.dto.user.authentication.ChangePasswordDTO;
-import com.soosmart.facts.entity.user.Utilisateur;
-import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

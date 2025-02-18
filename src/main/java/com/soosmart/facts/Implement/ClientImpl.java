@@ -7,7 +7,6 @@ import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.service.ClientService;
-import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

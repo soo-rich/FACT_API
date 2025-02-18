@@ -1,8 +1,5 @@
 package com.soosmart.facts.dto.user;
 
-import com.soosmart.facts.entity.user.Role;
-import com.soosmart.facts.enumpack.TypeDeRole;
-
 import java.time.Instant;
 import java.util.UUID;
 

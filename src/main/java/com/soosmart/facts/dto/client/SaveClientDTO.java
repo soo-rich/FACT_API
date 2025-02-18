@@ -1,6 +1,5 @@
 package com.soosmart.facts.dto.client;
 
-import com.soosmart.facts.exceptions.dto.DtoArgumentRquired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 public record SaveClientDTO(

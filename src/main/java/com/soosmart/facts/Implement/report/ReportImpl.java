@@ -53,7 +53,7 @@ public class ReportImpl implements ReportService {
                 articleQuantite -> new ArticleQuantiteReportDTO(
                         articleQuantite.getArticle().getLibelle(),
                         articleQuantite.getQuantite(),
-                        articleQuantite.getArticle().getPrix_unitaire()
+                        articleQuantite.getArticle().getPrix_unitaire().intValue()
                 )).toList();
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setPrefix("templates/");
@@ -94,11 +94,85 @@ public class ReportImpl implements ReportService {
 
     @Override
     public byte[] preparedataandGenerateForBordeau(Bordereau bordereau) {
+        List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = bordereau.getProforma().getArticleQuantiteList().stream().map(
+                articleQuantite -> new ArticleQuantiteReportDTO(
+                        articleQuantite.getArticle().getLibelle(),
+                        articleQuantite.getQuantite(),
+                        articleQuantite.getArticle().getPrix_unitaire().intValue()
+                )).toList();
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        templateResolver.setOrder(1);
+        templateResolver.setCheckExistence(true);
+
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+
+
+        Context context = new Context();
+        context.setVariable("numero", bordereau.getNumero());
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(bordereau.getCreate_at())));
+        context.setVariable("reference", bordereau.getReference());
+
+        context.setVariable("articles", articleQuantiteReportDTOS);
+
+        context.setVariable("client", bordereau.getProforma().getClient().getNom());
+        context.setVariable("adresse", bordereau.getProforma().getClient().getLieu());
+
+        try {
+            String htmlContent = templateEngine.process("bordereau", context);
+            return this.pdfGeneration.generatePdfFromHtml(htmlContent);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return new byte[0];
     }
 
     @Override
     public byte[] preparedataandGenerateForFacture(Facture facture) {
+        List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(
+                articleQuantite -> new ArticleQuantiteReportDTO(
+                        articleQuantite.getArticle().getLibelle(),
+                        articleQuantite.getQuantite(),
+                        articleQuantite.getArticle().getPrix_unitaire().intValue()
+                )).toList();
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        templateResolver.setOrder(1);
+        templateResolver.setCheckExistence(true);
+
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+
+
+        Context context = new Context();
+        context.setVariable("numero", facture.getNumero());
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(facture.getCreate_at())));
+        context.setVariable("reference", facture.getReference());
+
+        context.setVariable("articles", articleQuantiteReportDTOS);
+
+        context.setVariable("totalht", facture.getBordereau().getProforma().getTotal_ht());
+        context.setVariable("tva", facture.getBordereau().getProforma().getTotal_tva());
+        context.setVariable("totalttc", facture.getBordereau().getProforma().getTotal_ttc());
+        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(facture.getBordereau().getProforma().getTotal_ttc()));
+        context.setVariable("sign", facture.getSignedBy());
+        context.setVariable("role", facture.getRole());
+        context.setVariable("client", facture.getBordereau().getProforma().getClient().getNom());
+        context.setVariable("adresse", facture.getBordereau().getProforma().getClient().getLieu());
+
+        try {
+            String htmlContent = templateEngine.process("facture", context);
+            return this.pdfGeneration.generatePdfFromHtml(htmlContent);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         return new byte[0];
     }
 
