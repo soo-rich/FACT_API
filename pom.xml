@@ -29,8 +29,6 @@
     <properties>
         <java.version>17</java.version>
         <spring-shell.version>3.3.3</spring-shell.version>
-        <node.version>22.12.0</node.version>
-        <npm.version>11.0.0</npm.version>
     </properties>
     <dependencyManagement>
         <dependencies>
