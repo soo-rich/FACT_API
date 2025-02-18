@@ -68,7 +68,7 @@ public class ReportImpl implements ReportService {
         context.setVariable("totalht", Math.round(proforma.getTotal_ht()));
         context.setVariable("tva", Math.round(proforma.getTotal_tva()));
         context.setVariable("totalttc", Math.round(proforma.getTotal_ttc()));
-        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(proforma.getTotal_ttc()));
+        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(Math.round(proforma.getTotal_ttc())));
         context.setVariable("sign", proforma.getSignedBy());
         context.setVariable("role", proforma.getRole());
         context.setVariable("client", proforma.getClient().getNom());
@@ -135,7 +135,7 @@ public class ReportImpl implements ReportService {
         context.setVariable("totalht", Math.round(facture.getBordereau().getProforma().getTotal_ht()));
         context.setVariable("tva",Math.round( facture.getBordereau().getProforma().getTotal_tva()));
         context.setVariable("totalttc", Math.round(facture.getBordereau().getProforma().getTotal_ttc()));
-        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(facture.getBordereau().getProforma().getTotal_ttc()));
+        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())));
         context.setVariable("sign", facture.getSignedBy());
         context.setVariable("role", facture.getRole());
         context.setVariable("client", facture.getBordereau().getProforma().getClient().getNom());

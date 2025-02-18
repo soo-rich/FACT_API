@@ -31,7 +31,7 @@ public class ArticleQuantiteImpl implements ArticleQuantiteService {
                                         ArticleQuantite articleQuantite = this.articleQuantiteRepository.save(ArticleQuantite.builder()
                                                 .article(article)
                                                 .quantite(articleQuantiteDTO.quantite())
-                                                .prix_article(articleQuantiteDTO.prix_article() != 0 ? articleQuantiteDTO.prix_article() : article.getPrix_unitaire())
+                                                .prix_article((float) (articleQuantiteDTO.prix_article() != 0 ? Math.round(articleQuantiteDTO.prix_article()) : Math.round(article.getPrix_unitaire())))
                                                 .build()
                                         );
                                         articleQuantites.add(articleQuantite);
