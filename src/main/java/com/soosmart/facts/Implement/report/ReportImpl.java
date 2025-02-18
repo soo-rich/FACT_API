@@ -53,18 +53,9 @@ public class ReportImpl implements ReportService {
                 articleQuantite -> new ArticleQuantiteReportDTO(
                         articleQuantite.getArticle().getLibelle(),
                         articleQuantite.getQuantite(),
-                        articleQuantite.getArticle().getPrix_unitaire().intValue()
+                        articleQuantite.getPrix_article().intValue()
                 )).toList();
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
-        templateResolver.setOrder(1);
-        templateResolver.setCheckExistence(true);
-
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        TemplateEngine templateEngine = getTemplateEngine();
 
 
         Context context = new Context();
@@ -74,9 +65,9 @@ public class ReportImpl implements ReportService {
 
         context.setVariable("articles", articleQuantiteReportDTOS);
 
-        context.setVariable("totalht", proforma.getTotal_ht());
-        context.setVariable("tva", proforma.getTotal_tva());
-        context.setVariable("totalttc", proforma.getTotal_ttc());
+        context.setVariable("totalht", Math.round(proforma.getTotal_ht()));
+        context.setVariable("tva", Math.round(proforma.getTotal_tva()));
+        context.setVariable("totalttc", Math.round(proforma.getTotal_ttc()));
         context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(proforma.getTotal_ttc()));
         context.setVariable("sign", proforma.getSignedBy());
         context.setVariable("role", proforma.getRole());
@@ -98,18 +89,9 @@ public class ReportImpl implements ReportService {
                 articleQuantite -> new ArticleQuantiteReportDTO(
                         articleQuantite.getArticle().getLibelle(),
                         articleQuantite.getQuantite(),
-                        articleQuantite.getArticle().getPrix_unitaire().intValue()
+                        articleQuantite.getPrix_article().intValue()
                 )).toList();
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
-        templateResolver.setOrder(1);
-        templateResolver.setCheckExistence(true);
-
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        TemplateEngine templateEngine = getTemplateEngine();
 
 
         Context context = new Context();
@@ -131,24 +113,16 @@ public class ReportImpl implements ReportService {
         return new byte[0];
     }
 
+
     @Override
     public byte[] preparedataandGenerateForFacture(Facture facture) {
         List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(
                 articleQuantite -> new ArticleQuantiteReportDTO(
                         articleQuantite.getArticle().getLibelle(),
                         articleQuantite.getQuantite(),
-                        articleQuantite.getArticle().getPrix_unitaire().intValue()
+                        articleQuantite.getPrix_article().intValue()
                 )).toList();
-        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("templates/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
-        templateResolver.setOrder(1);
-        templateResolver.setCheckExistence(true);
-
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        TemplateEngine templateEngine = getTemplateEngine();
 
 
         Context context = new Context();
@@ -158,9 +132,9 @@ public class ReportImpl implements ReportService {
 
         context.setVariable("articles", articleQuantiteReportDTOS);
 
-        context.setVariable("totalht", facture.getBordereau().getProforma().getTotal_ht());
-        context.setVariable("tva", facture.getBordereau().getProforma().getTotal_tva());
-        context.setVariable("totalttc", facture.getBordereau().getProforma().getTotal_ttc());
+        context.setVariable("totalht", Math.round(facture.getBordereau().getProforma().getTotal_ht()));
+        context.setVariable("tva",Math.round( facture.getBordereau().getProforma().getTotal_tva()));
+        context.setVariable("totalttc", Math.round(facture.getBordereau().getProforma().getTotal_ttc()));
         context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(facture.getBordereau().getProforma().getTotal_ttc()));
         context.setVariable("sign", facture.getSignedBy());
         context.setVariable("role", facture.getRole());
@@ -179,5 +153,19 @@ public class ReportImpl implements ReportService {
     @Override
     public byte[] DownloadReport(String numero) {
         return this.pdfGeneration.downloadDossier(numero);
+    }
+
+    private static TemplateEngine getTemplateEngine() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCharacterEncoding(StandardCharsets.UTF_8.displayName());
+        templateResolver.setOrder(1);
+        templateResolver.setCheckExistence(true);
+
+        TemplateEngine templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        return templateEngine;
     }
 }
