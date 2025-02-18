@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>FACTURE</title>
 </head>
-<body style="position: relative; font-family: Arial, sans-serif, Calibri; padding-bottom: 50px; padding-top: 150px;">
+<body style="position: relative; font-family: Arial, sans-serif, Calibri; padding-bottom: 50px; padding-top: 70px;">
 
 <div style="display: flex; flex-direction: column;">
     <div style="padding-left: 450px; margin-bottom: 20px">
@@ -17,19 +17,18 @@
         <h2 style="text-align: left; margin-top: 10px;">FACTURE</h2>
         <table style="border-collapse: collapse; border: solid 1px; align-content: center; text-align: center; max-width: 70%; margin-bottom: 20px">
             <thead>
-            <tr style="border: solid 1px; text-align: center; background-color: #cbcbcb;">
+            <tr style="border: solid 1px;  background-color: #cbcbcb;">
                 <th style="border: 1px solid">Numéro</th>
                 <th style="border: 1px solid">Date</th>
                 <th style="border: 1px solid">Références</th>
-
             </tr>
             </thead>
             <tbody style="border: 1px solid">
-            <tr style="border: solid 1px; text-align: center;">
-                <td style="border: 1px solid"><span style="margin-right: 5px; margin-left: 5px"
-                                                    th:text="${numero}"></span></td>
-                <td style="border: 1px solid"><span style="margin-right: 5px; margin-left: 5px"
-                                                    th:text="${date}"></span></td>
+            <tr style="border: solid 1px;">
+                <td style="border: 1px solid; min-width: 100px"><span style="margin-right: 5px; margin-left: 5px"
+                                                                      th:text="${numero}"></span></td>
+                <td style="border: 1px solid; min-width: 120px"><span style="margin-right: 5px; margin-left: 5px"
+                                                                      th:text="${date}"></span></td>
                 <td style="border: 1px solid"><span
                         style="margin-right: 5px; margin-left: 5px; color: red; overflow-wrap: break-word"
                         th:text="${reference}"></span></td>
@@ -48,11 +47,13 @@
             </thead>
             <tbody>
             <tr th:each="art, iterStat : ${articles}" style="border: solid 1px;">
-                <td style="border-left: 1px solid; text-align: center" th:text="${iterStat.index + 1}"></td>
-                <td style="border-left: 1px solid; text-indent: 15px" th:text="${art.article}"></td>
-                <td style="border-left: 1px solid; text-align: center" th:text="${art.prix_article}"></td>
-                <td style="border-left: 1px solid; text-align: center" th:text="${art.quantite}"></td>
-                <td style="border-left: 1px solid; border-right: 1px solid;  text-align: right"
+                <td style="border-left: 1px solid; text-align: center; min-height: 50px"
+                    th:text="${iterStat.index + 1}"></td>
+                <td style="border-left: 1px solid; text-indent: 15px; min-height: 50px" th:text="${art.article}"></td>
+                <td style="border-left: 1px solid; text-align: center; min-height: 50px"
+                    th:text="${art.prix_article}"></td>
+                <td style="border-left: 1px solid; text-align: center; min-height: 50px" th:text="${art.quantite}"></td>
+                <td style="border-left: 1px solid; border-right: 1px solid;  text-align: right; min-height: 50px"
                     th:text="${art.montant}"></td>
             </tr>
             <tr style="border-top: solid 1px">
