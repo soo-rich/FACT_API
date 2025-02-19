@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 volumes:
   fact-data:
@@ -8,8 +8,8 @@ networks:
 
 services:
   mysqldb:
-    image: mysql:8.0
-    command: --mysql-native-password=ON
+    image: mysql:lts
+#    command: --mysql-native-password=ON
     ports:
       - "3308:3306"
     environment:
@@ -20,7 +20,7 @@ services:
     networks:
         - fact-network
     volumes:
-      - fact-data:/var/lib/mysql
+      - fact-data:/var/lib/mysql-fact
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       retries: 5
