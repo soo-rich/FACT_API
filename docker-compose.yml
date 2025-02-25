@@ -8,7 +8,7 @@ networks:
 
 services:
   mysqldb:
-    image: mysql:lts
+    image: mysql:8.0
 #    command: --mysql-native-password=ON
     ports:
       - "3308:3306"
