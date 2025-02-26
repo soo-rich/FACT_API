@@ -18,4 +18,7 @@ public interface FactureDao extends JpaRepository<Facture, UUID> {
     Optional<Facture> findByNumero(String numero);
 
     List<Facture> findAllByDeletedIsFalse();
+
+    @Query("SELECT COUNT (f) FROM Facture f WHERE f.deleted = false ")
+    int countAllByDeletedIsFalse();
 }

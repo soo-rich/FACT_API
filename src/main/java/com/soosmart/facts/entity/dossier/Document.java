@@ -36,4 +36,10 @@ public abstract class Document {
 
     @Builder.Default
     private Boolean deleted = false;
+
+    @Builder.Default
+    private Boolean adopted = false;
+    private Float total_ht;
+    private Float total_ttc;
+    private Float total_tva;
 }

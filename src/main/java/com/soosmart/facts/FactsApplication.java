@@ -27,7 +27,7 @@ public class FactsApplication implements CommandLineRunner {
                     "admin"
             );
         } catch (Exception e) {
-            System.out.println("Super admin already exists");
+            System.out.println();
         }
     }
 }

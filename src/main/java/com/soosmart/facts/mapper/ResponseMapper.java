@@ -7,12 +7,14 @@ import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.project.ProjetDTO;
+import com.soosmart.facts.dto.stat.Table;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.entity.Article;
 import com.soosmart.facts.entity.ArticleQuantite;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.entity.Projet;
 import com.soosmart.facts.entity.dossier.Bordereau;
+import com.soosmart.facts.entity.dossier.Document;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.entity.user.Utilisateur;
@@ -20,8 +22,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseMapper {
-    public ResponseUtilisateur responseUtilisateur(Utilisateur utilisateur){
-        if (utilisateur == null){
+    public ResponseUtilisateur responseUtilisateur(Utilisateur utilisateur) {
+        if (utilisateur == null) {
             return null;
         }
 
@@ -38,8 +40,8 @@ public class ResponseMapper {
         );
     }
 
-    public ArticleDTO responseArticleDTO (Article article){
-        if(article== null) {
+    public ArticleDTO responseArticleDTO(Article article) {
+        if (article == null) {
             return null;
         }
         return new ArticleDTO(
@@ -49,8 +51,8 @@ public class ResponseMapper {
         );
     }
 
-    public ClientDTO responseClientDTO(Client client){
-        if (client==null){
+    public ClientDTO responseClientDTO(Client client) {
+        if (client == null) {
             return null;
         }
         return new ClientDTO(
@@ -63,8 +65,8 @@ public class ResponseMapper {
         );
     }
 
-    public ProjetDTO responseProjetDTO(Projet projet){
-        if (projet==null){
+    public ProjetDTO responseProjetDTO(Projet projet) {
+        if (projet == null) {
             return null;
         }
         return new ProjetDTO(
@@ -78,8 +80,8 @@ public class ResponseMapper {
         );
     }
 
-    public ArticleQuantiteDTO responseArticleQuantiteDTO(ArticleQuantite articleQuantite){
-        if (articleQuantite==null){
+    public ArticleQuantiteDTO responseArticleQuantiteDTO(ArticleQuantite articleQuantite) {
+        if (articleQuantite == null) {
             return null;
         }
         return new ArticleQuantiteDTO(
@@ -90,8 +92,8 @@ public class ResponseMapper {
         );
     }
 
-    public ProformaDTO responseProformaDTO(Proforma proforma){
-        if (proforma==null){
+    public ProformaDTO responseProformaDTO(Proforma proforma) {
+        if (proforma == null) {
             return null;
         }
         return new ProformaDTO(
@@ -109,8 +111,8 @@ public class ResponseMapper {
         );
     }
 
-    public BorderauDto responseBorderauDto(Bordereau borderau){
-        if (borderau==null){
+    public BorderauDto responseBorderauDto(Bordereau borderau) {
+        if (borderau == null) {
             return null;
         }
         return new BorderauDto(
@@ -127,8 +129,8 @@ public class ResponseMapper {
         );
     }
 
-    public FactureDto responseFactureDto(Facture facture){
-        if (facture==null){
+    public FactureDto responseFactureDto(Facture facture) {
+        if (facture == null) {
             return null;
         }
         return new FactureDto(
@@ -142,6 +144,17 @@ public class ResponseMapper {
                 facture.getBordereau().getProforma().getClient().getNom(),
                 facture.getBordereau().getProforma().getCreate_at(),
                 facture.getSignedBy()
+        );
+    }
+
+    public Table responseTable(Document document) {
+        if (document == null) {
+            return null;
+        }
+        return new Table(
+                document.getNumero(),
+                document.getCreate_at(),
+                document.getTotal_ttc()
         );
     }
 }

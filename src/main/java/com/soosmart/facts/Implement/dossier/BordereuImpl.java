@@ -34,6 +34,9 @@ public class BordereuImpl implements BordereauService {
                     .numero(this.numeroGenerateur.GenerateBordereauNumero())
                     .reference(save.getReference())
                     .proforma(save)
+                    .total_ttc(save.getTotal_ttc())
+                    .total_ht(save.getTotal_ht())
+                    .total_tva(save.getTotal_tva())
                     .build();
             return this.responseMapper.responseBorderauDto(this.borderauRepository.save(bordereau));
 

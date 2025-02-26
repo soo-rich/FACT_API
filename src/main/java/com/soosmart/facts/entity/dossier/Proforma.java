@@ -21,11 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @DiscriminatorValue("PROFORMA")
 public class Proforma extends Document {
-    @Builder.Default
-    private Boolean adopted = false;
-    private Float total_ht;
-    private Float total_ttc;
-    private Float total_tva;
+
 
     @ManyToOne
     private Client client;

@@ -26,4 +26,7 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
     List<Proforma> findAllByReference(String reference);
 
     Optional<Proforma> findByReference(String reference);
+
+    @Query("SELECT COUNT (p) FROM Proforma p WHERE p.deleted = false ")
+    int countAllByDeletedIsFalse();
 }
