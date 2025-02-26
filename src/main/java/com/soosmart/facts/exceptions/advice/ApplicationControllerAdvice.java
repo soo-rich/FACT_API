@@ -13,12 +13,14 @@ import com.soosmart.facts.exceptions.user.UsernameExiste;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -228,7 +230,7 @@ public class ApplicationControllerAdvice {
     }
 
 
-@ResponseStatus(NOT_FOUND)
+    @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public @ResponseBody ExceptionDto handleNoHandlerFoundException(NoHandlerFoundException exception) {
         return new ExceptionDto(NOT_FOUND, "Route not found");
@@ -242,6 +244,16 @@ public class ApplicationControllerAdvice {
         return new ExceptionDto(
                 INTERNAL_SERVER_ERROR,
                 exception.getMessage()
+        );
+    }
+
+    @ResponseStatus(FORBIDDEN)
+    @ExceptionHandler(value = LockedException.class)
+    public @ResponseBody
+    ExceptionDto lockedException(final LockedException exception) {
+        return new ExceptionDto(
+                FORBIDDEN,
+                "Compte bloqué"
         );
     }
 }
