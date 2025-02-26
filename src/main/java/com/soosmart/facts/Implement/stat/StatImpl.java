@@ -1,5 +1,6 @@
 package com.soosmart.facts.Implement.stat;
 
+import com.soosmart.facts.dto.stat.Chart;
 import com.soosmart.facts.dto.stat.Facture;
 import com.soosmart.facts.dto.stat.Statistique;
 import com.soosmart.facts.entity.dossier.Document;
@@ -14,7 +15,10 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -31,11 +35,23 @@ public class StatImpl implements StatService {
         Instant endOfDay = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant(); // Fin de la journée
 
         List<Document> documents = this.documentDAO.findAll();
+        List<String> documentTypes = this.documentDAO.findAllByDocumentType();
+        Map<String, Integer> charti = new HashMap<>();
+        for (String documentType : documentTypes) {
+            charti.put(documentType, charti.getOrDefault(documentType, 0)+1);
+        }
+        List<Chart> chart = new ArrayList<>();
+
+        for (Map.Entry<String, Integer> entry : charti.entrySet()) {
+            chart.add(new Chart(entry.getKey(), entry.getValue()));
+        }
+
 
         return new Statistique(
                 new Facture(this.factureDao.countAllByDeletedIsFalse(), Math.toIntExact(this.factureDao.countFacturesCreateToday(startOfDay, endOfDay))),
                 new Facture(this.proformaDao.countAllByDeletedIsFalse(), Math.toIntExact(this.proformaDao.countProformasCreateToday(startOfDay, endOfDay))),
-                documents.subList(0, Math.min(documents.size(), 20)).stream().map(responseMapper::responseTable).toList()
+                documents.subList(0, Math.min(documents.size(), 20)).stream().map(responseMapper::responseTable).toList(),
+                chart
                 );
     }
 }
