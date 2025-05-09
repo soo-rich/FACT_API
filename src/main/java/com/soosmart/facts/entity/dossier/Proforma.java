@@ -5,7 +5,6 @@ import com.soosmart.facts.entity.ArticleQuantite;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.entity.Projet;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

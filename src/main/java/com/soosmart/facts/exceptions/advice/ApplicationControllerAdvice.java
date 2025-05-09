@@ -13,7 +13,6 @@ import com.soosmart.facts.exceptions.user.UsernameExiste;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
