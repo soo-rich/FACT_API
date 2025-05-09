@@ -40,3 +40,4 @@ src/main/resources/pdf/
 
 // dev profile
 src/main/resources/application-dev.properties
+src/main/resources/application.properties
