@@ -1,7 +1,6 @@
 package com.soosmart.facts.controller;
 
 
-import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;

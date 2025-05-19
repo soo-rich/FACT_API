@@ -7,12 +7,9 @@ import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
 import com.soosmart.facts.dto.user.authentication.ChangePasswordDTO;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface UtilisateurService extends UserDetailsService {

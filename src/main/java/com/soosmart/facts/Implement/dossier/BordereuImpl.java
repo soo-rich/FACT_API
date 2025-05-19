@@ -13,7 +13,6 @@ import com.soosmart.facts.utils.NumeroGenerateur;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

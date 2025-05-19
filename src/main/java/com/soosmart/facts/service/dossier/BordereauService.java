@@ -4,10 +4,7 @@ import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossier.Bordereau;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface BordereauService {

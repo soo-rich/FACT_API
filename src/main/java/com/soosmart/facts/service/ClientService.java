@@ -4,10 +4,7 @@ import com.soosmart.facts.dto.client.ClientDTO;
 import com.soosmart.facts.dto.client.SaveClientDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface ClientService {

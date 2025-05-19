@@ -5,10 +5,7 @@ import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.project.SaveProjetDTO;
 import com.soosmart.facts.dto.project.UpdateProjet;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface ProjetService {
