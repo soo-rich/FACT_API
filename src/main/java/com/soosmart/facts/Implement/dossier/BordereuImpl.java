@@ -1,6 +1,8 @@
 package com.soosmart.facts.Implement.dossier;
 
 import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.mapper.ResponseMapper;
@@ -8,11 +10,12 @@ import com.soosmart.facts.repository.dossier.BorderauDao;
 import com.soosmart.facts.repository.dossier.ProformaDao;
 import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.utils.NumeroGenerateur;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,17 +49,13 @@ public class BordereuImpl implements BordereauService {
     }
 
     @Override
-    public List<BorderauDto> getBordereauAll() {
-        return this.borderauRepository.findAllByDeletedIsFalse().stream().map(
-                this.responseMapper::responseBorderauDto
-        ).toList();
+    public CustomPageResponse<BorderauDto> getBordereauAll(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseBorderauDto);
     }
 
     @Override
-    public List<BorderauDto> getBordereauAllNotAdopted() {
-        return this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse().stream().map(
-                this.responseMapper::responseBorderauDto
-        ).toList();
+    public CustomPageResponse<BorderauDto> getBordereauAllNotAdopted(PaginatedRequest paginatedRequest) {
+         return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseBorderauDto);
     }
 
     @Override

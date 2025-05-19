@@ -1,7 +1,11 @@
 package com.soosmart.facts.service.dossier;
 
 import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossier.Bordereau;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -9,9 +13,9 @@ import java.util.UUID;
 public interface BordereauService {
     BorderauDto saveBordereau(UUID id_proforma);
 
-    List<BorderauDto> getBordereauAll();
+    CustomPageResponse<BorderauDto> getBordereauAll(PaginatedRequest paginatedRequest);
 
-    List<BorderauDto> getBordereauAllNotAdopted();
+    CustomPageResponse<BorderauDto> getBordereauAllNotAdopted(PaginatedRequest paginatedRequest);
 
     BorderauDto getBordereau(UUID id);
 

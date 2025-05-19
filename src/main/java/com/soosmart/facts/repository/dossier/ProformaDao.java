@@ -1,6 +1,8 @@
 package com.soosmart.facts.repository.dossier;
 
 import com.soosmart.facts.entity.dossier.Proforma;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,11 +21,11 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
     Optional<Proforma> findByNumero(String numero);
 
-    List<Proforma> findAllByDeletedIsFalse();
+    Page<Proforma> findAllByDeletedIsFalse(Pageable pageable);
 
-    List<Proforma> findAllByDeletedIsFalseAndAdoptedIsFalse();
+    Page<Proforma> findAllByDeletedIsFalseAndAdoptedIsFalse(Pageable pageable);
 
-    List<Proforma> findAllByReference(String reference);
+    Page<Proforma> findAllByReference(Pageable pageable,String reference);
 
     Optional<Proforma> findByReference(String reference);
 

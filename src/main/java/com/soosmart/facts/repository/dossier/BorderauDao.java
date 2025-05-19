@@ -1,6 +1,8 @@
 package com.soosmart.facts.repository.dossier;
 
 import com.soosmart.facts.entity.dossier.Bordereau;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +19,7 @@ public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
 
     Optional<Bordereau> findByNumero(String numero);
 
-    List<Bordereau> findAllByDeletedIsFalse();
+    Page<Bordereau> findAllByDeletedIsFalse(Pageable pageable);
 
-    List<Bordereau> findAllByDeletedIsFalseAndAdoptedIsFalse();
+    Page<Bordereau> findAllByDeletedIsFalseAndAdoptedIsFalse(Pageable pageable);
 }

@@ -1,6 +1,8 @@
 package com.soosmart.facts.Implement.dossier;
 
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
@@ -10,6 +12,7 @@ import com.soosmart.facts.repository.dossier.FactureDao;
 import com.soosmart.facts.repository.dossier.ProformaDao;
 import com.soosmart.facts.service.dossier.FactureService;
 import com.soosmart.facts.utils.NumeroGenerateur;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,17 +56,16 @@ public class FactureImpl implements FactureService {
     }
 
     @Override
-    public List<FactureDto> getFactureAll() {
-        return this.factureDao.findAllByDeletedIsFalse().stream().map(
-                this.responseMapper::responseFactureDto
-        ).toList();
+    public CustomPageResponse<FactureDto> getFactureAll(PaginatedRequest paginatedRequest) {
+         return PageMapperUtils.toPageResponse(this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseFactureDto);
     }
 
     @Override
-    public List<String> getFacturesNumereList() {
-        return this.factureDao.findAllByDeletedIsFalse().stream().map(
-                Facture::getNumero
-        ).toList();
+    public CustomPageResponse<String> getFacturesNumereList(PaginatedRequest paginatedRequest) {
+         return PageMapperUtils.toPageResponse(
+                 this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                 Facture::getNumero
+         );
     }
 
     @Override

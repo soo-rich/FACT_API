@@ -3,6 +3,8 @@ package com.soosmart.facts.controller.dossier;
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.service.dossier.ProformaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,17 +22,17 @@ public class proformaController {
     private final ProformaService proformaService;
 
     @GetMapping
-    public ResponseEntity<List<ProformaDTO>> getProformas() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformas());
+    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformas(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformas(new PaginatedRequest(page,pagesize,search)));
     }
 
     @GetMapping("/numero")
-    public ResponseEntity<List<String>> getProformasNumereList() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNumereList());
+    public ResponseEntity<CustomPageResponse<String>> getProformasNumereList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNumereList(new PaginatedRequest(page , pagesize, search)));
     }
     @GetMapping("/not-adoped")
-    public ResponseEntity<List<ProformaDTO>> getProformasNotAdapted() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNotAdopted());
+    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformasNotAdapted(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNotAdopted(new PaginatedRequest(page,pagesize,search)));
     }
 
 

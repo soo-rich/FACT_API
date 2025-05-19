@@ -2,15 +2,17 @@ package com.soosmart.facts.Implement;
 
 import com.soosmart.facts.dto.client.ClientDTO;
 import com.soosmart.facts.dto.client.SaveClientDTO;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.service.ClientService;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,10 +24,10 @@ public class ClientImpl implements ClientService {
     private final ResponseMapper responseMapper;
 
     @Override
-    public List<ClientDTO> list() {
-        return this.clientDAO.findAllBySupprimerIsFalse().stream().map(
+    public CustomPageResponse<ClientDTO> list(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(this.clientDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
                 this.responseMapper::responseClientDTO
-        ).toList();
+        );
     }
 
     @Override

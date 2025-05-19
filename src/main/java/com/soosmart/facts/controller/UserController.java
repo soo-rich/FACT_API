@@ -1,6 +1,8 @@
 package com.soosmart.facts.controller;
 
 
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
@@ -38,9 +40,9 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<List<ResponseUtilisateur>> getUser(@RequestParam(value = "email", required = false)  String email) {
+    public ResponseEntity<?> getUser(@RequestParam(value = "email", required = false)  String email, @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.findAll(new PaginatedRequest(page, pagesize, search)));
         }
         else {
             return ResponseEntity.status(HttpStatus.OK).body(List.of(this.utilisateurService.findByEmail(email)));

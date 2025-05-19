@@ -1,6 +1,8 @@
 package com.soosmart.facts.controller.dossier;
 
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.service.dossier.FactureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +29,13 @@ public class FactureController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FactureDto>> getFactureAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFactureAll());
+    public ResponseEntity<CustomPageResponse<FactureDto>> getFactureAll(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFactureAll(new PaginatedRequest(page, pagesize, search)));
     }
 
     @GetMapping("/numero")
-    public ResponseEntity<List<String>> getFacturesNumereList() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesNumereList());
+    public ResponseEntity<CustomPageResponse<String>> getFacturesNumereList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesNumereList(new PaginatedRequest(page,pagesize, search)));
     }
 
     @PostMapping("{id_borderau}")

@@ -18,12 +18,17 @@ import com.soosmart.facts.entity.dossier.Document;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.entity.user.Utilisateur;
+import com.soosmart.facts.enumpack.TypeDeRole;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResponseMapper {
     public ResponseUtilisateur responseUtilisateur(Utilisateur utilisateur) {
         if (utilisateur == null) {
+            return null;
+        }
+
+        if (!utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
             return null;
         }
 

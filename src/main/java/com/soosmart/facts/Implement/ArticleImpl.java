@@ -2,17 +2,19 @@ package com.soosmart.facts.Implement;
 
 import com.soosmart.facts.dto.Article.ArticleDTO;
 import com.soosmart.facts.dto.Article.SaveArticleDTO;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.Article;
 import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ArticleDAO;
 import com.soosmart.facts.service.ArticleService;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 public class ArticleImpl implements ArticleService {
@@ -34,8 +36,8 @@ public class ArticleImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDTO> list_article() {
-        return this.articleDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseArticleDTO).collect(Collectors.toList());
+    public CustomPageResponse<ArticleDTO> list_article(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(this.articleDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), this.responseMapper::responseArticleDTO);
     }
 
     @Override

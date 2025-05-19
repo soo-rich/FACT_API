@@ -3,6 +3,8 @@ package com.soosmart.facts.Implement.dossier;
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.entity.Projet;
 import com.soosmart.facts.entity.dossier.Proforma;
@@ -14,6 +16,7 @@ import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.ArticleQuantiteService;
 import com.soosmart.facts.service.dossier.ProformaService;
 import com.soosmart.facts.utils.NumeroGenerateur;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,7 +54,8 @@ public class ProformaImpl implements ProformaService {
                         .role(this.utilisateurConnecteServie.getUtilisateurConnecte().getRole().getLibelle().name())
                         .build();
                 proforma1 = this.CalculateProformaTotal(proforma);
-            }return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma1));
+            }
+            return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma1));
 
         } else if
         (saveProformaDTO.client_id() != null) {
@@ -66,8 +70,7 @@ public class ProformaImpl implements ProformaService {
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
                     .build();
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
-        }
-        else {
+        } else {
             throw new EntityExistsException("Projet or Client not found");
         }
     }
@@ -126,18 +129,24 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public List<ProformaDTO> getProformas() {
-        return this.proformaRepository.findAllByDeletedIsFalse().stream().map(this.responseMapper::responseProformaDTO).toList();
+    public CustomPageResponse<ProformaDTO> getProformas(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),this.responseMapper::responseProformaDTO);
     }
 
     @Override
-    public List<ProformaDTO> getProformasNotAdopted() {
-        return this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse().stream().map(this.responseMapper::responseProformaDTO).toList();
+    public CustomPageResponse<ProformaDTO> getProformasNotAdopted(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(
+                this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                this.responseMapper::responseProformaDTO
+        );
     }
 
     @Override
-    public List<String> getProformasNumereList() {
-        return this.proformaRepository.findAllByDeletedIsFalse().stream().map(Proforma::getNumero).toList();
+    public CustomPageResponse<String> getProformasNumereList(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(
+                this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest))
+                ,Proforma::getNumero
+        );
     }
 
     @Override

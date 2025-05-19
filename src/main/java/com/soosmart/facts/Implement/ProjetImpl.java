@@ -1,5 +1,7 @@
 package com.soosmart.facts.Implement;
 
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.project.SaveProjetDTO;
 import com.soosmart.facts.dto.project.UpdateProjet;
@@ -10,10 +12,10 @@ import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.repository.ProjetDAO;
 import com.soosmart.facts.service.ProjetService;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,10 +28,12 @@ public class ProjetImpl implements ProjetService {
     private final ResponseMapper responseMapper;
 
     @Override
-    public List<ProjetDTO> list() {
-        return this.projetRepository.findAll().stream().map(
+    public CustomPageResponse<ProjetDTO> list(PaginatedRequest paginatedRequest) {
+
+        return PageMapperUtils.toPageResponse(
+                this.projetRepository.findAll(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
                 this.responseMapper::responseProjetDTO
-        ).toList();
+        );
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ProjetImpl implements ProjetService {
                     .client(client.get())
                     .build())
             );
-        }else {
+        } else {
             throw new EntityNotFound("Client not found");
         }
 
@@ -59,8 +63,7 @@ public class ProjetImpl implements ProjetService {
             projetNew.setDescription(updateProjet.description());
             projetNew.setOffre(updateProjet.offre());
             return this.responseMapper.responseProjetDTO(this.projetRepository.save(projetNew));
-        }
-        else {
+        } else {
             throw new EntityNotFound("Projet not found");
         }
     }
@@ -74,8 +77,7 @@ public class ProjetImpl implements ProjetService {
             projetNew.setOffre(!projetNew.getOffre());
             this.projetRepository.save(projetNew);
             return projetNew.getOffre();
-        }
-        else {
+        } else {
             throw new EntityNotFound("Projet not found");
         }
     }

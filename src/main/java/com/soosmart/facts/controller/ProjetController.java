@@ -1,5 +1,7 @@
 package com.soosmart.facts.controller;
 
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.project.SaveProjetDTO;
 import com.soosmart.facts.dto.project.UpdateProjet;
@@ -25,8 +27,8 @@ public class ProjetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjetDTO>> getall() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.projetService.list());
+    public ResponseEntity<CustomPageResponse<ProjetDTO>> getall(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.projetService.list(new PaginatedRequest(page,pagesize,search)));
     }
 
     @PutMapping("{id}")

@@ -3,7 +3,11 @@ package com.soosmart.facts.service.dossier;
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossier.Proforma;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,9 +18,9 @@ public interface ProformaService {
     ProformaDTO updateProformaArticleQuantite(UUID id,  List<SaveArticleQuantiteDTO> articleQuantiteslist);
     void deleteProforma(String numero);
     ProformaDTO getProforma(String numero);
-    List<ProformaDTO> getProformas();
-    List<ProformaDTO> getProformasNotAdopted();
-    List<String> getProformasNumereList();
+    CustomPageResponse<ProformaDTO> getProformas(PaginatedRequest paginatedRequest);
+    CustomPageResponse<ProformaDTO> getProformasNotAdopted(PaginatedRequest paginatedRequest);
+    CustomPageResponse<String> getProformasNumereList(PaginatedRequest paginatedRequest);
     ProformaDTO signerProforma(UUID id, String who_signed);
     ProformaDTO signedbywhoconnectProforma(UUID id);
     Proforma getProformaEntity(String numero);

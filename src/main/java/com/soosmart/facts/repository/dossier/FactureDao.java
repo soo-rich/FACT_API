@@ -1,6 +1,8 @@
 package com.soosmart.facts.repository.dossier;
 
 import com.soosmart.facts.entity.dossier.Facture;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +19,7 @@ public interface FactureDao extends JpaRepository<Facture, UUID> {
 
     Optional<Facture> findByNumero(String numero);
 
-    List<Facture> findAllByDeletedIsFalse();
+    Page<Facture> findAllByDeletedIsFalse(Pageable pageable);
 
     @Query("SELECT COUNT (f) FROM Facture f WHERE f.deleted = false ")
     int countAllByDeletedIsFalse();

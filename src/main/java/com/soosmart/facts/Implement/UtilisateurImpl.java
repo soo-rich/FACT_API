@@ -1,5 +1,7 @@
 package com.soosmart.facts.Implement;
 
+import com.soosmart.facts.dto.pagination.CustomPageResponse;
+import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.dto.user.SaveUtilisateurDTO;
 import com.soosmart.facts.dto.user.UpdateUtilisateurDTO;
@@ -17,6 +19,7 @@ import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
 import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
+import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -65,15 +68,11 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     }
 
     @Override
-    public List<ResponseUtilisateur> findAll() {
-        List<Utilisateur> utilisateurList = this.utilisateurDAO.findAll();
-        List <ResponseUtilisateur> responseUtilisateurs = new ArrayList<>();
-        for (Utilisateur utilisateur : utilisateurList) {
-            if (!utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
-                responseUtilisateurs.add(this.responseMapper.responseUtilisateur(utilisateur));
-            }
-        }
-        return responseUtilisateurs;
+    public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
+        return PageMapperUtils.toPageResponse(
+                this.utilisateurDAO.findAll(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                this.responseMapper::responseUtilisateur
+        );
     }
 
     @Override
