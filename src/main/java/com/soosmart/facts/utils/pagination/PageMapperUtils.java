@@ -27,6 +27,7 @@ public class PageMapperUtils {
                 page.getSize(),
                 page.getTotalElements(),
                 page.getTotalPages(),
+                page.isFirst(),
                 page.isLast()
         );
     }
