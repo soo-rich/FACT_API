@@ -23,12 +23,8 @@ public class PageMapperUtils {
 
         return new CustomPageResponse<>(
                 page.getContent().stream().map(mapper).toList(),
-                page.getNumber(),
-                page.getSize(),
                 page.getTotalElements(),
-                page.getTotalPages(),
-                page.isFirst(),
-                page.isLast()
+                page.getTotalPages()
         );
     }
 }

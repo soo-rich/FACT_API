@@ -30,8 +30,8 @@ public class ArticleController {
 
     @GetMapping
     public ResponseEntity<CustomPageResponse<ArticleDTO>> getall(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int pagesize,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "pagesize", defaultValue = "10") int pagesize,
             @RequestParam(value = "search", defaultValue = "") String search
     ) {
 
