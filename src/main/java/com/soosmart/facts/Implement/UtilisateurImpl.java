@@ -22,7 +22,7 @@ import com.soosmart.facts.service.UtilisateurService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+// import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,19 +32,18 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
+public class UtilisateurImpl implements UtilisateurService {
 
     private final UtilisateurDAO utilisateurDAO;
     private ResponseMapper responseMapper;
     private BCryptPasswordEncoder passwordEncoder;
     private final UtilisateurConnecteServie utilisateurConnecteServie;
 
-
     @Override
     public void createSuprerAdmin(String email, String username, String password) {
         Optional<Utilisateur> superAdmin = this.utilisateurDAO.findByRole_Libelle(TypeDeRole.SUPER_ADMIN);
         if (superAdmin.isPresent()) {
-           throw new SuperAdminExeciste("Super Admin Existe");
+            throw new SuperAdminExeciste("Super Admin Existe");
         } else {
             Utilisateur utilisateur = Utilisateur.builder()
                     .email(email)
@@ -53,8 +52,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                     .role(
                             Role.builder()
                                     .libelle(TypeDeRole.SUPER_ADMIN)
-                                    .build()
-                    )
+                                    .build())
                     .actif(true)
                     .build();
             if (this.verifierUtilisateurEmail(utilisateur)) {
@@ -69,13 +67,12 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
                 this.utilisateurDAO.findAll(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
-                this.responseMapper::responseUtilisateur
-        );
+                this.responseMapper::responseUtilisateur);
     }
 
     @Override
     public ResponseUtilisateur findByEmail(String email) {
-        Optional<Utilisateur> utilisateur =this.utilisateurDAO.findByEmail(email);
+        Optional<Utilisateur> utilisateur = this.utilisateurDAO.findByEmail(email);
         if (utilisateur.isPresent()) {
             return this.responseMapper.responseUtilisateur(utilisateur.get());
         } else {
@@ -86,7 +83,8 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
 
     @Override
     public ResponseUtilisateur findByUsername(String username) {
-        return this.responseMapper.responseUtilisateur(this.utilisateurDAO.findByUsername(username).orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé")));
+        return this.responseMapper.responseUtilisateur(this.utilisateurDAO.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFound("Utilisateur non trouvé")));
     }
 
     @Override
@@ -102,8 +100,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                 .role(
                         Role.builder()
                                 .libelle(TypeDeRole.USER)
-                                .build()
-                )
+                                .build())
                 .build();
 
         if (this.verifierUtilisateurEmail(user)) {
@@ -117,8 +114,7 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
                     save.getUsername(),
                     save.getRole().getLibelle().name(),
                     save.getCreatedAt(),
-                    save.getActif()
-            );
+                    save.getActif());
         } else {
             throw new BadEmail("Email invalide");
         }
@@ -195,7 +191,8 @@ public class UtilisateurImpl implements UtilisateurService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.utilisateurDAO
                 .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur trouve avec cet Username ou Email"));
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("Aucun utilisateur trouve avec cet Username ou Email"));
     }
 
     @Override
