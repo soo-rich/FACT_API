@@ -22,16 +22,16 @@ public class proformaController {
     private final ProformaService proformaService;
 
     @GetMapping
-    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformas(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformas(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformas(new PaginatedRequest(page,pagesize,search)));
     }
 
     @GetMapping("/numero")
-    public ResponseEntity<CustomPageResponse<String>> getProformasNumereList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<String>> getProformasNumereList(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNumereList(new PaginatedRequest(page , pagesize, search)));
     }
     @GetMapping("/not-adoped")
-    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformasNotAdapted(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<ProformaDTO>> getProformasNotAdapted(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.getProformasNotAdopted(new PaginatedRequest(page,pagesize,search)));
     }
 

@@ -28,12 +28,12 @@ public class FactureController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomPageResponse<FactureDto>> getFactureAll(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<FactureDto>> getFactureAll(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFactureAll(new PaginatedRequest(page, pagesize, search)));
     }
 
     @GetMapping("/numero")
-    public ResponseEntity<CustomPageResponse<String>> getFacturesNumereList(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<String>> getFacturesNumereList(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesNumereList(new PaginatedRequest(page,pagesize, search)));
     }
 

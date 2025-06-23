@@ -39,11 +39,12 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<?> getUser(@RequestParam(value = "email", required = false)  String email, @RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<?> getUser(@RequestParam(value = "email", required = false)  String email, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         if (email == null) {
             return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.findAll(new PaginatedRequest(page, pagesize, search)));
         }
         else {
+            System.out.println(email);
             return ResponseEntity.status(HttpStatus.OK).body(List.of(this.utilisateurService.findByEmail(email)));
         }
     }

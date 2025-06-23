@@ -19,7 +19,7 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping()
-    public ResponseEntity<CustomPageResponse<ClientDTO>> listResponseEntity(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search){
+    public ResponseEntity<CustomPageResponse<ClientDTO>> listResponseEntity(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search){
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.list(new PaginatedRequest(page, pagesize, search)));
     }
 

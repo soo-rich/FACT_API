@@ -22,12 +22,12 @@ public class BorderauController {
 
 
     @GetMapping
-    public ResponseEntity<CustomPageResponse<BorderauDto>> getBorderauAll(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<BorderauDto>> getBorderauAll(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.bordereauService.getBordereauAll(new PaginatedRequest(page, pagesize, search)));
     }
 
     @GetMapping("not-use")
-    public ResponseEntity<CustomPageResponse<BorderauDto>> getBorderauAllNotAdopt(@RequestParam(value = "page", defaultValue = "1") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    public ResponseEntity<CustomPageResponse<BorderauDto>> getBorderauAllNotAdopt(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
 
         return ResponseEntity.status(HttpStatus.OK).body(this.bordereauService.getBordereauAllNotAdopted(new PaginatedRequest(page, pagesize, search)));
     }
