@@ -130,13 +130,13 @@ public class ProformaImpl implements ProformaService {
 
     @Override
     public CustomPageResponse<ProformaDTO> getProformas(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),this.responseMapper::responseProformaDTO);
+        return PageMapperUtils.toPageResponse(this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),this.responseMapper::responseProformaDTO);
     }
 
     @Override
     public CustomPageResponse<ProformaDTO> getProformasNotAdopted(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                 this.responseMapper::responseProformaDTO
         );
     }
@@ -144,7 +144,7 @@ public class ProformaImpl implements ProformaService {
     @Override
     public CustomPageResponse<String> getProformasNumereList(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest))
+                this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest))
                 ,Proforma::getNumero
         );
     }

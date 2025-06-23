@@ -25,7 +25,7 @@ public class ClientImpl implements ClientService {
 
     @Override
     public CustomPageResponse<ClientDTO> list(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.clientDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+        return PageMapperUtils.toPageResponse(this.clientDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                 this.responseMapper::responseClientDTO
         );
     }

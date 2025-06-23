@@ -37,7 +37,7 @@ public class ArticleImpl implements ArticleService {
 
     @Override
     public CustomPageResponse<ArticleDTO> list_article(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.articleDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), this.responseMapper::responseArticleDTO);
+        return PageMapperUtils.toPageResponse(this.articleDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), this.responseMapper::responseArticleDTO);
     }
 
     @Override

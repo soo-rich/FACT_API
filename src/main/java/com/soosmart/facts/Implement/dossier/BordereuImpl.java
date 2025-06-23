@@ -49,12 +49,12 @@ public class BordereuImpl implements BordereauService {
 
     @Override
     public CustomPageResponse<BorderauDto> getBordereauAll(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseBorderauDto);
+        return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseBorderauDto);
     }
 
     @Override
     public CustomPageResponse<BorderauDto> getBordereauAllNotAdopted(PaginatedRequest paginatedRequest) {
-         return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseBorderauDto);
+         return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseBorderauDto);
     }
 
     @Override

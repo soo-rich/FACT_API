@@ -31,7 +31,7 @@ public class ProjetImpl implements ProjetService {
     public CustomPageResponse<ProjetDTO> list(PaginatedRequest paginatedRequest) {
 
         return PageMapperUtils.toPageResponse(
-                this.projetRepository.findAll(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                this.projetRepository.findAll(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                 this.responseMapper::responseProjetDTO
         );
     }

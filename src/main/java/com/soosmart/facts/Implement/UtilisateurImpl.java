@@ -66,7 +66,7 @@ public class UtilisateurImpl implements UtilisateurService {
     @Override
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.utilisateurDAO.findAll(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                this.utilisateurDAO.findAll(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                 this.responseMapper::responseUtilisateur);
     }
 

@@ -56,13 +56,13 @@ public class FactureImpl implements FactureService {
 
     @Override
     public CustomPageResponse<FactureDto> getFactureAll(PaginatedRequest paginatedRequest) {
-         return PageMapperUtils.toPageResponse(this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)), responseMapper::responseFactureDto);
+         return PageMapperUtils.toPageResponse(this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseFactureDto);
     }
 
     @Override
     public CustomPageResponse<String> getFacturesNumereList(PaginatedRequest paginatedRequest) {
          return PageMapperUtils.toPageResponse(
-                 this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSerach(paginatedRequest)),
+                 this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                  Facture::getNumero
          );
     }

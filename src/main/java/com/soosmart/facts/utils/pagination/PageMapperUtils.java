@@ -13,7 +13,7 @@ import java.util.function.Function;
 @Service
 public class PageMapperUtils {
 
-    public static Pageable createPageableWithoutSerach(PaginatedRequest paginatedRequest) {
+    public static Pageable createPageableWithoutSearch(PaginatedRequest paginatedRequest) {
         Sort sort = paginatedRequest.sort()==null ? Sort.unsorted() :
                 Sort.by(Sort.Direction.ASC, paginatedRequest.sort());
         return PageRequest.of(paginatedRequest.page(), paginatedRequest.pagesize(), sort);
