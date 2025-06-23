@@ -90,7 +90,7 @@ public class JwtService {
     private Map<String, String> generateJwtToken(Utilisateur utilisateur) {
 
         final long currentTime = System.currentTimeMillis(); // temps actuel
-        final long expirationTime = currentTime + 60 * 60 * 1000 * 24; // 1 heure
+        final long expirationTime = currentTime + 60 * 60 * 1000 * 24; // 24 heure
         final Map<String, Object> claims = Map.of(
                 "nom", utilisateur.getNom() != null ? utilisateur.getNom() : "",
                 "prenom", utilisateur.getPrenom() != null ? utilisateur.getPrenom() : "",
