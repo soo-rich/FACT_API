@@ -24,28 +24,26 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 
-
-
 @Service
 @Transactional
 public class JwtService {
 
-    @Value("${my.secretkey}")
-    private  String ENCRYPTION_KEY;
-    private static final String TOKEN_INVALIDE = "Token invalide";
-    private static final String REFRESH_TOKEN_INVALIDE = "Refresh token invalide";
     public static final String BEARER = "bearer";
     public static final String REFRESH = "refresh";
+    private static final String TOKEN_INVALIDE = "Token invalide";
+    private static final String REFRESH_TOKEN_INVALIDE = "Refresh token invalide";
     private final UtilisateurService utilisateurService;
     private final JwtDAO jwtDAO;
     private final UtilisateurConnecteServie utilisateurConnecteServie;
+    @Value("${my.secretkey}")
+    private String ENCRYPTION_KEY;
 
-    public JwtService(UtilisateurService utilisateurService, JwtDAO jwtDAO, UtilisateurConnecteServie utilisateurConnecteServie) {
+    public JwtService(UtilisateurService utilisateurService, JwtDAO jwtDAO,
+                      UtilisateurConnecteServie utilisateurConnecteServie) {
         this.utilisateurService = utilisateurService;
         this.jwtDAO = jwtDAO;
         this.utilisateurConnecteServie = utilisateurConnecteServie;
     }
-
 
     public Jwt tokenByValue(String token) {
         return this.jwtDAO.findByValeurAndDesactiveAndExpire(token, false, false)
@@ -61,11 +59,9 @@ public class JwtService {
                 jwt -> {
                     jwt.setDesactive(true);
                     jwt.setExpire(true);
-                }
-        ).toList();
+                }).toList();
         this.jwtDAO.saveAll(jwtList);
     }
-
 
     public Map<String, String> generateToken(String username) {
         Utilisateur utilisateur = (Utilisateur) this.utilisateurService.loadUserByUsername(username);
@@ -75,7 +71,7 @@ public class JwtService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .value(UUID.randomUUID().toString())
                 .expired(false)
-                .expirationDate(Instant.now().plusMillis( 60 * 60 * 1000 * 2))// 2 heures
+                .expirationDate(Instant.now().plusMillis(60 * 60 * 1000 * 10))// 10 heures
                 .build();
 
         Jwt jwt = Jwt.builder()
@@ -94,15 +90,15 @@ public class JwtService {
     private Map<String, String> generateJwtToken(Utilisateur utilisateur) {
 
         final long currentTime = System.currentTimeMillis(); // temps actuel
-        final long expirationTime = currentTime + 60 * 60 * 1000; // 1 heure
+        final long expirationTime = currentTime + 60 * 60 * 1000 * 24; // 1 heure
         final Map<String, Object> claims = Map.of(
-                "nom", utilisateur.getNom() != null ? utilisateur.getNom():"",
-                "prenom", utilisateur.getPrenom()!= null ? utilisateur.getPrenom():"",
-                "email", utilisateur.getEmail()!= null ? utilisateur.getEmail():"",
-                "numero", utilisateur.getNumero()!= null ? utilisateur.getNumero():"",
+                "nom", utilisateur.getNom() != null ? utilisateur.getNom() : "",
+                "prenom", utilisateur.getPrenom() != null ? utilisateur.getPrenom() : "",
+                "email", utilisateur.getEmail() != null ? utilisateur.getEmail() : "",
+                "numero", utilisateur.getNumero() != null ? utilisateur.getNumero() : "",
                 "role", utilisateur.getRole().getLibelle(),
-                Claims.EXPIRATION, new Date(expirationTime),// date d'expiration
-                Claims.SUBJECT, utilisateur.getUsername(),// sujet
+                Claims.EXPIRATION, new Date(expirationTime), // date d'expiration
+                Claims.SUBJECT, utilisateur.getUsername(), // sujet
                 Claims.ISSUER, "soosmart"// emetteur
         );
 
@@ -132,11 +128,11 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaimsFromToken(String token){
+    private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(
-                        this.getKey()
-                ).build()
+                        this.getKey())
+                .build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
@@ -150,12 +146,12 @@ public class JwtService {
         return expirationDate.before(new Date());
     }
 
-    public Map<String, String> refreshToken(RefreshTokenDTO refreshTokenRequest){
+    public Map<String, String> refreshToken(RefreshTokenDTO refreshTokenRequest) {
         final String refreshToken = refreshTokenRequest.refresh();
         final Jwt jwt = this.jwtDAO.findByRefreshTokenValue(refreshToken)
                 .orElseThrow(() -> new RefreshTokenInvalid(REFRESH_TOKEN_INVALIDE));
 
-        if (jwt.getRefreshToken().getExpired()||jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())){
+        if (jwt.getRefreshToken().getExpired() || jwt.getRefreshToken().getExpirationDate().isBefore(Instant.now())) {
             throw new RefresTokenExpire("Refresh token expiré");
         }
         this.disableToken(jwt.getUtilisateur());
@@ -163,7 +159,7 @@ public class JwtService {
     }
 
     @Scheduled(cron = "@daily")
-    public void removeUselessJwt(){
-        this.jwtDAO.deleteAllByExpireAndDesactive(true,true);
+    public void removeUselessJwt() {
+        this.jwtDAO.deleteAllByExpireAndDesactive(true, true);
     }
 }
