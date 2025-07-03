@@ -21,12 +21,15 @@ import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 // import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -66,7 +69,7 @@ public class UtilisateurImpl implements UtilisateurService {
     @Override
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.utilisateurDAO.findAll(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                this.utilisateurDAO.findByRole_LibelleNotIn(PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN, TypeDeRole.ADMIN)),
                 this.responseMapper::responseUtilisateur);
     }
 

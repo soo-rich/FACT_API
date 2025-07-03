@@ -28,7 +28,7 @@ public class ResponseMapper {
             return null;
         }
 
-        if (!utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
+        if (utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
             return null;
         }
 
