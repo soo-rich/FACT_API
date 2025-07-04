@@ -13,8 +13,10 @@ import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -79,5 +81,10 @@ public class ClientImpl implements ClientService {
             throw new EntityNotFound("ce Client n'existe pas");
         }
 
+    }
+
+    @Override
+    public List<ClientDTO> search(String search) {
+        return this.clientDAO.findAllByNomContainsIgnoreCase(search).stream().map(this.responseMapper::responseClientDTO).collect(Collectors.toList());
     }
 }

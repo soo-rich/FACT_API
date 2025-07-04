@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +22,11 @@ public class ClientController {
     @GetMapping()
     public ResponseEntity<CustomPageResponse<ClientDTO>> listResponseEntity(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search){
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.list(new PaginatedRequest(page, pagesize, search)));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ClientDTO>> Search(@RequestParam(value = "search", defaultValue = "", required = false) String search){
+        return ResponseEntity.status(HttpStatus.OK).body(this.clientService.search(search));
     }
 
     @PostMapping()
