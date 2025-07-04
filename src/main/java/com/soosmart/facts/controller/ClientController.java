@@ -24,7 +24,7 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.list(new PaginatedRequest(page, pagesize, search)));
     }
 
-    @GetMapping()
+    @GetMapping("search")
     public ResponseEntity<List<ClientDTO>> Search(@RequestParam(value = "search", defaultValue = "", required = false) String search){
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.search(search));
     }
