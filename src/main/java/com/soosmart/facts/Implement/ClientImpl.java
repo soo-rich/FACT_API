@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -85,6 +84,10 @@ public class ClientImpl implements ClientService {
 
     @Override
     public List<ClientDTO> search(String search) {
-        return this.clientDAO.findAllByNomContainsIgnoreCase(search).stream().map(this.responseMapper::responseClientDTO).collect(Collectors.toList());
+        Optional<Client> cl = this.clientDAO.findAllByNomContainsIgnoreCase(search);
+        if (cl.isEmpty()) {
+            return List.of();
+        }
+        return cl.stream().map(this.responseMapper::responseClientDTO).toList();
     }
 }
