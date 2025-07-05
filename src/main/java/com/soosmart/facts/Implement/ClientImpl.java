@@ -84,10 +84,6 @@ public class ClientImpl implements ClientService {
 
     @Override
     public List<ClientDTO> search(String search) {
-        Optional<Client> cl = this.clientDAO.findAllByNomContainsIgnoreCase(search);
-        if (cl.isEmpty()) {
-            return List.of();
-        }
-        return cl.stream().map(this.responseMapper::responseClientDTO).toList();
+        return this.clientDAO.findAllByNomContainsIgnoreCase(search).stream().map(this.responseMapper::responseClientDTO).toList();
     }
 }
