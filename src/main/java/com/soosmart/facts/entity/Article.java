@@ -19,7 +19,7 @@ public class Article {
     private String libelle;
     private Float prix_unitaire;
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, name = "created_at")
     private Instant create_at;
     @UpdateTimestamp
     private Instant update_at;

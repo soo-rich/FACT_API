@@ -35,7 +35,7 @@ public class ArticleQuantite {
     private Float prix_article;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, name = "created_at")
     private Instant create_at;
 
     @UpdateTimestamp

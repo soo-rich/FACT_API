@@ -28,7 +28,7 @@ public abstract class Document {
     private String signedBy; // le nom de la personne qui a signé la proforma
     private String role; // le role de la personne qui a signé la proforma
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, name = "created_at")
     private Instant create_at;
 
     @UpdateTimestamp

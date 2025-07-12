@@ -35,7 +35,7 @@ public class Projet {
     private List<Proforma> proformaList;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, name = "created_at")
     private Instant create_at;
 
     @UpdateTimestamp
