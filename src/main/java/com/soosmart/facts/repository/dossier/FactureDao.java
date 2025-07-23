@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 public interface FactureDao extends JpaRepository<Facture, UUID> {
-    @Query("SELECT count(f) from Facture f  WHERE f.create_at >= :startOfDay and f.create_at < :endOfDay")
+    @Query("SELECT count(f) from Facture f  WHERE f.created_at >= :startOfDay and f.created_at < :endOfDay")
     Long countFacturesCreateToday(Instant startOfDay, Instant endOfDay);
 
     Optional<Facture> findByNumero(String numero);

@@ -20,7 +20,7 @@ public class Article {
     private Float prix_unitaire;
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")
-    private Instant create_at;
+    private Instant created_at;
     @UpdateTimestamp
     private Instant update_at;
 

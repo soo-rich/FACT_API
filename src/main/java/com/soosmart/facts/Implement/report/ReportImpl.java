@@ -60,7 +60,7 @@ public class ReportImpl implements ReportService {
 
         Context context = new Context();
         context.setVariable("numero", proforma.getNumero());
-        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(proforma.getCreate_at())));
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(proforma.getCreated_at())));
         context.setVariable("reference", proforma.getReference());
 
         context.setVariable("articles", articleQuantiteReportDTOS);
@@ -96,7 +96,7 @@ public class ReportImpl implements ReportService {
 
         Context context = new Context();
         context.setVariable("numero", bordereau.getNumero());
-        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(bordereau.getCreate_at())));
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(bordereau.getCreated_at())));
         context.setVariable("reference", bordereau.getReference());
 
         context.setVariable("articles", articleQuantiteReportDTOS);
@@ -127,7 +127,7 @@ public class ReportImpl implements ReportService {
 
         Context context = new Context();
         context.setVariable("numero", facture.getNumero());
-        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(facture.getCreate_at())));
+        context.setVariable("date", new SimpleDateFormat("dd-MM-yyyy").format(Date.from(facture.getCreated_at())));
         context.setVariable("reference", facture.getReference());
 
         context.setVariable("articles", articleQuantiteReportDTOS);
