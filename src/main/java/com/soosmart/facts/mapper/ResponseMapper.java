@@ -80,7 +80,7 @@ public class ResponseMapper {
                 projet.getDescription(),
                 projet.getOffre(),
                 projet.getClient().getNom(),
-                projet.getCreated_at(),
+                projet.getCreatedat(),
                 projet.getUpdate_at()
         );
     }
@@ -110,7 +110,7 @@ public class ResponseMapper {
                 proforma.getTotal_ttc(),
                 proforma.getTotal_tva(),
                 proforma.getClient().getNom(),
-                proforma.getCreated_at(),
+                proforma.getCreatedat(),
                 proforma.getSignedBy(),
                 proforma.getAdopted()
         );
@@ -130,7 +130,7 @@ public class ResponseMapper {
                 borderau.getProforma().getTotal_tva(),
                 borderau.getProforma().getClient().getNom(),
                 borderau.getAdopted(),
-                borderau.getCreated_at()
+                borderau.getCreatedat()
         );
     }
 
@@ -147,7 +147,7 @@ public class ResponseMapper {
                 facture.getBordereau().getProforma().getTotal_ttc(),
                 facture.getBordereau().getProforma().getTotal_tva(),
                 facture.getBordereau().getProforma().getClient().getNom(),
-                facture.getBordereau().getProforma().getCreated_at(),
+                facture.getBordereau().getProforma().getCreatedat(),
                 facture.getSignedBy()
         );
     }
@@ -158,7 +158,7 @@ public class ResponseMapper {
         }
         return new Table(
                 document.getNumero(),
-                document.getCreated_at(),
+                document.getCreatedat(),
                 document.getTotal_ttc()
         );
     }

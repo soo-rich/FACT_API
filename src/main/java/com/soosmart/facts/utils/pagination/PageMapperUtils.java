@@ -15,7 +15,7 @@ public class PageMapperUtils {
 
     public static Pageable createPageableWithoutSearch(PaginatedRequest paginatedRequest) {
         Sort sort = paginatedRequest.sort() == null ?
-                Sort.by(Sort.Direction.DESC, "created_at") :
+                Sort.by(Sort.Direction.DESC, "createdat") :
                 Sort.by(Sort.Direction.ASC, paginatedRequest.sort());
         return PageRequest.of(paginatedRequest.page(), paginatedRequest.pagesize(), sort);
     }

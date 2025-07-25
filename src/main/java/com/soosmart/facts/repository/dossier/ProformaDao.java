@@ -15,7 +15,7 @@ import java.util.UUID;
 @Repository
 public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
-    @Query("SELECT COUNT (p) FROM Proforma p WHERE p.created_at >= :startOfDay and p.created_at < :endOfDay")
+    @Query("SELECT COUNT (p) FROM Proforma p WHERE p.createdat >= :startOfDay and p.createdat < :endOfDay")
     Long countProformasCreateToday(@Param("startOfDay") Instant startOfDay, @Param("endOfDay")Instant endOfDay);
 
     Optional<Proforma> findByNumero(String numero);

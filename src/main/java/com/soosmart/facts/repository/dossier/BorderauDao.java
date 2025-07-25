@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Repository
 public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
-    @Query("SELECT count(b) FROM Bordereau b WHERE b.created_at >= :startOfDay and b.created_at < :endOfDay")
+    @Query("SELECT count(b) FROM Bordereau b WHERE b.createdat >= :startOfDay and b.createdat < :endOfDay")
     Long countBordereauxCreateToday(Instant startOfDay, Instant endOfDay);
 
     Optional<Bordereau> findByNumero(String numero);

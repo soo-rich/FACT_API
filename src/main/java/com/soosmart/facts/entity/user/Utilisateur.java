@@ -41,7 +41,7 @@ public class Utilisateur implements UserDetails {
 
 
     @CreationTimestamp
-    @Column(updatable = false, name = "created_at")
+    @Column(updatable = false, name = "createdat")
     private Instant createdAt;
 
     @UpdateTimestamp
