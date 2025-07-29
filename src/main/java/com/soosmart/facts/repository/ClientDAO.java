@@ -12,5 +12,6 @@ import java.util.UUID;
 @Repository
 public interface ClientDAO extends JpaRepository<Client, UUID> {
     List<Client> findAllByNomContainsIgnoreCase(String nom);
+    List<Client> findAllBySupprimerIsFalse();
     Page<Client> findAllBySupprimerIsFalse(Pageable pageable);
 }
