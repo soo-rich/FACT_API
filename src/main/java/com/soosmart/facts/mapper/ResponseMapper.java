@@ -120,6 +120,7 @@ public class ResponseMapper {
         if (borderau == null) {
             return null;
         }
+        System.out.println("Adopted: " + borderau.getAdopted());
         return new BorderauDto(
                 borderau.getId(),
                 borderau.getReference(),
