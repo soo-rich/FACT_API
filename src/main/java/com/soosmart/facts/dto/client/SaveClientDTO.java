@@ -11,7 +11,7 @@ public record SaveClientDTO(
 ) {
     public SaveClientDTO {
         if (lieu.isBlank() || nom.isBlank() || sigle.isBlank() || telephone.isBlank()) {
-            throw new HttpMessageNotReadableException("il manque des donne");
+            throw new HttpMessageNotReadableException("il manque des donnees");
         }
     }
 }
