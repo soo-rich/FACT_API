@@ -5,6 +5,7 @@ import com.soosmart.facts.dto.Article.SaveArticleDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ArticleService {
@@ -12,4 +13,5 @@ public interface ArticleService {
     CustomPageResponse<ArticleDTO> list_article(PaginatedRequest paginatedRequest);
     ArticleDTO update_article(UUID id_article, SaveArticleDTO articleDTO);
     boolean delete(UUID id);
+    List<ArticleDTO> search(String search);
 }

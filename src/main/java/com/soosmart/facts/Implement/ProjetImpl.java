@@ -16,6 +16,7 @@ import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -89,5 +90,21 @@ public class ProjetImpl implements ProjetService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    @Override
+    public List<ProjetDTO> search(String search) {
+        if (search == null || search.isEmpty()) {
+            return this.projetRepository.findAll()
+                    .stream()
+                    .map(this.responseMapper::responseProjetDTO)
+                    .limit(10)
+                    .toList();
+        }
+        return this.projetRepository.findByDescriptionContainingIgnoreCase(search)
+                .stream()
+                .map(this.responseMapper::responseProjetDTO)
+                .toList();
     }
 }

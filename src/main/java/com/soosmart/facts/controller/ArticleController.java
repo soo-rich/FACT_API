@@ -1,6 +1,5 @@
 package com.soosmart.facts.controller;
 
-
 import com.soosmart.facts.dto.Article.ArticleDTO;
 import com.soosmart.facts.dto.Article.SaveArticleDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,10 +32,17 @@ public class ArticleController {
     public ResponseEntity<CustomPageResponse<ArticleDTO>> getall(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "pagesize", defaultValue = "10") int pagesize,
-            @RequestParam(value = "search", defaultValue = "") String search
-    ) {
+            @RequestParam(value = "search", defaultValue = "") String search) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(this.articleService.list_article(new PaginatedRequest(page, pagesize, search)));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.articleService.list_article(new PaginatedRequest(page, pagesize, search)));
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<List<ArticleDTO>> getall(
+            @RequestParam(value = "search", defaultValue = "") String search) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(this.articleService.search(search));
     }
 
     @PutMapping("{id}")

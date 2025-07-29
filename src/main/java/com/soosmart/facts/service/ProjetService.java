@@ -6,6 +6,7 @@ import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.project.SaveProjetDTO;
 import com.soosmart.facts.dto.project.UpdateProjet;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProjetService {
@@ -14,4 +15,5 @@ public interface ProjetService {
     ProjetDTO update(UUID id, UpdateProjet updateProjet);
     Boolean changeOffre(UUID id);
     void delete(UUID id);
+    List<ProjetDTO> search(String search);
 }

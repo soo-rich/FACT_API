@@ -12,6 +12,7 @@ import com.soosmart.facts.service.ArticleService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -63,6 +64,22 @@ public class ArticleImpl implements ArticleService {
             return true;
         }
         throw new EntityNotFound("Article not found");
+    }
 
+    @Override
+    public List<ArticleDTO> search(String search) {
+
+        // if (search == null || search.isEmpty()) {
+        //     return this.articleDAO.findAllBySupprimerIsFalse()
+        //             .stream()
+        //             .map(this.responseMapper::responseArticleDTO)
+        //             .limit(10)
+        //             .toList();
+        // }
+
+        return this.articleDAO.findByLibelleContainingIgnoreCaseAndSupprimerIsFalse(search)
+                .stream()
+                .map(this.responseMapper::responseArticleDTO)
+                .toList();  
     }
 }

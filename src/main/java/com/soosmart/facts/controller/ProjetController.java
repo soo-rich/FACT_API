@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,12 @@ public class ProjetController {
     public ResponseEntity<CustomPageResponse<ProjetDTO>> getall(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.projetService.list(new PaginatedRequest(page,pagesize,search)));
     }
+
+     @GetMapping("search")
+    public ResponseEntity<List<ProjetDTO>> getall( @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.projetService.search(search));
+    }
+
 
     @PutMapping("{id}")
     public ResponseEntity<ProjetDTO> update(@PathVariable UUID id, @RequestBody UpdateProjet updateProjet) {
