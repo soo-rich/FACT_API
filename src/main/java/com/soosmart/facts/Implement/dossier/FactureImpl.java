@@ -71,6 +71,8 @@ public class FactureImpl implements FactureService {
     public FactureDto saveFacture(UUID id_borderau) {
         Optional<Bordereau> bordereau = this.borderauDao.findById(id_borderau).stream().findFirst();
         if (bordereau.isPresent()) {
+            bordereau.get().setAdopted(true);
+            this.borderauDao.save(bordereau.get());
             Optional<Proforma> proforma = this.proformaRepository.findByReference((bordereau.get().getReference())).stream().findFirst();
             if (proforma.isPresent()) {
                 if (proforma.get().getReference().equalsIgnoreCase(bordereau.get().getReference())) {
