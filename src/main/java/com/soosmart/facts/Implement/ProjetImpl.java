@@ -43,7 +43,7 @@ public class ProjetImpl implements ProjetService {
 
         if (client.isPresent()) {
             return this.responseMapper.responseProjetDTO(this.projetRepository.save(Projet.builder()
-                    .projet_type(saveProjetDTO.projet_type())
+                    .projetType(saveProjetDTO.projet_type())
                     .description(saveProjetDTO.description())
                     .offre(saveProjetDTO.offre())
                     .client(client.get())
@@ -60,7 +60,7 @@ public class ProjetImpl implements ProjetService {
         Optional<Projet> projetOld = this.projetRepository.findById(id).stream().findFirst();
         if (projetOld.isPresent()) {
             Projet projetNew = projetOld.get();
-            projetNew.setProjet_type(updateProjet.projet_type());
+            projetNew.setProjetType(updateProjet.projet_type());
             projetNew.setDescription(updateProjet.description());
             projetNew.setOffre(updateProjet.offre());
             return this.responseMapper.responseProjetDTO(this.projetRepository.save(projetNew));
@@ -102,7 +102,7 @@ public class ProjetImpl implements ProjetService {
                     .limit(10)
                     .toList();
         }
-        return this.projetRepository.findByDescriptionContainingIgnoreCase(search)
+        return this.projetRepository.findAllByProjetTypeContainsIgnoreCase(search)
                 .stream()
                 .map(this.responseMapper::responseProjetDTO)
                 .toList();

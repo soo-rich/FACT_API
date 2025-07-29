@@ -76,7 +76,7 @@ public class ResponseMapper {
         }
         return new ProjetDTO(
                 projet.getId(),
-                projet.getProjet_type(),
+                projet.getProjetType(),
                 projet.getDescription(),
                 projet.getOffre(),
                 projet.getClient().getNom(),

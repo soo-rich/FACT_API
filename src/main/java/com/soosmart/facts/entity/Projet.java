@@ -21,7 +21,7 @@ public class Projet {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid")
     private UUID id;
 
-    private String projet_type;
+    private String projetType;
     @Column(columnDefinition = "TEXT")
     private String description;
     @Builder.Default
