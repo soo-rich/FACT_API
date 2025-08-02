@@ -9,10 +9,18 @@ import java.util.UUID;
 
 public interface FactureService {
     void deleteFacture(UUID id);
+
     FactureDto getFacture(String numero);
+
     Facture getFactureEntity(String numero);
+
     CustomPageResponse<FactureDto> getFactureAll(PaginatedRequest paginatedRequest);
+
     CustomPageResponse<String> getFacturesNumereList(PaginatedRequest paginatedRequest);
+
     FactureDto saveFacture(UUID id_borderau);
+
+    FactureDto signerFactureWithNumner(String numero, String who_signed);
+
     Boolean paid(UUID id_facture);
 }

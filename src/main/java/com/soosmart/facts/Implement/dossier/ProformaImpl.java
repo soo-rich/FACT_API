@@ -161,6 +161,17 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
+    public ProformaDTO signerProformaWithNumner(String number, String who_signed) {
+        Optional<Proforma> proforma = this.proformaRepository.findByNumero(number);
+        if (proforma.isPresent()) {
+            proforma.get().setSignedBy(who_signed);
+            return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma.get()));
+        } else {
+            throw new EntityExistsException("Proforma not found with number: " + number);
+        }
+    }
+
+    @Override
     public ProformaDTO signedbywhoconnectProforma(UUID id) {
         Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
         if (proforma.isPresent()) {

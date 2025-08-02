@@ -56,15 +56,15 @@ public class FactureImpl implements FactureService {
 
     @Override
     public CustomPageResponse<FactureDto> getFactureAll(PaginatedRequest paginatedRequest) {
-         return PageMapperUtils.toPageResponse(this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseFactureDto);
+        return PageMapperUtils.toPageResponse(this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseFactureDto);
     }
 
     @Override
     public CustomPageResponse<String> getFacturesNumereList(PaginatedRequest paginatedRequest) {
-         return PageMapperUtils.toPageResponse(
-                 this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
-                 Facture::getNumero
-         );
+        return PageMapperUtils.toPageResponse(
+                this.factureDao.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                Facture::getNumero
+        );
     }
 
     @Override
@@ -101,6 +101,17 @@ public class FactureImpl implements FactureService {
     }
 
     @Override
+    public FactureDto signerFactureWithNumner(String numero, String who_signed) {
+        Optional<Facture> facture = this.factureDao.findByNumero(numero).stream().findFirst();
+        if (facture.isPresent()) {
+            facture.get().setSignedBy(who_signed);
+            return this.responseMapper.responseFactureDto(this.factureDao.save(facture.get()));
+        } else {
+            throw new EntityExistsException("Facture not found");
+        }
+    }
+
+    @Override
     public Boolean paid(UUID id_facture) {
         Optional<Facture> facture = this.factureDao.findById(id_facture).stream().findFirst();
         if (facture.isPresent()) {
@@ -109,6 +120,6 @@ public class FactureImpl implements FactureService {
             return facture.get().getIsPaid();
         } else {
             throw new IllegalArgumentException("Facture not found");
-        }  
+        }
     }
 }

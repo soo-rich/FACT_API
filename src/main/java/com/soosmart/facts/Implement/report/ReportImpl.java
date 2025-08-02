@@ -1,9 +1,11 @@
 package com.soosmart.facts.Implement.report;
 
+import com.soosmart.facts.dto.dossier.DocumentDTO;
 import com.soosmart.facts.dto.report.ArticleQuantiteReportDTO;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
+import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.service.dossier.FactureService;
 import com.soosmart.facts.service.dossier.ProformaService;
@@ -29,6 +31,7 @@ public class ReportImpl implements ReportService {
     private final ProformaService proformaService;
     private final BordereauService bordereauService;
     private final FactureService factureService;
+    private final ResponseMapper responseMapper;
     private final NumberToWords numberToWords;
     private final PdfGeneration pdfGeneration;
 
@@ -42,8 +45,69 @@ public class ReportImpl implements ReportService {
             case "FA" -> this.preparedataandGenerateForFacture(this.factureService.getFactureEntity(numero));
             default -> throw new IllegalArgumentException("Type de Document non reconnu");
         };
+    }
 
+    @Override
+    public DocumentDTO getDocumentByNumero(String numero) {
+        String type = numero.substring(0, 2);
+        return switch (type) {
+            case "FP" -> {
+                Proforma pr = this.proformaService.getProformaEntity(numero);
+                yield new DocumentDTO(
+                        pr.getId(),
+                        pr.getReference(),
+                        pr.getNumero(),
+                        pr.getArticleQuantiteList().stream().map(
+                                responseMapper::responseArticleQuantiteDTO
+                        ).toList(),
+                        pr.getTotal_ht(),
+                        pr.getTotal_ttc(),
+                        pr.getTotal_tva(),
+                        this.numberToWords.convertNumberToWords(Math.round(pr.getTotal_ttc())),
+                        this.responseMapper.responseClientDTO(pr.getClient()),
+                        pr.getCreatedat(),
+                        pr.getSignedBy()
+                );
+            }
+            case "BL" -> {
+                Bordereau br = this.bordereauService.getBordereauEntity(numero);
+                yield new DocumentDTO(
+                        br.getId(),
+                        br.getReference(),
+                        br.getNumero(),
+                        br.getProforma().getArticleQuantiteList().stream().map(
+                                responseMapper::responseArticleQuantiteDTO
+                        ).toList(),
+                        br.getProforma().getTotal_ht(),
+                        br.getProforma().getTotal_ttc(),
+                        br.getProforma().getTotal_tva(),
+                        this.numberToWords.convertNumberToWords(Math.round(br.getProforma().getTotal_ttc())),
+                        this.responseMapper.responseClientDTO(br.getProforma().getClient()),
+                        br.getCreatedat(),
+                        br.getSignedBy()
+                );
 
+            }
+            case "FA" -> {
+                Facture facture = this.factureService.getFactureEntity(numero);
+                yield new DocumentDTO(
+                        facture.getId(),
+                        facture.getReference(),
+                        facture.getNumero(),
+                        facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(
+                                responseMapper::responseArticleQuantiteDTO
+                        ).toList(),
+                        facture.getBordereau().getProforma().getTotal_ht(),
+                        facture.getBordereau().getProforma().getTotal_ttc(),
+                        facture.getBordereau().getProforma().getTotal_tva(),
+                        this.numberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())),
+                        this.responseMapper.responseClientDTO(facture.getBordereau().getProforma().getClient()),
+                        facture.getCreatedat(),
+                        facture.getSignedBy()
+                );
+            }
+            default -> throw new IllegalArgumentException("Type de Document non reconnu");
+        };
     }
 
     @Override
