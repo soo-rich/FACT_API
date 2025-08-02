@@ -27,6 +27,11 @@ public class FactureController {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacture(numero));
     }
 
+    @GetMapping("paid/{id_facture}")
+    public ResponseEntity<Boolean> paid(@PathVariable UUID id_facture) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.paid(id_facture));
+    }
+
     @GetMapping
     public ResponseEntity<CustomPageResponse<FactureDto>> getFactureAll(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFactureAll(new PaginatedRequest(page, pagesize, search)));

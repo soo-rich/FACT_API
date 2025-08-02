@@ -35,6 +35,7 @@ public class SetterDataBaseTest {
             Client client = this.clientDAO.save(Client.builder()
                     .lieu("Lieu_" + i)
                     .nom("Nom_" + i)
+                    .sigle("Sigle_" + i)
                     .telephone("90 00 00 0" + i)
                     .potentiel(i >= 5 && i <= 10)
                     .build());
@@ -43,7 +44,7 @@ public class SetterDataBaseTest {
                             .client(client)
                             .description("Description_" + i)
                             .offre(i >= 5 && i <= 10)
-                            .projet_type("Type_" + i)
+                            .projetType("Type_" + i)
                             .build()
             );
             System.out.println("Save Client et Projet "+i);

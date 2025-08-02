@@ -101,4 +101,16 @@ public class FactureImpl implements FactureService {
         }
 
     }
+
+    @Override
+    public Boolean paid(UUID id_facture) {
+        Optional<Facture> facture = this.factureDao.findById(id_facture).stream().findFirst();
+        if (facture.isPresent()) {
+            facture.get().setIsPaid(!facture.get().getIsPaid());
+            this.factureDao.save(facture.get());
+            return facture.get().getIsPaid();
+        } else {
+            throw new IllegalArgumentException("Facture not found");
+        }  
+    }
 }

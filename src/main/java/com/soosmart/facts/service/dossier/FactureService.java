@@ -14,4 +14,5 @@ public interface FactureService {
     CustomPageResponse<FactureDto> getFactureAll(PaginatedRequest paginatedRequest);
     CustomPageResponse<String> getFacturesNumereList(PaginatedRequest paginatedRequest);
     FactureDto saveFacture(UUID id_borderau);
+    Boolean paid(UUID id_facture);
 }
