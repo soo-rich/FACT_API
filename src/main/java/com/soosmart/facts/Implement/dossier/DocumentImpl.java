@@ -19,7 +19,7 @@ public class DocumentImpl implements DocumentService {
     public Boolean signeDocument(String numero, String signedBy) {
         String type = numero.substring(0, 2);
         switch (type) {
-            case "PF":
+            case "FP":
                 ProformaDTO proforma = this.proformaService.signerProformaWithNumner(numero, signedBy);
             case "FA":
                 FactureDto facture = this.factureService.signerFactureWithNumner(numero, signedBy);
