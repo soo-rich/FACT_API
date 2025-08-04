@@ -115,7 +115,7 @@ public class FactureImpl implements FactureService {
     public Boolean paid(UUID id_facture) {
         Optional<Facture> facture = this.factureDao.findById(id_facture).stream().findFirst();
         if (facture.isPresent()) {
-            facture.get().setIsPaid(!facture.get().getIsPaid());
+            facture.get().setIsPaid(true);
             this.factureDao.save(facture.get());
             return facture.get().getIsPaid();
         } else {
