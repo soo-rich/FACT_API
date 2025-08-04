@@ -66,6 +66,7 @@ public class ReportImpl implements ReportService {
                         this.numberToWords.convertNumberToWords(Math.round(pr.getTotal_ttc())),
                         this.responseMapper.responseClientDTO(pr.getClient()),
                         pr.getCreatedat(),
+                        false,
                         pr.getSignedBy()
                 );
             }
@@ -84,6 +85,7 @@ public class ReportImpl implements ReportService {
                         this.numberToWords.convertNumberToWords(Math.round(br.getProforma().getTotal_ttc())),
                         this.responseMapper.responseClientDTO(br.getProforma().getClient()),
                         br.getCreatedat(),
+                        false,
                         br.getSignedBy()
                 );
 
@@ -103,6 +105,7 @@ public class ReportImpl implements ReportService {
                         this.numberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())),
                         this.responseMapper.responseClientDTO(facture.getBordereau().getProforma().getClient()),
                         facture.getCreatedat(),
+                        facture.getIsPaid(),
                         facture.getSignedBy()
                 );
             }

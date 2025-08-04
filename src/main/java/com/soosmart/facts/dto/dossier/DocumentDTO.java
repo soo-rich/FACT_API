@@ -18,6 +18,7 @@ public record DocumentDTO(
         String total_letters,
         ClientDTO client,
         Instant date,
+        Boolean paied,
         String signby
 ) {
 }
