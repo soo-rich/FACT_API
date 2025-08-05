@@ -19,8 +19,7 @@ docker rm soosmartfact_api 2>/dev/null || true
 echo "🚀 Démarrage du nouveau conteneur..."
 docker run -d \
   --name soosmartfact_api \
-  --env-file .env \
-  -p 8080:8080 \
+  -p 9000:8080 \
   soosmartfact_api:latest
 
 echo "✅ Application déployée"
