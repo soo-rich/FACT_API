@@ -5,7 +5,7 @@ cd ..
 
 # Variables (à modifier avec tes infos)
 DOCKER_USERNAME="sooulrich933"
-APP_NAME="soosmart-facts-spring"
+APP_NAME="soosmart-facts-api"
 VERSION=$(date +%Y%m%d-%H%M%S)  # ou utilise $(date +%Y%m%d-%H%M%S) pour un timestamp
 
 # Couleurs pour les messages
@@ -61,6 +61,6 @@ echo -e "${BLUE}📋 Commandes pour ton serveur de production:${NC}"
 echo ""
 echo "# Sur ton serveur de production, execute:"
 echo "docker pull $DOCKER_USERNAME/$APP_NAME:latest"
-echo "docker run -d --name mon-app --env-file .env -p 8080:8080 --restart unless-stopped $DOCKER_USERNAME/$APP_NAME:latest"
+echo "docker run -d --name $APP_NAME --env-file .env -p 8080:8080 --restart unless-stopped $DOCKER_USERNAME/$APP_NAME:latest"
 echo ""
 echo -e "${GREEN}🎉 Déploiement terminé !${NC}"
