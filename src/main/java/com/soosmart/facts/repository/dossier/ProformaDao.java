@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
     @Query("SELECT COUNT (p) FROM Proforma p WHERE p.createdat >= :startOfDay and p.createdat < :endOfDay")
-    Long countProformasCreateToday(@Param("startOfDay") Instant startOfDay, @Param("endOfDay")Instant endOfDay);
+    Long countProformasCreateToday(@Param("startOfDay") Instant startOfDay, @Param("endOfDay") Instant endOfDay);
 
     Optional<Proforma> findByNumero(String numero);
 
@@ -24,10 +24,16 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
     Page<Proforma> findAllByDeletedIsFalseAndAdoptedIsFalse(Pageable pageable);
 
-    Page<Proforma> findAllByReference(Pageable pageable,String reference);
+    Page<Proforma> findAllByReference(Pageable pageable, String reference);
 
     Optional<Proforma> findByReference(String reference);
 
     @Query("SELECT COUNT (p) FROM Proforma p WHERE p.deleted = false ")
     int countAllByDeletedIsFalse();
+
+    @Query("SELECT COUNT (p) FROM Proforma p WHERE p.adopted = true")
+    Long countAllAdoptedIsTrue();
+
+    @Query("SELECT COUNT (p) FROM Proforma p WHERE p.adopted = false")
+    Long countAllAdoptedIsFalse();
 }

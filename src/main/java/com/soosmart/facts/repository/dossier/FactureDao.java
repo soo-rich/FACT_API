@@ -22,4 +22,10 @@ public interface FactureDao extends JpaRepository<Facture, UUID> {
 
     @Query("SELECT COUNT (f) FROM Facture f WHERE f.deleted = false ")
     int countAllByDeletedIsFalse();
+
+    @Query("SELECT SUM(f.total_ttc) FROM Facture f WHERE f.deleted = false and f.isPaid= true")
+    Double getTotalFacture();
+
+    @Query("SELECT SUM(f.total_ttc) FROM Facture f WHERE f.deleted = false and f.isPaid= false")
+    Double getTotalFactureUnPaiud();
 }

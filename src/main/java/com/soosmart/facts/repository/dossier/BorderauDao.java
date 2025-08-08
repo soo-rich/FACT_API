@@ -21,4 +21,13 @@ public interface BorderauDao extends JpaRepository<Bordereau, UUID> {
     Page<Bordereau> findAllByDeletedIsFalse(Pageable pageable);
 
     Page<Bordereau> findAllByDeletedIsFalseAndAdoptedIsFalse(Pageable pageable);
+
+    @Query("SELECT COUNT (b) FROM Bordereau b WHERE b.adopted = true")
+    Long countBordereauxAdopedTrue();
+
+    @Query("SELECT COUNT (b) FROM Bordereau b WHERE b.adopted = false")
+    Long countBordereauxAdopedFalse();
+
+    @Query("SELECT COUNT (b) FROM Bordereau b WHERE b.deleted = false ")
+    Integer countAllByDeletedIsFalse();
 }
