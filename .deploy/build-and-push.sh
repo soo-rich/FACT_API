@@ -26,7 +26,7 @@ fi
 
 # 2. Build l'image Docker avec tag
 echo -e "${BLUE}🐳 Build de l'image Docker...${NC}"
-docker build -t $DOCKER_USERNAME/$APP_NAME:$VERSION .
+docker build -t $DOCKER_USERNAME/$APP_NAME:"$VERSION" .
 docker build -t $DOCKER_USERNAME/$APP_NAME:latest .
 
 if [ $? -ne 0 ]; then
