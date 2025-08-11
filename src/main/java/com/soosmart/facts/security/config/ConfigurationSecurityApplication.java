@@ -40,7 +40,7 @@ public class  ConfigurationSecurityApplication {
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
                     corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:4200","http://localhost:8081","http://localhost:8082","http://localhost:3000"));
+                    corsConfiguration.setAllowedOrigins(java.util.List.of("*"));
                     corsConfiguration.setAllowedMethods(java.util.List.of("*"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                     corsConfiguration.setMaxAge(3600L);
@@ -50,6 +50,7 @@ public class  ConfigurationSecurityApplication {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers(SWAGGER_LIST).permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(
