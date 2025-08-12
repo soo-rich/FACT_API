@@ -3,8 +3,6 @@ WORKDIR /app
 
 COPY ../target/*.jar app.jar
 
-ENV SPRING_PROFILES_ACTIVE=prod
-
-EXPOSE 8080
+EXPOSE 9000
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
