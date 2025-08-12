@@ -4,6 +4,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 
 public record SaveArticleDTO(
         String libelle,
+        String description,
         Float prix_unitaire
 ) {
     public SaveArticleDTO{

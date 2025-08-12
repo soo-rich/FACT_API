@@ -31,7 +31,7 @@ public class ArticleImpl implements ArticleService {
     @Override
     public ArticleDTO save_article(SaveArticleDTO articleDTO) {
 
-        Article article = Article.builder().libelle(articleDTO.libelle()).prix_unitaire(articleDTO.prix_unitaire()).build();
+        Article article = Article.builder().libelle(articleDTO.libelle()).description(articleDTO.description()).prix_unitaire(articleDTO.prix_unitaire()).build();
         Article save = this.articleDAO.save(article);
         return this.responseMapper.responseArticleDTO(save);
     }
@@ -47,6 +47,7 @@ public class ArticleImpl implements ArticleService {
         if (articleOld.isPresent()) {
             Article articleupdate = articleOld.get();
             articleupdate.setLibelle(articleDTO.libelle());
+            articleupdate.setDescription(articleDTO.description());
             articleupdate.setPrix_unitaire(articleDTO.prix_unitaire());
 
             return this.responseMapper.responseArticleDTO(this.articleDAO.save(articleupdate));

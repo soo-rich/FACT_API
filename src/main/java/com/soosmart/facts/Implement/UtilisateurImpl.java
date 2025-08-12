@@ -19,10 +19,10 @@ import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
 import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
+import com.soosmart.facts.utils.EmailService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,7 @@ public class UtilisateurImpl implements UtilisateurService {
     private ResponseMapper responseMapper;
     private BCryptPasswordEncoder passwordEncoder;
     private final UtilisateurConnecteServie utilisateurConnecteServie;
+    private final EmailService emailService;
 
     @Override
     public void createSuprerAdmin(String email, String username, String password) {
@@ -97,7 +98,7 @@ public class UtilisateurImpl implements UtilisateurService {
                 .email(utilisateur.email())
                 .numero(utilisateur.numero())
                 .username(utilisateur.username())
-                .mdp(passwordEncoder.encode(utilisateur.password()))
+                .mdp(passwordEncoder.encode(utilisateur.nom()))
                 .role(
                         Role.builder()
                                 .libelle(TypeDeRole.USER)
@@ -106,6 +107,8 @@ public class UtilisateurImpl implements UtilisateurService {
 
         if (this.verifierUtilisateurEmail(user)) {
             Utilisateur save = this.utilisateurDAO.save(user);
+            // Send default password email
+            this.emailService.sendDefaultPasswordMail(save.getEmail(), utilisateur.nom());
             return new ResponseUtilisateur(
                     save.getId(),
                     save.getNom(),

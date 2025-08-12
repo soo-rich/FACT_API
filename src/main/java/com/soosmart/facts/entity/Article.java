@@ -17,6 +17,12 @@ public class Article {
     @GeneratedValue(generator = "uuid", strategy = GenerationType.AUTO )
     private UUID id;
     private String libelle;
+    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private String description;
     private Float prix_unitaire;
     @CreationTimestamp
     @Column(updatable = false, name = "createdat")

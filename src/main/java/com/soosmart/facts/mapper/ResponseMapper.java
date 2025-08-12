@@ -52,6 +52,7 @@ public class ResponseMapper {
         return new ArticleDTO(
                 article.getId(),
                 article.getLibelle(),
+                article.getDescription(),
                 article.getPrix_unitaire()
         );
     }
