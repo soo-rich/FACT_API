@@ -7,8 +7,7 @@ public record SaveUtilisateurDTO(
         String prenom,
         String email,
         Integer numero,
-        String username,
-        String password
+        String username
 ) {
     public SaveUtilisateurDTO{
         if (nom == null || nom.isBlank()) {
@@ -25,9 +24,6 @@ public record SaveUtilisateurDTO(
         }
         if (username == null || username.isBlank()) {
             throw new HttpMessageNotReadableException("Le username ne doit pas etre null ou vide");
-        }
-        if (password == null || password.isBlank()) {
-            throw new HttpMessageNotReadableException("Le password ne doit pas etre null ou vide");
         }
     }
 }
