@@ -91,14 +91,14 @@ public class UtilisateurImpl implements UtilisateurService {
 
     @Override
     public ResponseUtilisateur save(SaveUtilisateurDTO utilisateur) {
-
+        String defaultPassword = utilisateur.nom() + "123456";
         Utilisateur user = Utilisateur.builder()
                 .nom(utilisateur.nom())
                 .prenom(utilisateur.prenom())
                 .email(utilisateur.email())
                 .numero(utilisateur.numero())
                 .username(utilisateur.username())
-                .mdp(passwordEncoder.encode(utilisateur.nom()))
+                .mdp(passwordEncoder.encode(defaultPassword))
                 .role(
                         Role.builder()
                                 .libelle(TypeDeRole.USER)
@@ -108,7 +108,7 @@ public class UtilisateurImpl implements UtilisateurService {
         if (this.verifierUtilisateurEmail(user)) {
             Utilisateur save = this.utilisateurDAO.save(user);
             // Send default password email
-            this.emailService.sendDefaultPasswordMail(save.getEmail(), utilisateur.nom());
+            this.emailService.sendDefaultPasswordMail(save.getEmail(), defaultPassword);
             return new ResponseUtilisateur(
                     save.getId(),
                     save.getNom(),
