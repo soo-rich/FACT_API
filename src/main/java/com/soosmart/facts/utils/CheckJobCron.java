@@ -34,7 +34,7 @@ public class CheckJobCron {
         }
     }
 
-    @Scheduled(fixedRate = 2000) // Runs every 2 seconds
+    @Scheduled(fixedRate = 60000) // Runs every 60 seconds
     public void checkApplicationhealthy() {
         logger.info("Checking application health...");
         try {
