@@ -16,10 +16,11 @@ public class CheckJobCron {
     private static final Logger logger = LoggerFactory.getLogger(CheckJobCron.class);
 
     private final ArticleDAO articleDAO;
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    public CheckJobCron(ArticleDAO articleDAO) {
+    public CheckJobCron(ArticleDAO articleDAO, RestTemplate restTemplate) {
         this.articleDAO = articleDAO;
+        this.restTemplate = restTemplate;
     }
 
     @Scheduled(fixedRate = 20000) // Runs every 20 seconds
@@ -33,7 +34,7 @@ public class CheckJobCron {
         }
     }
 
-    @Scheduled(fixedRate = 20000) // Runs every 20 seconds
+    @Scheduled(fixedRate = 2000) // Runs every 2 seconds
     public void checkApplicationhealthy() {
         logger.info("Checking application health...");
         try {
