@@ -18,7 +18,6 @@ public class Article {
     private UUID id;
     private String libelle;
     @Column(columnDefinition = "TEXT")
-    @Lob
     @Basic(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
