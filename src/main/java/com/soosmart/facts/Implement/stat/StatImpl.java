@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -76,7 +75,7 @@ public class StatImpl implements StatService {
                 allByDeletedIsFalse.stream()
                         .map(item -> new Table(
                                 item[0].toString(),
-                                ((Date) item[1]).toInstant(),
+                                ((Instant) item[1]),
                                 (Float) item[2]
                         ))
                         .toList()
