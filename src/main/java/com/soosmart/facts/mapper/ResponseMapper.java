@@ -93,6 +93,7 @@ public class ResponseMapper {
         return new ArticleQuantiteDTO(
                 articleQuantite.getId(),
                 articleQuantite.getArticle().getLibelle(),
+                articleQuantite.getArticle().getDescription(),
                 articleQuantite.getQuantite(),
                 articleQuantite.getPrix_article()
         );
