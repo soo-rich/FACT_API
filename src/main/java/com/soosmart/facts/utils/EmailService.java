@@ -11,12 +11,12 @@ public class EmailService {
 
     private JavaMailSender mailSender;
 
-    public void sendDefaultPasswordMail(String to, String password) {
+    public void sendDefaultPasswordMail(String to, String password, String username) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
             message.setSubject("Mot de passe par défaut");
-            message.setText("Votre mot de passe par defaut est : " + password + "\nVeuillez le changer dans votre profil.");
+            message.setText("\nVotre mot de passe par defaut est : " + password + "\nVeuillez le changer dans votre profil.");
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de l'envoi de l'email : " + e.getMessage(), e);

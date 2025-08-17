@@ -108,7 +108,7 @@ public class UtilisateurImpl implements UtilisateurService {
         if (this.verifierUtilisateurEmail(user)) {
             Utilisateur save = this.utilisateurDAO.save(user);
             // Send default password email
-            this.emailService.sendDefaultPasswordMail(save.getEmail(), defaultPassword);
+            this.emailService.sendDefaultPasswordMail(save.getEmail(), defaultPassword, save.getUsername());
             return new ResponseUtilisateur(
                     save.getId(),
                     save.getNom(),
