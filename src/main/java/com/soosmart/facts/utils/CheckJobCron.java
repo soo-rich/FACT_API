@@ -23,7 +23,7 @@ public class CheckJobCron {
         this.restTemplate = restTemplate;
     }
 
-    @Scheduled(fixedRate = 20000) // Runs every 20 seconds
+    //    @Scheduled(fixedRate = 20000) // Runs every 20 seconds
     public void checkdatabaseNeon() {
         logger.info("Checking database Neon...");
         try {
