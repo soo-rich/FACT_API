@@ -15,8 +15,9 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
-            message.setSubject("Mot de passe par défaut");
-            message.setText("\nVotre mot de passe par defaut est : " + password + "\nVeuillez le changer dans votre profil.");
+            message.setSubject("Identifiant par défaut");
+            message.setText("\nVotre Nom Utilisateur est : " + username + "\nVotre mot de passe par defaut est : "
+                    + password + "\nVeuillez le changer dans votre profil.");
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de l'envoi de l'email : " + e.getMessage(), e);
