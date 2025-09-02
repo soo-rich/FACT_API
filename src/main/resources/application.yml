@@ -48,7 +48,7 @@ my:
 file:
   storage:
     provider: minio
-    max-size: 100MB
+    max-size: 104857600
     allowed-types: jpg,jpeg,png,pdf,doc,docx
 
 # Configuration MinIO

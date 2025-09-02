@@ -1,47 +1,46 @@
 package com.soosmart.facts.Implement.dossier;
 
 import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderDto;
+import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderOneDto;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossierexterne.PurchaseOrder;
+import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.dossier.PurchaseOrderDao;
-import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.service.dossier.ProformaService;
-import com.soosmart.facts.service.dossier.purchaseOrderService;
+import com.soosmart.facts.service.dossier.PurchaseOrderService;
 import com.soosmart.facts.service.file.FileMetadataService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class purchaseOrderImpl implements purchaseOrderService {
+public class purchaseOrderImpl implements PurchaseOrderService {
 
     private final FileMetadataService fileMetadataService;
     private final ProformaService proformaService;
-    private final BordereauService bordereauService;
     private final PurchaseOrderDao purchaseOrderDao;
     private final ResponseMapper responseMapper;
 
     @Override
     public PurchaseOderDto savepurchaseOrder(String proformaNumero, MultipartFile file) {
-        return
-                this.responseMapper.responsePurchaseOder(
-                        this.purchaseOrderDao.save(PurchaseOrder.builder()
-                                .proforma(this.proformaService.getProformaEntity(proformaNumero))
-                                .file(this.fileMetadataService.save(file))
-                                .build()));
+        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file)).build()));
+    }
+
+    @Override
+    public PurchaseOderOneDto findOne(UUID id) {
+        return this.responseMapper.responsePurchaseOderOne(this.purchaseOrderDao.findById(id).orElseThrow(() -> new EntityNotFound("Fichier non trouver")));
     }
 
     @Override
     public CustomPageResponse<PurchaseOderDto> listpurchaseorder(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.purchaseOrderDao.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
-                responseMapper::responsePurchaseOder
-        );
+        return PageMapperUtils.toPageResponse(this.purchaseOrderDao.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responsePurchaseOder);
     }
 
     @Override
@@ -51,6 +50,14 @@ public class purchaseOrderImpl implements purchaseOrderService {
 
     @Override
     public Boolean remove(UUID id) {
-        return null;
+        Optional<PurchaseOrder> purchaseOrder = this.purchaseOrderDao.findById(id);
+
+        if (purchaseOrder.isPresent()) {
+            PurchaseOrder order = purchaseOrder.get();
+            order.setSupprimer(true);
+            order = this.purchaseOrderDao.save(order);
+            return order.getSupprimer();
+        } else return false;
+
     }
 }

@@ -42,3 +42,5 @@ src/main/resources/application-dev.properties
 
 .deploy/.env
 #.deploy/deploy.sh
+
+.docker/data

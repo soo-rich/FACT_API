@@ -7,6 +7,7 @@ import com.soosmart.facts.dto.dossier.borderau.BorderauDto;
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderDto;
+import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderOneDto;
 import com.soosmart.facts.dto.file.FileMetaDataDto;
 import com.soosmart.facts.dto.project.ProjetDTO;
 import com.soosmart.facts.dto.stat.Table;
@@ -108,5 +109,14 @@ public class ResponseMapper {
             return null;
         }
         return new PurchaseOderDto(purchaseOrder.getProforma().getNumero(), purchaseOrder.getBordereau().getNumero(), this.responseFileMetadate(purchaseOrder.getFile()));
+    }
+
+    public PurchaseOderOneDto responsePurchaseOderOne(PurchaseOrder purchaseOrder) {
+        if (purchaseOrder == null) return null;
+        return new PurchaseOderOneDto(
+                this.responseBorderauDto(purchaseOrder.getBordereau()),
+                this.responseProformaDTO(purchaseOrder.getProforma()),
+                this.responseFileMetadate(purchaseOrder.getFile())
+        );
     }
 }

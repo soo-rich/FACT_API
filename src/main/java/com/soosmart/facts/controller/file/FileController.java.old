@@ -1,0 +1,393 @@
+/*
+package com.soosmart.facts.controller.file;
+
+
+import com.soosmart.facts.Implement.file.FileMetadataService;
+import com.soosmart.facts.entity.file.FileMetadata;
+import com.soosmart.facts.exceptions.file.FileNotFoundException;
+import com.soosmart.facts.exceptions.file.FileStorageException;
+import com.soosmart.facts.service.file.FileStorageService;
+import com.soosmart.facts.utils.FileValidationService;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@AllArgsConstructor
+@RequestMapping("files")
+public class FileController {
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+
+    private FileStorageService fileStorageService;
+
+    private FileMetadataService fileMetadataService;
+
+    private FileValidationService fileValidationService;
+
+    @Value("${file.storage.provider}")
+    private String storageProvider;
+
+    @PostMapping("/upload")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> uploadFile(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "description", required = false) String description,
+            Authentication authentication) */
+/**//*
+{
+
+        try {
+            // Validation du fichier
+            FileValidationService.ValidationResult validationResult =
+                    fileValidationService.validateFile(file);
+
+            if (!validationResult.isValid()) {
+                return ResponseEntity.badRequest()
+                        .body(new ErrorResponse("VALIDATION_ERROR", validationResult.getErrorMessage()));
+            }
+
+            // Génération d'un nom unique pour éviter les collisions
+            String fileExtension = getFileExtension(file.getOriginalFilename());
+            String uniqueFileName = generateUniqueFileName(fileExtension);
+
+            // Upload du fichier vers le stockage configuré
+            String storageUrl = fileStorageService.uploadFile(file, uniqueFileName);
+
+            // Sauvegarde des métadonnées en base de données
+            FileMetadata metadata = new FileMetadata(
+                    uniqueFileName,
+                    file.getOriginalFilename(),
+                    file.getContentType(),
+                    file.getSize(),
+                    storageUrl,
+                    authentication.getName(),
+                    storageProvider
+            );
+
+            FileMetadata savedMetadata = fileMetadataService.save(metadata);
+
+            logger.info("File uploaded successfully: {} by user: {}",
+                    uniqueFileName, authentication.getName());
+
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new FileUploadResponse(
+                            savedMetadata.getId(),
+                            uniqueFileName,
+                            file.getOriginalFilename(),
+                            storageUrl,
+                            file.getSize(),
+                            storageProvider
+                    ));
+
+        } catch (Exception e) {
+            logger.error("Error uploading file", e);
+            throw new FileStorageException("Erreur lors de l'upload du fichier", e);
+        }
+    }
+
+    @PostMapping("/upload/multiple")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> uploadMultipleFiles(
+            @RequestParam("files") MultipartFile[] files,
+            Authentication authentication) {
+
+        if (files.length == 0) {
+            return ResponseEntity.badRequest()
+                    .body(new ErrorResponse("NO_FILES", "Aucun fichier fourni"));
+        }
+
+        if (files.length > 10) { // Limite à 10 fichiers par upload
+            return ResponseEntity.badRequest()
+                    .body(new ErrorResponse("TOO_MANY_FILES", "Maximum 10 fichiers par upload"));
+        }
+
+        List<FileUploadResponse> responses = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            try {
+                // Réutiliser la logique d'upload simple
+                ResponseEntity<?> singleUploadResult = uploadFile(file, null, authentication);
+
+                if (singleUploadResult.getStatusCode().is2xxSuccessful()) {
+                    responses.add((FileUploadResponse) singleUploadResult.getBody());
+                } else {
+                    // En cas d'erreur sur un fichier, continuer avec les autres
+                    logger.warn("Failed to upload file: {}", file.getOriginalFilename());
+                }
+            } catch (Exception e) {
+                logger.error("Error uploading file: {}", file.getOriginalFilename(), e);
+            }
+        }
+
+        return ResponseEntity.ok(new MultipleFileUploadResponse(responses));
+    }
+
+    @GetMapping("/download/{fileId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<InputStreamResource> downloadFile(
+            @PathVariable Long fileId,
+            Authentication authentication) {
+
+        FileMetadata metadata = fileMetadataService.findById(fileId);
+        if (metadata == null) {
+            throw new FileNotFoundException("Fichier introuvable avec l'ID: " + fileId);
+        }
+
+        // Vérification des permissions
+        if (!canUserAccessFile(metadata, authentication)) {
+            throw new AccessDeniedException("Accès refusé au fichier");
+        }
+
+        try {
+            InputStream fileStream = fileStorageService.downloadFile(metadata.getFileName());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + metadata.getOriginalFileName() + "\"");
+            headers.setContentType(MediaType.parseMediaType(metadata.getContentType()));
+            headers.setContentLength(metadata.getFileSize());
+
+            logger.info("File downloaded: {} by user: {}",
+                    metadata.getFileName(), authentication.getName());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(new InputStreamResource(fileStream));
+
+        } catch (Exception e) {
+            logger.error("Error downloading file with ID: " + fileId, e);
+            throw new FileStorageException("Erreur lors du téléchargement du fichier");
+        }
+    }
+
+    @DeleteMapping("/{fileId}")
+
+    public ResponseEntity<?> deleteFile(
+            @PathVariable UUID fileId,
+            Authentication authentication) {
+
+        FileMetadata metadata = fileMetadataService.findById(fileId);
+        if (metadata == null) {
+            throw new FileNotFoundException("Fichier introuvable avec l'ID: " + fileId);
+        }
+
+
+        try {
+            // Suppression du fichier du stockage
+            boolean deleted = fileStorageService.deleteFile(metadata.getFileName());
+
+            if (deleted) {
+                // Suppression des métadonnées de la base de données
+                fileMetadataService.delete(fileId);
+
+                logger.info("File deleted: {} by user: {}",
+                        metadata.getFileName(), authentication.getName());
+
+                return ResponseEntity.ok()
+                        .body(new SuccessResponse("Fichier supprimé avec succès"));
+            } else {
+                throw new FileStorageException("Impossible de supprimer le fichier du stockage");
+            }
+
+        } catch (Exception e) {
+            logger.error("Error deleting file with ID: " + fileId, e);
+            throw new FileStorageException("Erreur lors de la suppression du fichier");
+        }
+    }
+
+    @GetMapping("/my-files")
+
+    public ResponseEntity<List<FileMetadata>> getUserFiles(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        List<FileMetadata> userFiles = fileMetadataService.findByUploadedBy(
+                authentication.getName());
+        return ResponseEntity.ok(userFiles);
+    }
+
+    @GetMapping("/signed-url/{fileId}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getSignedUrl(
+            @PathVariable UUID fileId,
+            @RequestParam(defaultValue = "60") int expirationMinutes
+    ) {
+
+        if (expirationMinutes > 1440) { // Max 24 heures
+            return ResponseEntity.badRequest()
+                    .body("Durée d'expiration maximale: 1440 minutes");
+        }
+
+        FileMetadata metadata = fileMetadataService.findById(fileId);
+        if (metadata == null) {
+            throw new FileNotFoundException("Fichier introuvable avec l'ID: " + fileId);
+        }
+
+
+        try {
+            String signedUrl = fileStorageService.generateSignedUrl(
+                    metadata.getFileName(), expirationMinutes);
+
+            return ResponseEntity.ok(new SignedUrlResponse(
+                    signedUrl,
+                    expirationMinutes,
+                    metadata.getOriginalFileName()
+            ));
+
+        } catch (Exception e) {
+            logger.error("Error generating signed URL for file ID: " + fileId, e);
+            throw new FileStorageException("Erreur lors de la génération de l'URL signée");
+        }
+    }
+
+    @GetMapping("/info/{fileId}")
+    public ResponseEntity<FileMetadata> getFileInfo(
+            @PathVariable UUID fileId
+    ) {
+
+        FileMetadata metadata = fileMetadataService.findById(fileId);
+        if (metadata == null) {
+            throw new FileNotFoundException("Fichier introuvable avec l'ID: " + fileId);
+        }
+
+        return ResponseEntity.ok(metadata);
+    }
+
+    // Méthodes utilitaires
+    private String getFileExtension(String fileName) {
+        if (fileName == null || fileName.lastIndexOf('.') == -1) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+    }
+
+    private String generateUniqueFileName(String extension) {
+        String uuid = UUID.randomUUID().toString();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        return uuid + "_" + timestamp + (extension.isEmpty() ? "" : "." + extension);
+    }
+
+    private boolean canUserAccessFile(FileMetadata metadata, Authentication authentication) {
+        return metadata.getUploadedBy().equals(authentication.getName()) ||
+                authentication.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    private boolean canUserDeleteFile(FileMetadata metadata, Authentication authentication) {
+        return canUserAccessFile(metadata, authentication);
+    }
+
+    // Classes de réponse
+    public static class FileUploadResponse {
+        private Long id;
+        private String fileName;
+        private String originalFileName;
+        private String url;
+        private Long fileSize;
+        private String storageProvider;
+
+        public FileUploadResponse(Long id, String fileName, String originalFileName,
+                                  String url, Long fileSize, String storageProvider) {
+            this.id = id;
+            this.fileName = fileName;
+            this.originalFileName = originalFileName;
+            this.url = url;
+            this.fileSize = fileSize;
+            this.storageProvider = storageProvider;
+        }
+
+        // Getters
+        public Long getId() {
+            return id;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public String getOriginalFileName() {
+            return originalFileName;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public Long getFileSize() {
+            return fileSize;
+        }
+
+        public String getStorageProvider() {
+            return storageProvider;
+        }
+    }
+
+    public static class MultipleFileUploadResponse {
+        private List<FileUploadResponse> files;
+        private int totalUploaded;
+
+        public MultipleFileUploadResponse(List<FileUploadResponse> files) {
+            this.files = files;
+            this.totalUploaded = files.size();
+        }
+
+        public List<FileUploadResponse> getFiles() {
+            return files;
+        }
+
+        public int getTotalUploaded() {
+            return totalUploaded;
+        }
+    }
+
+    public static class SignedUrlResponse {
+        private String url;
+        private int expirationMinutes;
+        private String fileName;
+
+        public SignedUrlResponse(String url, int expirationMinutes, String fileName) {
+            this.url = url;
+            this.expirationMinutes = expirationMinutes;
+            this.fileName = fileName;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public int getExpirationMinutes() {
+            return expirationMinutes;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+    }
+
+    public static class SuccessResponse {
+        private String message;
+
+        public SuccessResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
+}*/
