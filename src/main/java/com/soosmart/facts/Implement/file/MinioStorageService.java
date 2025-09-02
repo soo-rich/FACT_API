@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
+import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
+import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
+
 @Service
 @ConditionalOnProperty(name = "file.storage.provider", havingValue = "minio")
 public class MinioStorageService implements FileStorageService {
@@ -22,14 +25,38 @@ public class MinioStorageService implements FileStorageService {
     private final MinioClient minioClient;
     @Value("${minio.bucket-name}")
     private String bucketName;
+    @Value("${minio.endpoint}")
+    private String endpoint;
 
     public MinioStorageService(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
     @Override
+    public String uploadFile(MultipartFile file, String fileName) {
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+
+            logger.info("File uploaded successfully to MinIO: {}", fileName);
+            return String.format("%s/%s/%s", endpoint, bucketName, fileName);
+
+        } catch (Exception e) {
+            logger.error("Error uploading file to MinIO: {}", fileName, e);
+            throw new RuntimeException("Failed to upload file to MinIO", e);
+        }
+    }
+
+    @Override
     public String uploadFile(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
+        String fileExtension = getFileExtension(file.getOriginalFilename());
+        String uniqueFileName = generateUniqueFileName(fileExtension);
 
         try {
             InputStream inputStream = file.getInputStream();
@@ -37,15 +64,15 @@ public class MinioStorageService implements FileStorageService {
             return minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(fileName)
+                            .object(uniqueFileName)
                             .stream(inputStream, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
-            ).toString();
+            ).object();
 
 
         } catch (Exception e) {
-            logger.error("Error uploading file to MinIO: {}", fileName, e);
+            logger.error("Error uploading file to MinIO: {}", uniqueFileName, e);
             throw new RuntimeException("Failed to upload file to MinIO", e);
         }
     }

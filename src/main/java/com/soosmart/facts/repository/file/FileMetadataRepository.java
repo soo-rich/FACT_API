@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface FileMetadataRepository extends JpaRepository<FileMetadata, UUID> {
     List<FileMetadata> findByUploadedBy(String uploadedBy);
 
-    Page findAllBySupprimerIsFalse(Pageable pageable);
+    Page<FileMetadata> findAllBySupprimerIsFalse(Pageable pageable);
 }

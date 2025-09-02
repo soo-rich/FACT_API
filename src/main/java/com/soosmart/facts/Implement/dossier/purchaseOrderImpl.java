@@ -6,11 +6,13 @@ import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.entity.dossierexterne.PurchaseOrder;
 import com.soosmart.facts.exceptions.EntityNotFound;
+import com.soosmart.facts.exceptions.file.FileValidationException;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.dossier.PurchaseOrderDao;
 import com.soosmart.facts.service.dossier.ProformaService;
 import com.soosmart.facts.service.dossier.PurchaseOrderService;
 import com.soosmart.facts.service.file.FileMetadataService;
+import com.soosmart.facts.utils.FileValidationService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class purchaseOrderImpl implements PurchaseOrderService {
 
+    private FileValidationService fileValidationService;
     private final FileMetadataService fileMetadataService;
     private final ProformaService proformaService;
     private final PurchaseOrderDao purchaseOrderDao;
@@ -30,6 +33,13 @@ public class purchaseOrderImpl implements PurchaseOrderService {
 
     @Override
     public PurchaseOderDto savepurchaseOrder(String proformaNumero, MultipartFile file) {
+        FileValidationService.ValidationResult validationResult =
+                fileValidationService.validateFile(file);
+
+        if (!validationResult.isValid()) {
+            throw new FileValidationException(validationResult.getErrorMessage());
+        }
+
         return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file)).build()));
     }
 

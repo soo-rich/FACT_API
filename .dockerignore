@@ -1,0 +1,14 @@
+.env
+.git
+.gitignore
+.gitattributes
+README.md
+.deploy
+.docker
+.dockerignore
+.idea
+.vscode
+*.log
+*.iml
+Dockerfile
+target

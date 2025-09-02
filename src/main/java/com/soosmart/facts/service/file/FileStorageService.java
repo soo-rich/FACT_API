@@ -4,13 +4,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileStorageService {
 
-    /*    *//**
+    /*  *
      * Upload un fichier vers le stockage
      * @param file Le fichier à uploader
      * @param fileName Le nom du fichier
      * @return L'URL d'accès au fichier
-     *//*
-    String uploadFile(MultipartFile file, String fileName);*/
+     */
+    String uploadFile(MultipartFile file, String fileName);
 
     /**
      * Upload un fichier vers le stockage

@@ -7,6 +7,7 @@ import com.soosmart.facts.exceptions.NotSameId;
 import com.soosmart.facts.exceptions.dto.DtoArgumentRquired;
 import com.soosmart.facts.exceptions.file.FileNotFoundException;
 import com.soosmart.facts.exceptions.file.FileStorageException;
+import com.soosmart.facts.exceptions.file.FileValidationException;
 import com.soosmart.facts.exceptions.jwt.RefresTokenExpire;
 import com.soosmart.facts.exceptions.jwt.RefreshTokenInvalid;
 import com.soosmart.facts.exceptions.jwt.TokenExpireException;
@@ -285,6 +286,12 @@ public class ApplicationControllerAdvice {
     }
 
 
+    @ExceptionHandler(FileValidationException.class)
+    public @ResponseBody
+    ExceptionDto handleGenericException(FileValidationException ex) {
+        logger.error("validation file error: {}", ex.getMessage(), ex);
+        return new ExceptionDto(BAD_REQUEST, "votre fichier ne repond pas au normes");
+    }
     @ExceptionHandler(Exception.class)
     public @ResponseBody
     ExceptionDto handleGenericException(Exception ex) {

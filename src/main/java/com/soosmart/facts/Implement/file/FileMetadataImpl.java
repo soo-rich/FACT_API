@@ -17,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
+import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
+import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
+
 @Service
 public class FileMetadataImpl implements FileMetadataService {
 
@@ -36,11 +39,20 @@ public class FileMetadataImpl implements FileMetadataService {
 
 
     public FileMetadata save(MultipartFile file) {
+        String uniqueFileName = generateUniqueFileName(getFileExtension(file.getOriginalFilename()));
 
-        String uri = this.fileStorageService.uploadFile(file);
-        String filename = String.format("%s-%s", UUID.randomUUID(), file.getOriginalFilename());
-
-        return fileMetadataRepository.save(FileMetadata.builder().storageUrl(uri).storageProvider(provider).fileSize(file.getSize()).originalFileName(file.getOriginalFilename()).fileName(filename).contentType(file.getContentType()).uploadedBy(utilisateurConnecteServie.getUtilisateurConnecte().getUsername()).build());
+        String username = utilisateurConnecteServie
+                .getUtilisateurConnecte().getUsername();
+        return fileMetadataRepository.save(FileMetadata.builder()
+                .storageUrl(this.fileStorageService.uploadFile(file))
+                .storageProvider(provider)
+                .fileSize(file.getSize())
+                .originalFileName(file.getOriginalFilename())
+                .fileName(uniqueFileName)
+                .contentType(file.getContentType())
+//                .uploadedBy("N/A")
+                .uploadedBy(username)
+                .build());
     }
 
     public FileMetadata findById(UUID id) {

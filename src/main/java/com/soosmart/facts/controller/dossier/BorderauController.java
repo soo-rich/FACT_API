@@ -7,6 +7,7 @@ import com.soosmart.facts.service.dossier.BordereauService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -40,6 +41,11 @@ public class BorderauController {
     @PostMapping("{id_proforma}")
     public ResponseEntity<BorderauDto> saveBorderau(@PathVariable UUID id_proforma) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.bordereauService.saveBordereau(id_proforma));
+    }
+
+    @PostMapping(value = "bc/{id_proforma}", consumes = "multipart/form-data")
+    public ResponseEntity<BorderauDto> saveBorderauwithPurchaseOrder(@PathVariable UUID id_proforma, @RequestParam("bc") MultipartFile bc) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.bordereauService.saveBordereau(id_proforma, bc));
     }
 
     @DeleteMapping("{id}")
