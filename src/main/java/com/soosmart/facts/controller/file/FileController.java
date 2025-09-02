@@ -19,6 +19,6 @@ public class FileController {
 
     @PostMapping(value = "uploader-file", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.fileMetadataService.save(file));
+        return ResponseEntity.status(HttpStatus.OK).body(this.fileMetadataService.save(file, "bc"));
     }
 }

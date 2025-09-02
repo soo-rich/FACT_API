@@ -40,7 +40,7 @@ public class purchaseOrderImpl implements PurchaseOrderService {
             throw new FileValidationException(validationResult.getErrorMessage());
         }
 
-        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file)).build()));
+        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file, "bc")).build()));
     }
 
     @Override
