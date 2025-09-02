@@ -50,7 +50,7 @@ file:
     provider: local
     local:
       # Chemin de base pour le stockage local
-      base-path: /home/sul/projet/perso/DOCS/file/uploads
+      base-path: ${FILE_BASE_PATH}
       # ou pour Windows: C:\app\uploads
       # ou pour développement: ./uploads
     max-size: 104857600
