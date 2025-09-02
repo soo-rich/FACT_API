@@ -1,9 +1,12 @@
 package com.soosmart.facts.exceptions.advice;
 
+
 import com.soosmart.facts.dto.exception.ExceptionDto;
 import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.exceptions.NotSameId;
 import com.soosmart.facts.exceptions.dto.DtoArgumentRquired;
+import com.soosmart.facts.exceptions.file.FileNotFoundException;
+import com.soosmart.facts.exceptions.file.FileStorageException;
 import com.soosmart.facts.exceptions.jwt.RefresTokenExpire;
 import com.soosmart.facts.exceptions.jwt.RefreshTokenInvalid;
 import com.soosmart.facts.exceptions.jwt.TokenExpireException;
@@ -13,6 +16,8 @@ import com.soosmart.facts.exceptions.user.UsernameExiste;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
@@ -22,6 +27,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import static org.springframework.http.HttpStatus.*;
@@ -35,7 +41,7 @@ public class ApplicationControllerAdvice {
     public @ResponseBody ExceptionDto handleValidationExceptions(MethodArgumentNotValidException ex) {
         return new ExceptionDto(BAD_REQUEST, ex.getMessage());
     }*/
-
+   private static final Logger logger = LoggerFactory.getLogger(ApplicationControllerAdvice.class);
     @ResponseStatus(FORBIDDEN)
     @ExceptionHandler(value = {RefreshTokenInvalid.class})
     public @ResponseBody ExceptionDto refreshtokeninvalid(RefreshTokenInvalid ex) {
@@ -255,4 +261,35 @@ public class ApplicationControllerAdvice {
                 "Compte bloqué"
         );
     }
+
+
+    @ExceptionHandler(FileStorageException.class)
+    public @ResponseBody
+    ExceptionDto handleFileStorageException(FileStorageException ex) {
+        logger.error("File storage error: {}", ex.getMessage(), ex);
+        return new ExceptionDto(INTERNAL_SERVER_ERROR, "FILE_STORAGE_ERROR" + ex.getMessage());
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public @ResponseBody
+    ExceptionDto handleFileNotFoundException(FileNotFoundException ex) {
+        logger.error("File not found: {}", ex.getMessage());
+        return new ExceptionDto(NOT_FOUND, "FILE_NOT_FOUND " + ex.getMessage());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public @ResponseBody
+    ExceptionDto handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        logger.error("File size exceeded: {}", ex.getMessage());
+        return new ExceptionDto(BAD_REQUEST, "Le fichier est trop volumineux");
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public @ResponseBody
+    ExceptionDto handleGenericException(Exception ex) {
+        logger.error("Unexpected error: {}", ex.getMessage(), ex);
+        return new ExceptionDto(INTERNAL_SERVER_ERROR, "Une erreur interne s'est produite");
+    }
+
 }

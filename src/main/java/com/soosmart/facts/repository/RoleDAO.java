@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface RoleDAO extends JpaRepository<Role, Long> {
-    Role findById(UUID id);
+public interface RoleDAO extends JpaRepository<Role, UUID> {
+
     Role findByLibelle(TypeDeRole libelle);
 }
