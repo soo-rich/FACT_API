@@ -31,7 +31,6 @@ public class MinioStorageService implements FileStorageService {
 
     public MinioStorageService(MinioClient minioClient) {
         this.minioClient = minioClient;
-//        ensureBucketExists();
     }
 
     @Override

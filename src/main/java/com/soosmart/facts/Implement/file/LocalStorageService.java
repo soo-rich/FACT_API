@@ -15,7 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
 
 import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
 import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
@@ -28,12 +27,6 @@ public class LocalStorageService implements FileStorageService {
 
     @Value("${file.storage.local.base-path}")
     private String basePath;
-
-    @Value("${server.servlet.context-path:}")
-    private String contextPath;
-
-    @Value("${server.port:8080}")
-    private String serverPort;
 
     @Override
     public String uploadFile(MultipartFile file, String fileName) {
@@ -49,7 +42,7 @@ public class LocalStorageService implements FileStorageService {
             logger.info("File uploaded successfully to local storage: {}", fullPath);
 
             // Retourner l'URL d'accès local
-            return generateFileUrl(fileName);
+            return fullPath.toAbsolutePath().toString();
 
         } catch (IOException e) {
             logger.error("Error uploading file to local storage: {}", fileName, e);
@@ -67,7 +60,7 @@ public class LocalStorageService implements FileStorageService {
 
     @Override
     public String uploadFileToSubFolder(MultipartFile file, String subFolder) {
-        return uploadFile(file, subFolder + file.getOriginalFilename());
+        return uploadFile(file, subFolder);
     }
 
     @Override
@@ -109,7 +102,7 @@ public class LocalStorageService implements FileStorageService {
 
     @Override
     public String generateSignedUrl(String fileName, int expirationTimeInMinutes) {
-        try {
+       /* try {
             // Pour le stockage local, on génère une URL avec un token temporaire
             // Ici on utilise un simple encodage Base64 avec timestamp (à améliorer pour la production)
             long expirationTime = System.currentTimeMillis() + (expirationTimeInMinutes * 60 * 1000L);
@@ -122,7 +115,8 @@ public class LocalStorageService implements FileStorageService {
         } catch (Exception e) {
             logger.error("Error generating signed URL for local file: {}", fileName, e);
             throw new RuntimeException("Failed to generate signed URL", e);
-        }
+        }*/
+        return "";
     }
 
     @Override
@@ -156,11 +150,11 @@ public class LocalStorageService implements FileStorageService {
      * @param fileName Le nom du fichier
      * @return L'URL d'accès
      */
-    private String generateFileUrl(String fileName) {
+   /* private String generateFileUrl(String fileName) {
         String baseUrl = "http://localhost:" + serverPort;
         if (contextPath != null && !contextPath.isEmpty()) {
             baseUrl += contextPath;
         }
         return baseUrl + "/api/files/" + fileName;
-    }
+    }*/
 }

@@ -47,7 +47,12 @@ my:
 
 file:
   storage:
-    provider: minio
+    provider: local
+    local:
+      # Chemin de base pour le stockage local
+      base-path: /home/sul/projet/perso/DOCS/file/uploads
+      # ou pour Windows: C:\app\uploads
+      # ou pour développement: ./uploads
     max-size: 104857600
     allowed-types: jpg,jpeg,png,pdf,doc,docx
 
