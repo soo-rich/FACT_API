@@ -1,8 +1,8 @@
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY ../target/*.jar app.jar
+COPY target/*.jar app.jar
 
-EXPOSE 9000
+EXPOSE 4000
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
