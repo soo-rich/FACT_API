@@ -38,7 +38,7 @@ public class FileValidationService {
             return ValidationResult.error("Nom de fichier invalide");
         }
 
-        String extension = getFileExtension(fileName);
+        String extension = FileUtlis.getFileExtension(fileName);
         if (!isAllowedFileType(extension)) {
             return ValidationResult.error(
                     String.format("Type de fichier non autorisé. Types autorisés : %s", allowedTypes)
@@ -64,13 +64,6 @@ public class FileValidationService {
         return ValidationResult.success();
     }
 
-    private String getFileExtension(String fileName) {
-        if (fileName == null || fileName.lastIndexOf('.') == -1) {
-            return "";
-        }
-        return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
-    }
-
     private boolean isAllowedFileType(String extension) {
         List<String> allowedExtensions = Arrays.asList(allowedTypes.toLowerCase().split(","));
         return allowedExtensions.contains(extension.toLowerCase().trim());
@@ -82,23 +75,15 @@ public class FileValidationService {
 
     private boolean isValidMimeType(String mimeType, String extension) {
         // Mapping basique des types MIME selon l'extension
-        switch (extension.toLowerCase()) {
-            case "jpg":
-            case "jpeg":
-                return mimeType.equals("image/jpeg");
-            case "png":
-                return mimeType.equals("image/png");
-            case "pdf":
-                return mimeType.equals("application/pdf");
-            case "txt":
-                return mimeType.equals("text/plain");
-            case "doc":
-                return mimeType.equals("application/msword");
-            case "docx":
-                return mimeType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-            default:
-                return true; // Permettre d'autres types par défaut
-        }
+        return switch (extension.toLowerCase()) {
+            case "jpg", "jpeg" -> mimeType.equals("image/jpeg");
+            case "png" -> mimeType.equals("image/png");
+            case "pdf" -> mimeType.equals("application/pdf");
+            case "txt" -> mimeType.equals("text/plain");
+            case "doc" -> mimeType.equals("application/msword");
+            case "docx" -> mimeType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            default -> true; // Permettre d'autres types par défaut
+        };
     }
 
     private boolean isSecureFileName(String fileName) {
@@ -115,14 +100,7 @@ public class FileValidationService {
     }
 
     // Classe pour le résultat de validation
-    public static class ValidationResult {
-        private final boolean valid;
-        private final String errorMessage;
-
-        private ValidationResult(boolean valid, String errorMessage) {
-            this.valid = valid;
-            this.errorMessage = errorMessage;
-        }
+    public record ValidationResult(boolean valid, String errorMessage) {
 
         public static ValidationResult success() {
             return new ValidationResult(true, null);
@@ -132,12 +110,5 @@ public class FileValidationService {
             return new ValidationResult(false, message);
         }
 
-        public boolean isValid() {
-            return valid;
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
     }
 }

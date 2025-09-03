@@ -36,8 +36,8 @@ public class purchaseOrderImpl implements PurchaseOrderService {
         FileValidationService.ValidationResult validationResult =
                 fileValidationService.validateFile(file);
 
-        if (!validationResult.isValid()) {
-            throw new FileValidationException(validationResult.getErrorMessage());
+        if (!validationResult.valid()) {
+            throw new FileValidationException(validationResult.errorMessage());
         }
 
         return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file, "bc")).build()));
