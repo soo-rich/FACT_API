@@ -79,7 +79,16 @@ public class ResponseMapper {
         if (borderau == null) {
             return null;
         }
-        return new BorderauDto(borderau.getId(), borderau.getReference(), borderau.getNumero(), borderau.getProforma().getNumero(), borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), borderau.getProforma().getTotal_ht(), borderau.getProforma().getTotal_ttc(), borderau.getProforma().getTotal_tva(), borderau.getProforma().getClient().getNom(), borderau.getAdopted(), borderau.getCreatedat());
+        return new BorderauDto(
+                borderau.getId(),
+                borderau.getReference(),
+                borderau.getNumero(),
+                borderau.getProforma().getNumero(),
+                borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), borderau.getProforma().getTotal_ht(),
+                borderau.getProforma().getTotal_ttc(),
+                borderau.getProforma().getTotal_tva(),
+                borderau.getProforma().getClient().getNom(),
+                borderau.getAdopted(), borderau.getCreatedat());
     }
 
     public FactureDto responseFactureDto(Facture facture) {

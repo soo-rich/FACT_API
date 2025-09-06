@@ -47,10 +47,10 @@ my:
 
 file:
   storage:
-    provider: local
+    provider: ${FILE_PROVIDER:local}
     local:
       # Chemin de base pour le stockage local
-      base-path: ${FILE_BASE_PATH}
+      base-path: ${FILE_BASE_PATH:./uploads}
       # ou pour Windows: C:\app\uploads
       # ou pour développement: ./uploads
     max-size: 104857600
