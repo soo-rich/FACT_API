@@ -46,7 +46,7 @@ public class MinioStorageService implements FileStorageService {
             );
 
             logger.info("File uploaded successfully to MinIO: {}", normalizedFileName);
-            return String.format("%s/%s", bucketName, normalizedFileName);
+            return String.format("%s%s", bucketName, normalizedFileName);
 
         } catch (Exception e) {
             logger.error("Error uploading file to MinIO: {}", fileName, e);
