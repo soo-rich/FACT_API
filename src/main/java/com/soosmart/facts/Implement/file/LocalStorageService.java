@@ -16,9 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
-import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
-
 @Service
 @ConditionalOnProperty(name = "file.storage.provider", havingValue = "local")
 public class LocalStorageService implements FileStorageService {
@@ -42,7 +39,7 @@ public class LocalStorageService implements FileStorageService {
             logger.info("File uploaded successfully to local storage: {}", fullPath);
 
             // Retourner l'URL d'accès local
-            return fullPath.toAbsolutePath().toString();
+            return fullPath.toString();
 
         } catch (IOException e) {
             logger.error("Error uploading file to local storage: {}", fileName, e);
@@ -52,10 +49,7 @@ public class LocalStorageService implements FileStorageService {
 
     @Override
     public String uploadFile(MultipartFile file) {
-        String fileExtension = getFileExtension(file.getOriginalFilename());
-        String uniqueFileName = generateUniqueFileName(fileExtension);
-
-        return uploadFile(file, uniqueFileName);
+        return uploadFile(file, file.getOriginalFilename());
     }
 
     @Override

@@ -15,9 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
-import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
-import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
-
 @Service
 @ConditionalOnProperty(name = "file.storage.provider", havingValue = "minio")
 public class MinioStorageService implements FileStorageService {
@@ -59,26 +56,23 @@ public class MinioStorageService implements FileStorageService {
 
     @Override
     public String uploadFile(MultipartFile file) {
-        String fileExtension = getFileExtension(file.getOriginalFilename());
-        String uniqueFileName = generateUniqueFileName(fileExtension);
-
         try {
             InputStream inputStream = file.getInputStream();
 
-            ObjectWriteResponse response = minioClient.putObject(
+            minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(uniqueFileName)
+                            .object(file.getOriginalFilename())
                             .stream(inputStream, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
             );
 
-            logger.info("File uploaded successfully to MinIO: {}", uniqueFileName);
-            return String.format("%s/%s", bucketName, uniqueFileName);
+            logger.info("File uploaded successfully to MinIO: {}", file.getOriginalFilename());
+            return String.format("%s/%s", bucketName, file.getOriginalFilename());
 
         } catch (Exception e) {
-            logger.error("Error uploading file to MinIO: {}", uniqueFileName, e);
+            logger.error("Error uploading file to MinIO: {}", file.getOriginalFilename(), e);
             throw new RuntimeException("Failed to upload file to MinIO", e);
         }
     }
@@ -91,13 +85,7 @@ public class MinioStorageService implements FileStorageService {
      * @return L'URL d'accès au fichier
      */
     public String uploadFileToSubFolder(MultipartFile file, String subFolder) {
-        String fileExtension = getFileExtension(file.getOriginalFilename());
-        String uniqueFileName = generateUniqueFileName(fileExtension);
-
-        // Construire le chemin avec sous-dossier
-        String fullPath = subFolder.endsWith("/") ? subFolder + uniqueFileName : subFolder + "/" + uniqueFileName;
-
-        return uploadFile(file, fullPath);
+        return uploadFile(file, subFolder);
     }
 
     @Override
