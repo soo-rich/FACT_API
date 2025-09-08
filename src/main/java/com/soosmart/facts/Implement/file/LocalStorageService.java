@@ -36,10 +36,10 @@ public class LocalStorageService implements FileStorageService {
                 Files.copy(inputStream, fullPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            logger.info("File uploaded successfully to local storage: {}", fullPath);
+            logger.info("File uploaded successfully to local storage: {}", fileName);
 
             // Retourner l'URL d'accès local
-            return fullPath.toString();
+            return fileName;
 
         } catch (IOException e) {
             logger.error("Error uploading file to local storage: {}", fileName, e);
