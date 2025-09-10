@@ -79,15 +79,23 @@ public class ResponseMapper {
         if (borderau == null) {
             return null;
         }
-        System.out.println("Adopted: " + borderau.getAdopted());
-        return new BorderauDto(borderau.getId(), borderau.getReference(), borderau.getNumero(), borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), borderau.getProforma().getTotal_ht(), borderau.getProforma().getTotal_ttc(), borderau.getProforma().getTotal_tva(), borderau.getProforma().getClient().getNom(), borderau.getAdopted(), borderau.getCreatedat());
+        return new BorderauDto(
+                borderau.getId(),
+                borderau.getReference(),
+                borderau.getNumero(),
+                borderau.getProforma().getNumero(),
+                borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), borderau.getProforma().getTotal_ht(),
+                borderau.getProforma().getTotal_ttc(),
+                borderau.getProforma().getTotal_tva(),
+                borderau.getProforma().getClient().getNom(),
+                borderau.getAdopted(), borderau.getCreatedat());
     }
 
     public FactureDto responseFactureDto(Facture facture) {
         if (facture == null) {
             return null;
         }
-        return new FactureDto(facture.getId(), facture.getReference(), facture.getNumero(), facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), facture.getBordereau().getProforma().getTotal_ht(), facture.getBordereau().getProforma().getTotal_ttc(), facture.getBordereau().getProforma().getTotal_tva(), facture.getBordereau().getProforma().getClient().getNom(), facture.getBordereau().getProforma().getCreatedat(), facture.getSignedBy());
+        return new FactureDto(facture.getId(), facture.getReference(), facture.getNumero(), facture.getBordereau().getNumero(), facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), facture.getBordereau().getProforma().getTotal_ht(), facture.getBordereau().getProforma().getTotal_ttc(), facture.getBordereau().getProforma().getTotal_tva(), facture.getBordereau().getProforma().getClient().getNom(), facture.getBordereau().getProforma().getCreatedat(), facture.getSignedBy());
     }
 
     public Table responseTable(Document document) {

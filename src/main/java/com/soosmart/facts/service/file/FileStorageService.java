@@ -20,6 +20,8 @@ public interface FileStorageService {
      */
     String uploadFile(MultipartFile file);
 
+    String uploadFileToSubFolder(MultipartFile file, String subFolder);
+
     /**
      * Télécharge un fichier depuis le stockage
      *

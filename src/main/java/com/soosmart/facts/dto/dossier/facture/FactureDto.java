@@ -10,6 +10,7 @@ public record FactureDto(
         UUID id,
         String reference,
         String numero,
+        String numeroBorderau,
         List<ArticleQuantiteDTO> articleQuantiteslist,
         Float total_ht,
         Float total_ttc,

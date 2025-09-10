@@ -10,6 +10,7 @@ public record BorderauDto(
         UUID id,
         String reference,
         String numero,
+        String numeroProforma,
         List<ArticleQuantiteDTO> articleQuantiteslist,
         Float total_ht,
         Float total_ttc,

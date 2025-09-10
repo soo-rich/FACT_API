@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class purchaseOrderImpl implements PurchaseOrderService {
+public class PurchaseOrderImpl implements PurchaseOrderService {
 
     private FileValidationService fileValidationService;
     private final FileMetadataService fileMetadataService;
@@ -36,11 +36,11 @@ public class purchaseOrderImpl implements PurchaseOrderService {
         FileValidationService.ValidationResult validationResult =
                 fileValidationService.validateFile(file);
 
-        if (!validationResult.isValid()) {
-            throw new FileValidationException(validationResult.getErrorMessage());
+        if (!validationResult.valid()) {
+            throw new FileValidationException(validationResult.errorMessage());
         }
 
-        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file)).build()));
+        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file, "bc")).build()));
     }
 
     @Override
@@ -55,7 +55,15 @@ public class purchaseOrderImpl implements PurchaseOrderService {
 
     @Override
     public PurchaseOderDto updatepurchase(UUID purchaseOrderId, MultipartFile file) {
-        return null;
+        PurchaseOrder exciste = this.purchaseOrderDao.findById(purchaseOrderId).orElseThrow(() -> new EntityNotFound("Fichier non trouver"));
+        FileValidationService.ValidationResult validationResult =
+                fileValidationService.validateFile(file);
+
+        if (!validationResult.valid()) {
+            throw new FileValidationException(validationResult.errorMessage());
+        }
+        exciste.setFile(this.fileMetadataService.save(file, "bc"));
+        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(exciste));
     }
 
     @Override

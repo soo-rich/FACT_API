@@ -100,9 +100,16 @@ public class UtilisateurImpl implements UtilisateurService {
                 .username(utilisateur.username())
                 .mdp(passwordEncoder.encode(defaultPassword))
                 .role(
-                        Role.builder()
-                                .libelle(TypeDeRole.USER)
-                                .build())
+                        utilisateur.role().name().isBlank()
+                                ?
+                                Role.builder()
+                                        .libelle(TypeDeRole.USER)
+                                        .build()
+                                :
+                                Role.builder()
+                                        .libelle(utilisateur.role())
+                                        .build()
+                )
                 .build();
 
         if (this.verifierUtilisateurEmail(user)) {
@@ -138,6 +145,15 @@ public class UtilisateurImpl implements UtilisateurService {
                 userUpdate.setPrenom(utilisateur.prenom());
                 userUpdate.setEmail(utilisateur.email());
                 userUpdate.setNumero(utilisateur.numero());
+                userUpdate.setRole(
+                        utilisateur.role().name().equals(userUpdate.getRole().getLibelle().name())
+                                ?
+                                userUpdate.getRole()
+                                :
+                                Role.builder()
+                                        .libelle(utilisateur.role())
+                                        .build()
+                );
 
                 return this.responseMapper.responseUtilisateur(this.utilisateurDAO.save(userUpdate));
             } else {

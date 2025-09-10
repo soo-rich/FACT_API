@@ -1,5 +1,6 @@
 package com.soosmart.facts.dto.user;
 
+import com.soosmart.facts.enumpack.TypeDeRole;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
 public record SaveUtilisateurDTO(
@@ -7,7 +8,8 @@ public record SaveUtilisateurDTO(
         String prenom,
         String email,
         Integer numero,
-        String username
+        String username,
+        TypeDeRole role
 ) {
     public SaveUtilisateurDTO{
         if (nom == null || nom.isBlank()) {

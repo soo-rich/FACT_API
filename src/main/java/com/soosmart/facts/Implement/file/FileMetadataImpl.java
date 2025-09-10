@@ -55,6 +55,23 @@ public class FileMetadataImpl implements FileMetadataService {
                 .build());
     }
 
+    public FileMetadata save(MultipartFile file, String subDir) {
+        String uniqueFileName = generateUniqueFileName(getFileExtension(file.getOriginalFilename()));
+
+        String username = utilisateurConnecteServie
+                .getUtilisateurConnecte().getUsername();
+        return fileMetadataRepository.save(FileMetadata.builder()
+                .storageUrl(this.fileStorageService.uploadFileToSubFolder(file, String.format("/%s/%s", subDir, uniqueFileName)))
+                .storageProvider(provider)
+                .fileSize(file.getSize())
+                .originalFileName(file.getOriginalFilename())
+                .fileName(uniqueFileName)
+                .contentType(file.getContentType())
+//                .uploadedBy("N/A")
+                .uploadedBy(username)
+                .build());
+    }
+
     public FileMetadata findById(UUID id) {
         return fileMetadataRepository.findById(id).orElse(null);
     }
