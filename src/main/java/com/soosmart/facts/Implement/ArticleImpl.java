@@ -82,15 +82,6 @@ public class ArticleImpl implements ArticleService {
 
     @Override
     public List<ArticleDTO> search(String search) {
-
-        // if (search == null || search.isEmpty()) {
-        //     return this.articleDAO.findAllBySupprimerIsFalse()
-        //             .stream()
-        //             .map(this.responseMapper::responseArticleDTO)
-        //             .limit(10)
-        //             .toList();
-        // }
-
         return this.articleDAO.findByLibelleContainingIgnoreCaseAndSupprimerIsFalse(search).stream().map(this.responseMapper::responseArticleDTO).toList();
     }
 
