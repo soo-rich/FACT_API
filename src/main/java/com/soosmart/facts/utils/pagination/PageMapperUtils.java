@@ -17,7 +17,7 @@ public class PageMapperUtils {
         Sort sort = paginatedRequest.sort() == null ?
                 Sort.by(Sort.Direction.DESC, "createdat") :
                 Sort.by(Sort.Direction.ASC, paginatedRequest.sort());
-        return PageRequest.of(paginatedRequest.page(), paginatedRequest.pagesize(), sort);
+        return PageRequest.of(Math.max(paginatedRequest.page(), 1), Math.max(paginatedRequest.pagesize(), 1), sort);
     }
 
     public static <T, R> CustomPageResponse<R> toPageResponse(Page<T> page, Function<T, R> mapper) {

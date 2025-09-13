@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "article")
@@ -27,6 +28,38 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(this.articleService.save_article(articleDTO));
     }
+
+    @PostMapping(value = "all", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CompletableFuture<ResponseEntity<List<ArticleDTO>>> saveAll(
+            @RequestBody List<SaveArticleDTO> articlesDTO) {
+
+        // Validation de base
+        if (articlesDTO == null || articlesDTO.isEmpty()) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity.badRequest().build()
+            );
+        }
+
+        // Limiter le nombre d'articles par requête pour éviter les surcharges
+        if (articlesDTO.size() > 5000) {
+            return CompletableFuture.completedFuture(
+                    ResponseEntity.badRequest()
+                            .header("Error-Message", "Nombre maximum d'articles par requête: 5000")
+                            .build()
+            );
+        }
+
+        return this.articleService.saveAllArticlesAsync(articlesDTO)
+                .thenApply(savedArticles ->
+                        ResponseEntity.status(HttpStatus.CREATED).body(savedArticles)
+                )
+                .exceptionally(throwable -> {
+                    // Log l'erreur
+                    System.err.println("Erreur lors de la sauvegarde des articles: " + throwable.getMessage());
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                });
+    }
+
 
     @GetMapping
     public ResponseEntity<CustomPageResponse<ArticleDTO>> getall(

@@ -29,7 +29,7 @@ public class purchaseOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(this.purchaseOrderService.listpurchaseorder(new PaginatedRequest(page, pagesize, search)));
     }
 
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<PurchaseOderDto> save(@RequestPart(value = "proforma") String proforma, @RequestPart(value = "bc") MultipartFile bc) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.purchaseOrderService.savepurchaseOrder(proforma, bc));
     }
