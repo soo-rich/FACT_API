@@ -107,4 +107,12 @@ public class ProjetImpl implements ProjetService {
                 .map(this.responseMapper::responseProjetDTO)
                 .toList();
     }
+      @Override
+    public List<ProjetDTO> getall() {
+      
+        return this.projetRepository.findAll()
+                .stream()
+                .map(this.responseMapper::responseProjetDTO)
+                .toList();
+    }
 }

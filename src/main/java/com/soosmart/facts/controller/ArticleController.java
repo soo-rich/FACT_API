@@ -38,6 +38,12 @@ public class ArticleController {
                 .body(this.articleService.list_article(new PaginatedRequest(page, pagesize, search)));
     }
 
+    @GetMapping("all")
+    public ResponseEntity<List<ArticleDTO>> getallwithoutpage() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.articleService.list_article());
+    }
+
     @GetMapping("search")
     public ResponseEntity<List<ArticleDTO>> getall(
             @RequestParam(value = "search", defaultValue = "") String search) {

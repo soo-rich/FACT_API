@@ -15,5 +15,5 @@ public interface ProjetService {
     ProjetDTO update(UUID id, UpdateProjet updateProjet);
     Boolean changeOffre(UUID id);
     void delete(UUID id);
-    List<ProjetDTO> search(String search);
+    List<ProjetDTO> search(String search); List<ProjetDTO> getall();
 }

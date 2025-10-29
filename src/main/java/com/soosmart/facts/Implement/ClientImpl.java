@@ -26,9 +26,9 @@ public class ClientImpl implements ClientService {
 
     @Override
     public CustomPageResponse<ClientDTO> list(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.clientDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
-                this.responseMapper::responseClientDTO
-        );
+        return PageMapperUtils.toPageResponse(
+                this.clientDAO.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                this.responseMapper::responseClientDTO);
     }
 
     @Override
@@ -39,8 +39,7 @@ public class ClientImpl implements ClientService {
                 .sigle(saveClientDTO.sigle())
                 .telephone(saveClientDTO.telephone())
                 .potentiel(saveClientDTO.potentiel())
-                .build())
-        );
+                .build()));
     }
 
     @Override
@@ -85,8 +84,15 @@ public class ClientImpl implements ClientService {
     @Override
     public List<ClientDTO> search(String search) {
         if (search == null || search.isEmpty()) {
-            return this.clientDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseClientDTO).limit(10).toList();
+            return this.clientDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseClientDTO)
+                    .limit(10).toList();
         }
-        return this.clientDAO.findAllByNomContainsIgnoreCase(search).stream().map(this.responseMapper::responseClientDTO).toList();
+        return this.clientDAO.findAllByNomContainsIgnoreCase(search).stream()
+                .map(this.responseMapper::responseClientDTO).toList();
+    }
+
+    @Override
+    public List<ClientDTO> getall() {
+        return this.clientDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseClientDTO).toList();
     }
 }

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE,value="/projet")
+@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/projet")
 @AllArgsConstructor
 public class ProjetController {
     private ProjetService projetService;
@@ -27,15 +27,24 @@ public class ProjetController {
     }
 
     @GetMapping
-    public ResponseEntity<CustomPageResponse<ProjetDTO>> getall(@RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "pagesize", defaultValue = "10") int pagesize, @RequestParam(value = "search", defaultValue = "", required = false) String search) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.projetService.list(new PaginatedRequest(page,pagesize,search)));
+    public ResponseEntity<CustomPageResponse<ProjetDTO>> getall(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "pagesize", defaultValue = "10") int pagesize,
+            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.projetService.list(new PaginatedRequest(page, pagesize, search)));
     }
 
-     @GetMapping("search")
-    public ResponseEntity<List<ProjetDTO>> getall( @RequestParam(value = "search", defaultValue = "", required = false) String search) {
+    @GetMapping("search")
+    public ResponseEntity<List<ProjetDTO>> getall(
+            @RequestParam(value = "search", defaultValue = "", required = false) String search) {
         return ResponseEntity.status(HttpStatus.OK).body(this.projetService.search(search));
     }
 
+    @GetMapping("all")
+    public ResponseEntity<List<ProjetDTO>> getallwithoutpage() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.projetService.getall());
+    }
 
     @PutMapping("{id}")
     public ResponseEntity<ProjetDTO> update(@PathVariable UUID id, @RequestBody UpdateProjet updateProjet) {

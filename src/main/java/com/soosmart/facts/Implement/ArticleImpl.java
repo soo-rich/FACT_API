@@ -42,6 +42,11 @@ public class ArticleImpl implements ArticleService {
     }
 
     @Override
+    public List<ArticleDTO> list_article() {
+        return this.articleDAO.findAllBySupprimerIsFalse().stream().map(this.responseMapper::responseArticleDTO).toList();
+    }
+
+    @Override
     public ArticleDTO update_article(UUID id_article, SaveArticleDTO articleDTO) {
         Optional<Article> articleOld = this.articleDAO.findById(id_article).stream().findFirst();
         if (articleOld.isPresent()) {

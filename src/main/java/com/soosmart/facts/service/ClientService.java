@@ -15,4 +15,5 @@ public interface ClientService {
     Boolean delete(UUID id);
     Boolean changePotential(UUID id);
     List<ClientDTO> search(String search);
+        List<ClientDTO> getall();
 }

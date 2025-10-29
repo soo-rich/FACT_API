@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ProjetDAO extends JpaRepository<Projet, UUID> {
     List<Projet> findAllByProjetTypeContainsIgnoreCase(String search);
+
+    List<Projet> findAll();
 }

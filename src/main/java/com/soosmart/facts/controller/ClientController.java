@@ -24,9 +24,14 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.list(new PaginatedRequest(page, pagesize, search)));
     }
 
-    @GetMapping("search")
+    @GetMapping(path="search")
     public ResponseEntity<List<ClientDTO>> Search(@RequestParam(value = "search", defaultValue = "", required = false) String search){
         return ResponseEntity.status(HttpStatus.OK).body(this.clientService.search(search));
+    }
+
+     @GetMapping(path="all")
+    public ResponseEntity<List<ClientDTO>> getall(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.clientService.getall());
     }
 
     @PostMapping()
