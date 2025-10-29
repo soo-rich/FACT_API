@@ -37,10 +37,11 @@ build/
 src/main/resources/pdf/
 
 # dev profile
-src/main/resources/application-dev.properties
+src/main/resources/application-prod.yml
 #src/main/resources/application.properties
 
 .deploy/.env
+.env
 #.deploy/deploy.sh
 
 .docker/data
