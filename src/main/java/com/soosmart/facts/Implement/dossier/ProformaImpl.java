@@ -3,12 +3,15 @@ package com.soosmart.facts.Implement.dossier;
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
+import com.soosmart.facts.dto.dossier.proforma.SaveProformaWithArticleDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
+import com.soosmart.facts.entity.Article;
 import com.soosmart.facts.entity.Client;
 import com.soosmart.facts.entity.Projet;
 import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.mapper.ResponseMapper;
+import com.soosmart.facts.repository.ArticleDAO;
 import com.soosmart.facts.repository.ClientDAO;
 import com.soosmart.facts.repository.ProjetDAO;
 import com.soosmart.facts.repository.dossier.ProformaDao;
@@ -30,6 +33,7 @@ import java.util.UUID;
 public class ProformaImpl implements ProformaService {
 
     private final ProformaDao proformaRepository;
+    private final ArticleDAO articleRepository;
     private final ProjetDAO projetRepository;
     private final ClientDAO clientRepository;
     private final ArticleQuantiteService articleQuantiteService;
@@ -69,6 +73,50 @@ public class ProformaImpl implements ProformaService {
                     .reference(saveProformaDTO.reference())
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(saveProformaDTO.articleQuantiteslist()))
                     .build();
+            return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
+        } else {
+            throw new EntityExistsException("Projet or Client not found");
+        }
+    }
+
+    @Override
+    public ProformaDTO saveProforma(SaveProformaWithArticleDTO saveProformaDTO) {
+
+        Proforma proforma = Proforma.builder()
+                .numero(this.numeroGenerateur.GenerateproformaNumero())
+                .reference(saveProformaDTO.reference()).build();
+        List<SaveArticleQuantiteDTO> articleQuantiteDTOS = saveProformaDTO.articleQuantiteslist().stream().map(item -> {
+            Article a = this.articleRepository.save(Article.builder()
+                    .libelle(item.libelle())
+                    .prix_unitaire(item.prix_unitaire())
+                    .description(item.description())
+                    .build());
+            return new SaveArticleQuantiteDTO(a.getId(), item.quantite(), a.getPrix_unitaire());
+        }).toList();
+
+        if (saveProformaDTO.projet_id() != null) {
+            Optional<Projet> projet = this.projetRepository.findById(saveProformaDTO.projet_id()).stream().findFirst();
+            if (projet.isPresent()) {
+                proforma.setReference(saveProformaDTO.reference());
+                proforma.setProjet(projet.get());
+                proforma.setClient(projet.get().getClient());
+                proforma.setSignedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " " + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom());
+                proforma.setArticleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(articleQuantiteDTOS));
+                proforma.setRole(this.utilisateurConnecteServie.getUtilisateurConnecte().getRole().getLibelle().name());
+            }
+            return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
+
+        } else if
+        (saveProformaDTO.client_id() != null) {
+            Optional<Client> client = this.clientRepository.findById(saveProformaDTO.client_id()).stream().findFirst();
+            if (client.isEmpty()) {
+                throw new EntityExistsException("Client not found");
+            }
+
+            proforma.setClient(client.get());
+            proforma.setReference(saveProformaDTO.reference());
+            proforma.setArticleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(articleQuantiteDTOS));
+
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(this.CalculateProformaTotal(proforma)));
         } else {
             throw new EntityExistsException("Projet or Client not found");
@@ -130,7 +178,7 @@ public class ProformaImpl implements ProformaService {
 
     @Override
     public CustomPageResponse<ProformaDTO> getProformas(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),this.responseMapper::responseProformaDTO);
+        return PageMapperUtils.toPageResponse(this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), this.responseMapper::responseProformaDTO);
     }
 
     @Override
@@ -145,7 +193,7 @@ public class ProformaImpl implements ProformaService {
     public CustomPageResponse<String> getProformasNumereList(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
                 this.proformaRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest))
-                ,Proforma::getNumero
+                , Proforma::getNumero
         );
     }
 

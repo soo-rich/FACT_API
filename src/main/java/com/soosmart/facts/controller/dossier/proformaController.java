@@ -3,6 +3,7 @@ package com.soosmart.facts.controller.dossier;
 import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
+import com.soosmart.facts.dto.dossier.proforma.SaveProformaWithArticleDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.service.dossier.ProformaService;
@@ -38,6 +39,11 @@ public class proformaController {
 
     @PostMapping()
     public ResponseEntity<ProformaDTO> save(@RequestBody SaveProformaDTO saveProformaDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.proformaService.saveProforma(saveProformaDTO));
+    }
+
+    @PostMapping(path = "with-article")
+    public ResponseEntity<ProformaDTO> savewitharticle(@RequestBody SaveProformaWithArticleDTO saveProformaDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.proformaService.saveProforma(saveProformaDTO));
     }
 
