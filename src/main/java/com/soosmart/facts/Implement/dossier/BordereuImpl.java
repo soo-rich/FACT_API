@@ -64,9 +64,10 @@ public class BordereuImpl implements BordereauService {
                     .total_ht(save.getTotal_ht())
                     .total_tva(save.getTotal_tva())
                     .build();
-            this.purchaseOrderService.savepurchaseOrder(save.getNumero(), file);
-            return this.responseMapper.responseBorderauDto(this.borderauRepository.save(bordereau));
 
+            BorderauDto b = this.responseMapper.responseBorderauDto(this.borderauRepository.save(bordereau));
+            this.purchaseOrderService.savepurchaseOrder(save.getNumero(), b.numero(), file);
+            return b;
         } else {
             throw new EntityExistsException("Proforma not found");
         }
@@ -74,19 +75,25 @@ public class BordereuImpl implements BordereauService {
 
     @Override
     public CustomPageResponse<BorderauDto> getBordereauAll(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseBorderauDto);
+        return PageMapperUtils.toPageResponse(
+                this.borderauRepository
+                        .findAllByDeletedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                responseMapper::responseBorderauDto);
     }
 
     @Override
     public CustomPageResponse<BorderauDto> getBordereauAllNotAdopted(PaginatedRequest paginatedRequest) {
-         return PageMapperUtils.toPageResponse(this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), responseMapper::responseBorderauDto);
+        return PageMapperUtils.toPageResponse(
+                this.borderauRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(
+                        PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                responseMapper::responseBorderauDto);
     }
 
     @Override
     public BorderauDto getBordereau(UUID id) {
-        return this.responseMapper.responseBorderauDto(this.borderauRepository.findById(id).stream().findFirst().orElseThrow(
-                () -> new EntityExistsException("Bordereau not found")
-        ));
+        return this.responseMapper
+                .responseBorderauDto(this.borderauRepository.findById(id).stream().findFirst().orElseThrow(
+                        () -> new EntityExistsException("Bordereau not found")));
     }
 
     @Override
@@ -102,15 +109,14 @@ public class BordereuImpl implements BordereauService {
 
     @Override
     public BorderauDto getBordereauByNumero(String numero) {
-        return this.responseMapper.responseBorderauDto(this.borderauRepository.findByNumero(numero).stream().findFirst().orElseThrow(
-                () -> new EntityExistsException("Bordereau not found")
-        ));
+        return this.responseMapper
+                .responseBorderauDto(this.borderauRepository.findByNumero(numero).stream().findFirst().orElseThrow(
+                        () -> new EntityExistsException("Bordereau not found")));
     }
 
     @Override
     public Bordereau getBordereauEntity(String numero) {
         return this.borderauRepository.findByNumero(numero).stream().findFirst().orElseThrow(
-                () -> new EntityExistsException("Bordereau not found")
-        );
+                () -> new EntityExistsException("Bordereau not found"));
     }
 }

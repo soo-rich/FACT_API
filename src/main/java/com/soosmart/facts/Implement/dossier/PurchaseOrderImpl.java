@@ -9,6 +9,7 @@ import com.soosmart.facts.exceptions.EntityNotFound;
 import com.soosmart.facts.exceptions.file.FileValidationException;
 import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.dossier.PurchaseOrderDao;
+import com.soosmart.facts.service.dossier.BordereauService;
 import com.soosmart.facts.service.dossier.ProformaService;
 import com.soosmart.facts.service.dossier.PurchaseOrderService;
 import com.soosmart.facts.service.file.FileMetadataService;
@@ -28,11 +29,12 @@ public class PurchaseOrderImpl implements PurchaseOrderService {
     private FileValidationService fileValidationService;
     private final FileMetadataService fileMetadataService;
     private final ProformaService proformaService;
+    private final BordereauService bordereauService;
     private final PurchaseOrderDao purchaseOrderDao;
     private final ResponseMapper responseMapper;
 
     @Override
-    public PurchaseOderDto savepurchaseOrder(String proformaNumero, MultipartFile file) {
+    public PurchaseOderDto savepurchaseOrder(String proformaNumero,String bordereauNumero, MultipartFile file) {
         FileValidationService.ValidationResult validationResult =
                 fileValidationService.validateFile(file);
 
@@ -40,7 +42,16 @@ public class PurchaseOrderImpl implements PurchaseOrderService {
             throw new FileValidationException(validationResult.errorMessage());
         }
 
-        return this.responseMapper.responsePurchaseOder(this.purchaseOrderDao.save(PurchaseOrder.builder().proforma(this.proformaService.getProformaEntity(proformaNumero)).file(this.fileMetadataService.save(file, "bc")).build()));
+        return this.responseMapper
+        .responsePurchaseOder(
+            this.purchaseOrderDao
+            .save(
+                PurchaseOrder
+                .builder()
+                .proforma(this.proformaService.getProformaEntity(proformaNumero))
+                .bordereau(this.bordereauService.getBordereauEntity(bordereauNumero))
+                .file(this.fileMetadataService.save(file, "bc")).build()
+                ));
     }
 
     @Override

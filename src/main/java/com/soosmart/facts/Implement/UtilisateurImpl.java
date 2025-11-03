@@ -69,7 +69,7 @@ public class UtilisateurImpl implements UtilisateurService {
     @Override
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.utilisateurDAO.findByRole_LibelleNotIn(PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN, TypeDeRole.ADMIN)),
+                this.utilisateurDAO.findByRole_LibelleNotIn(PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN)),
                 this.responseMapper::responseUtilisateur);
     }
 
