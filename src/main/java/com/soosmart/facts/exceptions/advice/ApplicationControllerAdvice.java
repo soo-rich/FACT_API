@@ -30,6 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -239,6 +240,13 @@ public class ApplicationControllerAdvice {
     @ResponseStatus(NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
     public @ResponseBody ExceptionDto handleNoHandlerFoundException(NoHandlerFoundException exception) {
+        return new ExceptionDto(NOT_FOUND, "Erreur Inconnu");
+    }
+
+
+      @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(NoResourceFoundException.class)
+    public @ResponseBody ExceptionDto RoutenotFound(NoResourceFoundException exception) {
         return new ExceptionDto(NOT_FOUND, "Route not found");
     }
 
