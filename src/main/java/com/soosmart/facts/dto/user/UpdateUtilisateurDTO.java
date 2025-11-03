@@ -9,7 +9,7 @@ public record UpdateUtilisateurDTO(
         String nom,
         String prenom,
         String email,
-        Integer numero,
+        String numero,
         TypeDeRole role
 
 ) {

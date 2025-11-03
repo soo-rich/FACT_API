@@ -7,7 +7,7 @@ public record ResponseUtilisateur(
         UUID id,
         String nom,
         String prenom,
-        Integer telephone,
+        String telephone,
         String email,
         String username,
         String role,

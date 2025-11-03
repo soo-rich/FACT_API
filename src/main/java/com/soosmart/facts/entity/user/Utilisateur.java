@@ -29,8 +29,8 @@ public class Utilisateur implements UserDetails {
     private String prenom;
     @Column(unique = true)
     private String email;
-    @Column(unique = true, length = 10)
-    private Integer numero;
+    @Column(unique = true, length = 25)
+    private String numero;
     @Column(unique = true)
     private String username;
     @Column(name = "mot_de_passe")

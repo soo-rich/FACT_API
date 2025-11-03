@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -91,7 +92,8 @@ public class UtilisateurImpl implements UtilisateurService {
 
     @Override
     public ResponseUtilisateur save(SaveUtilisateurDTO utilisateur) {
-        String defaultPassword = utilisateur.nom() + "123456";
+        Random rand = new Random();
+        String defaultPassword = utilisateur.nom() + rand.nextDouble();
         Utilisateur user = Utilisateur.builder()
                 .nom(utilisateur.nom())
                 .prenom(utilisateur.prenom())

@@ -7,6 +7,7 @@ import com.soosmart.facts.dto.pagination.PaginatedRequest;
 import com.soosmart.facts.service.dossier.PurchaseOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,7 @@ public class purchaseOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(this.purchaseOrderService.listpurchaseorder(new PaginatedRequest(page, pagesize, search)));
     }
 
-    @PostMapping
+    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
     public ResponseEntity<PurchaseOderDto> save(@RequestPart(value = "proforma") String proforma, @RequestPart(value = "bc") MultipartFile bc) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.purchaseOrderService.savepurchaseOrder(proforma, bc));
     }

@@ -52,6 +52,7 @@ public class UserController {
     }
 
     @GetMapping("{id}/activate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<Boolean> activateUser(@PathVariable("id") UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body( this.utilisateurService.activateUser(id));
     }

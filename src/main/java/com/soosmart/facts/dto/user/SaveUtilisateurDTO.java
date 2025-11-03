@@ -7,7 +7,7 @@ public record SaveUtilisateurDTO(
         String nom,
         String prenom,
         String email,
-        Integer numero,
+        String numero,
         String username,
         TypeDeRole role
 ) {
