@@ -9,13 +9,13 @@ import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.dossier.BorderauDao;
 import com.soosmart.facts.repository.dossier.ProformaDao;
 import com.soosmart.facts.service.dossier.BordereauService;
-import com.soosmart.facts.service.dossier.PurchaseOrderService;
+// import com.soosmart.facts.service.dossier.PurchaseOrderService;
 import com.soosmart.facts.utils.NumeroGenerateur;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+// import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class BordereuImpl implements BordereauService {
     private final BorderauDao borderauRepository;
     private final ProformaDao proformaRepository;
-    private final PurchaseOrderService purchaseOrderService;
+    // private final PurchaseOrderService purchaseOrderService;
     private final NumeroGenerateur numeroGenerateur;
     private final ResponseMapper responseMapper;
 
@@ -50,28 +50,7 @@ public class BordereuImpl implements BordereauService {
         }
     }
 
-    @Override
-    public BorderauDto saveBordereau(UUID id_proforma, MultipartFile file) {
-        Optional<Proforma> proforma = this.proformaRepository.findById(id_proforma).stream().findFirst();
-        if (proforma.isPresent()) {
-            proforma.get().setAdopted(true);
-            Proforma save = this.proformaRepository.save(proforma.get());
-            Bordereau bordereau = Bordereau.builder()
-                    .numero(this.numeroGenerateur.GenerateBordereauNumero())
-                    .reference(save.getReference())
-                    .proforma(save)
-                    .total_ttc(save.getTotal_ttc())
-                    .total_ht(save.getTotal_ht())
-                    .total_tva(save.getTotal_tva())
-                    .build();
 
-            BorderauDto b = this.responseMapper.responseBorderauDto(this.borderauRepository.save(bordereau));
-            this.purchaseOrderService.savepurchaseOrder(save.getNumero(), b.numero(), file);
-            return b;
-        } else {
-            throw new EntityExistsException("Proforma not found");
-        }
-    }
 
     @Override
     public CustomPageResponse<BorderauDto> getBordereauAll(PaginatedRequest paginatedRequest) {

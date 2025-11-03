@@ -19,7 +19,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
+// import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -224,16 +224,16 @@ public class ApplicationControllerAdvice {
         );
     }
 
-    @ResponseStatus(CONFLICT)
-    @ExceptionHandler(value = {DataIntegrityViolationException.class})
-    public @ResponseBody
-    ExceptionDto sqlExceptionHelper(final DataIntegrityViolationException exception) {
+    // @ResponseStatus(CONFLICT)
+    // @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    // public @ResponseBody
+    // ExceptionDto sqlExceptionHelper(final DataIntegrityViolationException exception) {
 
-        return new ExceptionDto(
-                CONFLICT,
-                "Cela existe déjà"
-        );
-    }
+    //     return new ExceptionDto(
+    //             CONFLICT,
+    //             "Cela existe déjà"
+    //     );
+    // }
 
 
     @ResponseStatus(NOT_FOUND)

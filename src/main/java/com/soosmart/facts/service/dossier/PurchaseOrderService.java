@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface PurchaseOrderService {
 
-    PurchaseOderDto savepurchaseOrder(String proformaNumero, String bordereauNumero,  MultipartFile file);
+    PurchaseOderDto savepurchaseOrder(String proformaNumero, MultipartFile file);
 
     PurchaseOderOneDto findOne(UUID id);
 
