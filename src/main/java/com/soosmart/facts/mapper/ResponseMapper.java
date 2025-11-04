@@ -116,7 +116,7 @@ public class ResponseMapper {
         if (purchaseOrder == null) {
             return null;
         }
-        return new PurchaseOderDto(purchaseOrder.getProforma().getNumero(), purchaseOrder.getBordereau().getNumero(), this.responseFileMetadate(purchaseOrder.getFile()));
+        return new PurchaseOderDto(purchaseOrder.getId(),purchaseOrder.getProforma().getNumero(), purchaseOrder.getBordereau().getNumero(), this.responseFileMetadate(purchaseOrder.getFile()));
     }
 
     public PurchaseOderOneDto responsePurchaseOderOne(PurchaseOrder purchaseOrder) {
