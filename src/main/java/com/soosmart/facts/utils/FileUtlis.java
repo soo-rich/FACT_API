@@ -1,7 +1,5 @@
 package com.soosmart.facts.utils;
 
-import java.util.UUID;
-
 public class FileUtlis {
     public static String getFileExtension(String fileName) {
         if (fileName == null || fileName.lastIndexOf('.') == -1) {
@@ -10,9 +8,13 @@ public class FileUtlis {
         return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     }
 
-    public static String generateUniqueFileName(String extension) {
-        String uuid = UUID.randomUUID().toString();
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        return uuid + "_" + timestamp + (extension.isEmpty() ? "" : "." + extension);
+    public static String generateUniqueFileName(String filename, String extension) {
+        if (filename != null) {
+            return filename + (extension.isEmpty() ? "" : "." + extension);
+        } else {
+
+            String timestamp = String.valueOf(System.currentTimeMillis());
+            return timestamp + (extension.isEmpty() ? "" : "." + extension);
+        }
     }
 }

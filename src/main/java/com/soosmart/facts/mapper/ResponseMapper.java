@@ -109,7 +109,7 @@ public class ResponseMapper {
         if (fileMetadata == null) {
             return null;
         }
-        return new FileMetaDataDto(fileMetadata.getFileName(), fileMetadata.getStorageUrl(), fileMetadata.getFileSize(), fileMetadata.getUploadedBy(), fileMetadata.getStorageProvider(), fileMetadata.getUpdate_at());
+        return new FileMetaDataDto(fileMetadata.getFileName(), fileMetadata.getStorageUrl(),fileMetadata.getContentType(), fileMetadata.getFileSize(), fileMetadata.getUploadedBy(), fileMetadata.getStorageProvider(), fileMetadata.getUpdate_at());
     }
 
     public PurchaseOderDto responsePurchaseOder(PurchaseOrder purchaseOrder) {

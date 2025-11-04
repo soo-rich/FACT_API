@@ -31,8 +31,8 @@ public class purchaseOrderController {
     }
 
     @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE} )
-    public ResponseEntity<PurchaseOderDto> save(@RequestPart(value = "proforma") String proforma, @RequestPart(value = "bc") MultipartFile bc) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.purchaseOrderService.savepurchaseOrder(proforma, bc));
+    public ResponseEntity<PurchaseOderDto> save(@RequestPart(value = "proforma") String proforma, @RequestPart(value = "bc") MultipartFile bc, @RequestPart(value="filename", required = false) String filename ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.purchaseOrderService.savepurchaseOrder(proforma, bc, filename));
     }
 
     @PutMapping

@@ -6,7 +6,11 @@ import com.soosmart.facts.entity.file.FileMetadata;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -31,5 +35,12 @@ public class PurchaseOrder {
 
     @OneToOne
     private Bordereau bordereau;
+
+    @CreationTimestamp
+    @Column(updatable = false, name = "createdat")
+    private Instant createdat;
+
+    @UpdateTimestamp
+    private Instant update_at;
 
 }

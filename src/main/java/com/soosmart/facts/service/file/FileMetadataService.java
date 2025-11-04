@@ -14,6 +14,8 @@ public interface FileMetadataService {
 
     FileMetadata save(MultipartFile file, String subDir);
 
+    FileMetadata save(MultipartFile file, String filename, String subDir);
+
     FileMetadata findById(UUID id);
 
     List<FileMetadata> findByUploadedBy(String uploadedBy);

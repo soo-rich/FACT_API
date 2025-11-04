@@ -30,16 +30,16 @@ public class FileMetadataImpl implements FileMetadataService {
     @Value("${file.storage.provider}")
     private String provider;
 
-    public FileMetadataImpl(FileMetadataRepository fileMetadataRepository, FileStorageService fileStorageService, UtilisateurConnecteServie utilisateurConnecteServie, ResponseMapper responseMapper) {
+    public FileMetadataImpl(FileMetadataRepository fileMetadataRepository, FileStorageService fileStorageService,
+            UtilisateurConnecteServie utilisateurConnecteServie, ResponseMapper responseMapper) {
         this.fileMetadataRepository = fileMetadataRepository;
         this.fileStorageService = fileStorageService;
         this.utilisateurConnecteServie = utilisateurConnecteServie;
         this.responseMapper = responseMapper;
     }
 
-
     public FileMetadata save(MultipartFile file) {
-        String uniqueFileName = generateUniqueFileName(getFileExtension(file.getOriginalFilename()));
+        String uniqueFileName = generateUniqueFileName(null,getFileExtension(file.getOriginalFilename()));
 
         String username = utilisateurConnecteServie
                 .getUtilisateurConnecte().getUsername();
@@ -50,24 +50,42 @@ public class FileMetadataImpl implements FileMetadataService {
                 .originalFileName(file.getOriginalFilename())
                 .fileName(uniqueFileName)
                 .contentType(file.getContentType())
-//                .uploadedBy("N/A")
+                // .uploadedBy("N/A")
                 .uploadedBy(username)
                 .build());
     }
 
     public FileMetadata save(MultipartFile file, String subDir) {
-        String uniqueFileName = generateUniqueFileName(getFileExtension(file.getOriginalFilename()));
+        String uniqueFileName = generateUniqueFileName(null,getFileExtension(file.getOriginalFilename()));
 
         String username = utilisateurConnecteServie
                 .getUtilisateurConnecte().getUsername();
         return fileMetadataRepository.save(FileMetadata.builder()
-                .storageUrl(this.fileStorageService.uploadFileToSubFolder(file, String.format("/%s/%s", subDir, uniqueFileName)))
+                .storageUrl(this.fileStorageService.uploadFileToSubFolder(file,
+                        String.format("/%s/%s", subDir, uniqueFileName)))
                 .storageProvider(provider)
                 .fileSize(file.getSize())
                 .originalFileName(file.getOriginalFilename())
                 .fileName(uniqueFileName)
                 .contentType(file.getContentType())
-//                .uploadedBy("N/A")
+                // .uploadedBy("N/A")
+                .uploadedBy(username)
+                .build());
+    }
+
+    public FileMetadata save(MultipartFile file, String filename, String subDir) {
+        String uniqueFileName = generateUniqueFileName(filename,getFileExtension(file.getOriginalFilename()));
+
+        String username = utilisateurConnecteServie
+                .getUtilisateurConnecte().getUsername();
+        return fileMetadataRepository.save(FileMetadata.builder()
+                .storageUrl(this.fileStorageService.uploadFileToSubFolder(file,
+                        String.format("/%s/%s", subDir, uniqueFileName)))
+                .storageProvider(provider)
+                .fileSize(file.getSize())
+                .originalFileName(file.getOriginalFilename())
+                .fileName(filename)
+                .contentType(file.getContentType())
                 .uploadedBy(username)
                 .build());
     }
@@ -90,6 +108,9 @@ public class FileMetadataImpl implements FileMetadataService {
     }
 
     public CustomPageResponse<FileMetaDataDto> findAll(PaginatedRequest paginatedRequest) {
-        return PageMapperUtils.toPageResponse(this.fileMetadataRepository.findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)), this.responseMapper::responseFileMetadate);
+        return PageMapperUtils.toPageResponse(
+                this.fileMetadataRepository
+                        .findAllBySupprimerIsFalse(PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
+                this.responseMapper::responseFileMetadate);
     }
 }
