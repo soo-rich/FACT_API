@@ -31,7 +31,7 @@ public abstract class Document {
     @Column(updatable = false, name = "createdat")
     private Instant createdat;
 
-    @Column(unique = true, updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false)
     private UUID uniqueIdDossier;
 
     @UpdateTimestamp

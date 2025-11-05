@@ -137,6 +137,8 @@ public class ProformaImpl implements ProformaService {
     public ProformaDTO update(UUID uniqueid, SaveProformaWithArticleDTO saveProformaDTO) {
         Optional<Proforma> proforma = this.proformaRepository.findByUniqueIdDossier(uniqueid).stream().findFirst();
         if (proforma.isPresent()) {
+            proforma.get().setOldversion(true);
+            Proforma oldprofoma = this.proformaRepository.save(proforma.get());
             List<SaveArticleQuantiteDTO> articleQuantiteDTOS = saveProformaDTO.articleQuantiteslist().stream()
                     .map(item -> {
                         Article a = this.articleRepository.save(Article.builder()
@@ -148,10 +150,10 @@ public class ProformaImpl implements ProformaService {
                     }).toList();
             Proforma proformanew = Proforma.builder()
                     .numero(this.numeroGenerateur.GenerateproformaNumero())
-                    .reference(saveProformaDTO.reference())
-                    .projet(proforma.get().getProjet())
-                    .client(proforma.get().getClient())
-                    .uniqueIdDossier(UUID.randomUUID())
+                    .reference(oldprofoma.getReference())
+                    .projet(oldprofoma.getProjet())
+                    .client(oldprofoma.getClient())
+                    .uniqueIdDossier(oldprofoma.getUniqueIdDossier())
                     .signedBy(this.utilisateurConnecteServie.getUtilisateurConnecte().getNom() + " "
                             + this.utilisateurConnecteServie.getUtilisateurConnecte().getPrenom())
                     .articleQuantiteList(this.articleQuantiteService.saveAllArticleQuantitelist(articleQuantiteDTOS))

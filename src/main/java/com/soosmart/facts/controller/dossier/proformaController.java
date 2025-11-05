@@ -58,9 +58,9 @@ public class proformaController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<ProformaDTO> updateProformaArticleQuantite(@PathVariable UUID id, @RequestBody List<SaveArticleQuantiteDTO> articleQuantiteslist) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.updateProformaArticleQuantite(id, articleQuantiteslist));
+     @PutMapping("{id}")
+    public ResponseEntity<ProformaDTO> update(@PathVariable UUID id, @RequestBody SaveProformaWithArticleDTO saveProformaDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.proformaService.update(id, saveProformaDTO));
     }
 
 
