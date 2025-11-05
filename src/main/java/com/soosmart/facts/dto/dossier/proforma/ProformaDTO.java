@@ -7,16 +7,16 @@ import java.util.List;
 import java.util.UUID;
 
 public record ProformaDTO(
-        UUID id,
-        String reference,
-        String numero,
-        List<ArticleQuantiteDTO> articleQuantiteslist,
-        Float total_ht,
-        Float total_ttc,
-        Float total_tva,
-        String client,
-        Instant date,
-        String signby,
-        Boolean adopted
-        ) {
+                UUID id,
+                String reference,
+                String numero,
+                List<ArticleQuantiteDTO> articleQuantiteslist,
+                Float total_ht,
+                Float total_ttc,
+                Float total_tva,
+                String client,
+                Instant date,
+                String signby,
+                Boolean adopted,
+                UUID uniqueIdDossier) {
 }

@@ -17,6 +17,7 @@ public record BorderauDto(
         Float total_tva,
         String client,
         Boolean adopte,
-        Instant date
-) {
+        Instant date,
+        UUID uniqueIdDossier
+        ) {
 }

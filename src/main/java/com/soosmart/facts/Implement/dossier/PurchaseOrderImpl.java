@@ -74,6 +74,7 @@ public class PurchaseOrderImpl implements PurchaseOrderService {
                                                     .builder()
                                                     .proforma(save)
                                                     .bordereau(b)
+                                                
                                                     .file(this.fileMetadataService.save(file, "bc")).build()));
         } else {
             throw new EntityExistsException("Proforma not found");

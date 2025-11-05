@@ -17,6 +17,8 @@ public record FactureDto(
         Float total_tva,
         String client,
         Instant date,
-        String signby
+        String signby,
+        UUID uniqueIdDossier
+
 ) {
 }

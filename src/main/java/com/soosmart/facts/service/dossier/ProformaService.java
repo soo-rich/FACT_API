@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface ProformaService {
     ProformaDTO saveProforma(SaveProformaDTO saveProformaDTO);
     ProformaDTO saveProforma(SaveProformaWithArticleDTO saveProformaDTO);
+    ProformaDTO update(UUID uniqueid, SaveProformaWithArticleDTO saveProformaDTO);
     String updateProformaReference(UUID id, String newReference);
     ProformaDTO updateProformaArticleQuantite(UUID id,  List<SaveArticleQuantiteDTO> articleQuantiteslist);
     void deleteProforma(String numero);

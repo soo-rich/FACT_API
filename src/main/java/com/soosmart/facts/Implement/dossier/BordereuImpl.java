@@ -39,6 +39,7 @@ public class BordereuImpl implements BordereauService {
                     .numero(this.numeroGenerateur.GenerateBordereauNumero())
                     .reference(save.getReference())
                     .proforma(save)
+                    .uniqueIdDossier(save.getUniqueIdDossier())
                     .total_ttc(save.getTotal_ttc())
                     .total_ht(save.getTotal_ht())
                     .total_tva(save.getTotal_tva())

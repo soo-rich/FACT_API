@@ -83,6 +83,7 @@ public class FactureImpl implements FactureService {
                                     .total_ttc(proforma.get().getTotal_ttc())
                                     .total_ht(proforma.get().getTotal_ht())
                                     .total_tva(proforma.get().getTotal_tva())
+                                    .uniqueIdDossier(bordereau.get().getUniqueIdDossier())
                                     .signedBy(proforma.get().getSignedBy())
                                     .build()
                             )

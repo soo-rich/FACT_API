@@ -37,42 +37,52 @@ public class ResponseMapper {
             return null;
         }
 
-        return new ResponseUtilisateur(utilisateur.getId(), utilisateur.getNom(), utilisateur.getPrenom(), utilisateur.getNumero(), utilisateur.getEmail(), utilisateur.getUsername(), utilisateur.getRole().getLibelle().name(), utilisateur.getCreatedat(), utilisateur.getActif());
+        return new ResponseUtilisateur(utilisateur.getId(), utilisateur.getNom(), utilisateur.getPrenom(),
+                utilisateur.getNumero(), utilisateur.getEmail(), utilisateur.getUsername(),
+                utilisateur.getRole().getLibelle().name(), utilisateur.getCreatedat(), utilisateur.getActif());
     }
 
     public ArticleDTO responseArticleDTO(Article article) {
         if (article == null) {
             return null;
         }
-        return new ArticleDTO(article.getId(), article.getLibelle(), article.getDescription(), article.getPrix_unitaire());
+        return new ArticleDTO(article.getId(), article.getLibelle(), article.getDescription(),
+                article.getPrix_unitaire());
     }
 
     public ClientDTO responseClientDTO(Client client) {
         if (client == null) {
             return null;
         }
-        return new ClientDTO(client.getId(), client.getLieu(), client.getNom(), client.getSigle(), client.getTelephone(), client.getPotentiel());
+        return new ClientDTO(client.getId(), client.getLieu(), client.getNom(), client.getSigle(),
+                client.getTelephone(), client.getPotentiel());
     }
 
     public ProjetDTO responseProjetDTO(Projet projet) {
         if (projet == null) {
             return null;
         }
-        return new ProjetDTO(projet.getId(), projet.getProjetType(), projet.getDescription(), projet.getOffre(), projet.getClient().getNom(), projet.getCreatedat(), projet.getUpdate_at());
+        return new ProjetDTO(projet.getId(), projet.getProjetType(), projet.getDescription(), projet.getOffre(),
+                projet.getClient().getNom(), projet.getCreatedat(), projet.getUpdate_at());
     }
 
     public ArticleQuantiteDTO responseArticleQuantiteDTO(ArticleQuantite articleQuantite) {
         if (articleQuantite == null) {
             return null;
         }
-        return new ArticleQuantiteDTO(articleQuantite.getId(), articleQuantite.getArticle().getLibelle(), articleQuantite.getArticle().getDescription(), articleQuantite.getQuantite(), articleQuantite.getPrix_article());
+        return new ArticleQuantiteDTO(articleQuantite.getId(), articleQuantite.getArticle().getLibelle(),
+                articleQuantite.getArticle().getDescription(), articleQuantite.getQuantite(),
+                articleQuantite.getPrix_article());
     }
 
     public ProformaDTO responseProformaDTO(Proforma proforma) {
         if (proforma == null) {
             return null;
         }
-        return new ProformaDTO(proforma.getId(), proforma.getReference(), proforma.getNumero(), proforma.getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), proforma.getTotal_ht(), proforma.getTotal_ttc(), proforma.getTotal_tva(), proforma.getClient().getNom(), proforma.getCreatedat(), proforma.getSignedBy(), proforma.getAdopted());
+        return new ProformaDTO(proforma.getId(), proforma.getReference(), proforma.getNumero(),
+                proforma.getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                proforma.getTotal_ht(), proforma.getTotal_ttc(), proforma.getTotal_tva(), proforma.getClient().getNom(),
+                proforma.getCreatedat(), proforma.getSignedBy(), proforma.getAdopted(), proforma.getUniqueIdDossier());
     }
 
     public BorderauDto responseBorderauDto(Bordereau borderau) {
@@ -84,18 +94,29 @@ public class ResponseMapper {
                 borderau.getReference(),
                 borderau.getNumero(),
                 borderau.getProforma().getNumero(),
-                borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), borderau.getProforma().getTotal_ht(),
+                borderau.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                borderau.getProforma().getTotal_ht(),
                 borderau.getProforma().getTotal_ttc(),
                 borderau.getProforma().getTotal_tva(),
                 borderau.getProforma().getClient().getNom(),
-                borderau.getAdopted(), borderau.getCreatedat());
+                borderau.getAdopted(),
+                borderau.getCreatedat(),
+                borderau.getUniqueIdDossier());
     }
 
     public FactureDto responseFactureDto(Facture facture) {
         if (facture == null) {
             return null;
         }
-        return new FactureDto(facture.getId(), facture.getReference(), facture.getNumero(), facture.getBordereau().getNumero(), facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(), facture.getBordereau().getProforma().getTotal_ht(), facture.getBordereau().getProforma().getTotal_ttc(), facture.getBordereau().getProforma().getTotal_tva(), facture.getBordereau().getProforma().getClient().getNom(), facture.getBordereau().getProforma().getCreatedat(), facture.getSignedBy());
+        return new FactureDto(facture.getId(), facture.getReference(), facture.getNumero(),
+                facture.getBordereau().getNumero(),
+                facture.getBordereau().getProforma().getArticleQuantiteList().stream()
+                        .map(this::responseArticleQuantiteDTO).toList(),
+                facture.getBordereau().getProforma().getTotal_ht(), facture.getBordereau().getProforma().getTotal_ttc(),
+                facture.getBordereau().getProforma().getTotal_tva(),
+                facture.getBordereau().getProforma().getClient().getNom(),
+                facture.getBordereau().getProforma().getCreatedat(), facture.getSignedBy(),
+                facture.getUniqueIdDossier());
     }
 
     public Table responseTable(Document document) {
@@ -109,22 +130,25 @@ public class ResponseMapper {
         if (fileMetadata == null) {
             return null;
         }
-        return new FileMetaDataDto(fileMetadata.getFileName(), fileMetadata.getStorageUrl(),fileMetadata.getContentType(), fileMetadata.getFileSize(), fileMetadata.getUploadedBy(), fileMetadata.getStorageProvider(), fileMetadata.getUpdate_at());
+        return new FileMetaDataDto(fileMetadata.getFileName(), fileMetadata.getStorageUrl(),
+                fileMetadata.getContentType(), fileMetadata.getFileSize(), fileMetadata.getUploadedBy(),
+                fileMetadata.getStorageProvider(), fileMetadata.getUpdate_at());
     }
 
     public PurchaseOderDto responsePurchaseOder(PurchaseOrder purchaseOrder) {
         if (purchaseOrder == null) {
             return null;
         }
-        return new PurchaseOderDto(purchaseOrder.getId(),purchaseOrder.getProforma().getNumero(), purchaseOrder.getBordereau().getNumero(), this.responseFileMetadate(purchaseOrder.getFile()));
+        return new PurchaseOderDto(purchaseOrder.getId(), purchaseOrder.getProforma().getNumero(),
+                purchaseOrder.getBordereau().getNumero(), this.responseFileMetadate(purchaseOrder.getFile()));
     }
 
     public PurchaseOderOneDto responsePurchaseOderOne(PurchaseOrder purchaseOrder) {
-        if (purchaseOrder == null) return null;
+        if (purchaseOrder == null)
+            return null;
         return new PurchaseOderOneDto(
                 this.responseBorderauDto(purchaseOrder.getBordereau()),
                 this.responseProformaDTO(purchaseOrder.getProforma()),
-                this.responseFileMetadate(purchaseOrder.getFile())
-        );
+                this.responseFileMetadate(purchaseOrder.getFile()));
     }
 }
