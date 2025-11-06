@@ -82,7 +82,7 @@ public class ResponseMapper {
         return new ProformaDTO(proforma.getId(), proforma.getReference(), proforma.getNumero(),
                 proforma.getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
                 proforma.getTotal_ht(), proforma.getTotal_ttc(), proforma.getTotal_tva(), proforma.getClient().getNom(),
-                proforma.getCreatedat(), proforma.getSignedBy(), proforma.getAdopted(), proforma.getUniqueIdDossier());
+                proforma.getCreatedat(), proforma.getSignedBy(), proforma.getAdopted(), proforma.getOldversion(), proforma.getUniqueIdDossier());
     }
 
     public BorderauDto responseBorderauDto(Bordereau borderau) {

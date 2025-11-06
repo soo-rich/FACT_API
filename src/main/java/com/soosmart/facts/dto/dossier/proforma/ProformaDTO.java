@@ -18,5 +18,6 @@ public record ProformaDTO(
                 Instant date,
                 String signby,
                 Boolean adopted,
+                Boolean old,
                 UUID uniqueIdDossier) {
 }
