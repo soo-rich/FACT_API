@@ -134,8 +134,8 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public ProformaDTO update(UUID uniqueid, SaveProformaWithArticleDTO saveProformaDTO) {
-        Optional<Proforma> proforma = this.proformaRepository.findByUniqueIdDossier(uniqueid).stream().findFirst();
+    public ProformaDTO update(UUID id, SaveProformaWithArticleDTO saveProformaDTO) {
+        Optional<Proforma> proforma = this.proformaRepository.findById(id).stream().findFirst();
         if (proforma.isPresent()) {
             proforma.get().setOldversion(true);
             Proforma oldprofoma = this.proformaRepository.save(proforma.get());
