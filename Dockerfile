@@ -94,5 +94,5 @@ COPY --from=extract build/target/extracted/application/ ./
 EXPOSE 4000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:4000/api/actuator/health || exit 1
-    
+
 ENTRYPOINT [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
