@@ -31,7 +31,7 @@ public class Proforma extends Document {
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ArticleQuantite> articleQuantiteList = new ArrayList<>();
+    private List<ArticleQuantite> articleQuantiteList;
 
     @ManyToOne
     private Projet projet;
