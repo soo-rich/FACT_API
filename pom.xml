@@ -147,6 +147,29 @@
             <artifactId>minio</artifactId>
             <version>8.5.4</version>
         </dependency>
+
+        <!-- iText 7 Core -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>kernel</artifactId>
+            <version>7.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>layout</artifactId>
+            <version>7.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>io</artifactId>
+            <version>7.2.5</version>
+        </dependency>
+        <!--Conversion chiffre en lettre-->
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>73.2</version>
+        </dependency>
     </dependencies>
 
     <build>
