@@ -32,7 +32,7 @@ public class ReportImpl implements ReportService {
     private final BordereauService bordereauService;
     private final FactureService factureService;
     private final ResponseMapper responseMapper;
-    private final NumberToWords numberToWords;
+
     private final PdfGeneration pdfGeneration;
 
     @Override
@@ -63,7 +63,7 @@ public class ReportImpl implements ReportService {
                         pr.getTotal_ht(),
                         pr.getTotal_ttc(),
                         pr.getTotal_tva(),
-                        this.numberToWords.convertNumberToWords(Math.round(pr.getTotal_ttc())),
+                        NumberToWords.convertNumberToWords(Math.round(pr.getTotal_ttc())),
                         this.responseMapper.responseClientDTO(pr.getClient()),
                         pr.getCreatedat(),
                         false,
@@ -82,7 +82,7 @@ public class ReportImpl implements ReportService {
                         br.getProforma().getTotal_ht(),
                         br.getProforma().getTotal_ttc(),
                         br.getProforma().getTotal_tva(),
-                        this.numberToWords.convertNumberToWords(Math.round(br.getProforma().getTotal_ttc())),
+                        NumberToWords.convertNumberToWords(Math.round(br.getProforma().getTotal_ttc())),
                         this.responseMapper.responseClientDTO(br.getProforma().getClient()),
                         br.getCreatedat(),
                         false,
@@ -102,7 +102,7 @@ public class ReportImpl implements ReportService {
                         facture.getBordereau().getProforma().getTotal_ht(),
                         facture.getBordereau().getProforma().getTotal_ttc(),
                         facture.getBordereau().getProforma().getTotal_tva(),
-                        this.numberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())),
+                        NumberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())),
                         this.responseMapper.responseClientDTO(facture.getBordereau().getProforma().getClient()),
                         facture.getCreatedat(),
                         facture.getIsPaid(),
@@ -113,7 +113,7 @@ public class ReportImpl implements ReportService {
         };
     }
 
-    @Override
+
     public byte[] preparedataandGenerateForProforma(Proforma proforma) {
 
         List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = proforma.getArticleQuantiteList().stream().map(
@@ -135,7 +135,7 @@ public class ReportImpl implements ReportService {
         context.setVariable("totalht", Math.round(proforma.getTotal_ht()));
         context.setVariable("tva", Math.round(proforma.getTotal_tva()));
         context.setVariable("totalttc", Math.round(proforma.getTotal_ttc()));
-        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(Math.round(proforma.getTotal_ttc())));
+        context.setVariable("totalttcword", NumberToWords.convertNumberToWords(Math.round(proforma.getTotal_ttc())));
         context.setVariable("sign", proforma.getSignedBy());
         context.setVariable("role", proforma.getRole());
         context.setVariable("client", proforma.getClient().getNom());
@@ -150,7 +150,7 @@ public class ReportImpl implements ReportService {
         return new byte[0];
     }
 
-    @Override
+
     public byte[] preparedataandGenerateForBordeau(Bordereau bordereau) {
         List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = bordereau.getProforma().getArticleQuantiteList().stream().map(
                 articleQuantite -> new ArticleQuantiteReportDTO(
@@ -181,7 +181,7 @@ public class ReportImpl implements ReportService {
     }
 
 
-    @Override
+
     public byte[] preparedataandGenerateForFacture(Facture facture) {
         List<ArticleQuantiteReportDTO> articleQuantiteReportDTOS = facture.getBordereau().getProforma().getArticleQuantiteList().stream().map(
                 articleQuantite -> new ArticleQuantiteReportDTO(
@@ -202,7 +202,7 @@ public class ReportImpl implements ReportService {
         context.setVariable("totalht", Math.round(facture.getBordereau().getProforma().getTotal_ht()));
         context.setVariable("tva",Math.round( facture.getBordereau().getProforma().getTotal_tva()));
         context.setVariable("totalttc", Math.round(facture.getBordereau().getProforma().getTotal_ttc()));
-        context.setVariable("totalttcword", this.numberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())));
+        context.setVariable("totalttcword", NumberToWords.convertNumberToWords(Math.round(facture.getBordereau().getProforma().getTotal_ttc())));
         context.setVariable("sign", facture.getSignedBy());
         context.setVariable("role", facture.getRole());
         context.setVariable("client", facture.getBordereau().getProforma().getClient().getNom());
@@ -217,7 +217,7 @@ public class ReportImpl implements ReportService {
         return new byte[0];
     }
 
-    @Override
+
     public byte[] DownloadReport(String numero) {
         return this.pdfGeneration.downloadDossier(numero);
     }

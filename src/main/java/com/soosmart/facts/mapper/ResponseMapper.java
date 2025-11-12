@@ -10,6 +10,7 @@ import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderDto;
 import com.soosmart.facts.dto.dossier.purchseorder.PurchaseOderOneDto;
 import com.soosmart.facts.dto.file.FileMetaDataDto;
 import com.soosmart.facts.dto.project.ProjetDTO;
+import com.soosmart.facts.dto.report.DocumentReportDTO;
 import com.soosmart.facts.dto.stat.Table;
 import com.soosmart.facts.dto.user.ResponseUtilisateur;
 import com.soosmart.facts.entity.Article;
@@ -25,6 +26,8 @@ import com.soosmart.facts.entity.file.FileMetadata;
 import com.soosmart.facts.entity.user.Utilisateur;
 import com.soosmart.facts.enumpack.TypeDeRole;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class ResponseMapper {
@@ -150,5 +153,56 @@ public class ResponseMapper {
                 this.responseBorderauDto(purchaseOrder.getBordereau()),
                 this.responseProformaDTO(purchaseOrder.getProforma()),
                 this.responseFileMetadate(purchaseOrder.getFile()));
+    }
+
+    public DocumentReportDTO responseDocumentReportDTO(Object document) {
+        if (document == null) {
+            return null;
+        }
+
+        if (document instanceof Proforma p) {
+            return new DocumentReportDTO(
+                    p.getReference(),
+                    p.getNumero(),
+                    Date.from(p.getCreatedat()),
+                    p.getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                    this.responseClientDTO(p.getClient()),
+                    p.getRole(),
+                    p.getSignedBy(),
+                    p.getTotal_ht().doubleValue(),
+                    p.getTotal_tva().doubleValue(),
+                    p.getTotal_ttc().doubleValue()
+            );
+
+        }
+        if (document instanceof Bordereau b) {
+            return new DocumentReportDTO(
+                    b.getReference(),
+                    b.getNumero(),
+                    Date.from(b.getCreatedat()),
+                    b.getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                    this.responseClientDTO(b.getProforma().getClient()),
+                    b.getRole(),
+                    b.getSignedBy(),
+                    b.getTotal_ht().doubleValue(),
+                    b.getTotal_tva().doubleValue(),
+                    b.getTotal_ttc().doubleValue()
+            );
+        }
+        if (document instanceof Facture b) {
+            return new DocumentReportDTO(
+                    b.getReference(),
+                    b.getNumero(),
+                    Date.from(b.getCreatedat()),
+                    b.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                    this.responseClientDTO(b.getBordereau().getProforma().getClient()),
+                    b.getRole(),
+                    b.getSignedBy(),
+                    b.getTotal_ht().doubleValue(),
+                    b.getTotal_tva().doubleValue(),
+                    b.getTotal_ttc().doubleValue()
+            );
+        }
+        throw new IllegalArgumentException("Type de document non reconnu");
     }
 }

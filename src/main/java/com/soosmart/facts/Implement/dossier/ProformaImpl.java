@@ -291,9 +291,10 @@ public class ProformaImpl implements ProformaService {
     }
 
     private Proforma CalculateProformaTotal(Proforma proforma) {
-        proforma.setTotal_ht(proforma.getArticleQuantiteList().stream()
+        Float totalHt = proforma.getArticleQuantiteList().stream()
                 .map(articleQuantite -> articleQuantite.getPrix_article() * articleQuantite.getQuantite())
-                .reduce(0f, Float::sum));
+                .reduce(0f, Float::sum);
+        proforma.setTotal_ht(totalHt);
         proforma.setTotal_tva(proforma.getTotal_ht() * 0.18f);
         proforma.setTotal_ttc(proforma.getTotal_ht() + proforma.getTotal_tva());
         return proforma;

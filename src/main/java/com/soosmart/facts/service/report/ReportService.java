@@ -10,11 +10,4 @@ public interface ReportService {
 
     DocumentDTO getDocumentByNumero(String numero);
 
-    byte[] preparedataandGenerateForProforma(Proforma proforma);
-
-    byte[] preparedataandGenerateForBordeau(Bordereau bordereau);
-
-    byte[] preparedataandGenerateForFacture(Facture facture);
-
-    byte[] DownloadReport(String numero);
 }
