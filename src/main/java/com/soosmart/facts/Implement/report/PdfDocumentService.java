@@ -1,11 +1,13 @@
 package com.soosmart.facts.Implement.report;
 
+import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
-
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
@@ -16,9 +18,8 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
-import com.itextpdf.styledxmlparser.jsoup.Jsoup;
-import com.soosmart.facts.dto.report.DocumentReportDTO;
 import com.soosmart.facts.dto.articleQuantite.ArticleQuantiteDTO;
+import com.soosmart.facts.dto.report.DocumentReportDTO;
 import com.soosmart.facts.entity.dossier.Bordereau;
 import com.soosmart.facts.entity.dossier.Facture;
 import com.soosmart.facts.entity.dossier.Proforma;
@@ -31,8 +32,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -42,13 +45,10 @@ import java.util.Locale;
 @Service
 public class PdfDocumentService {
 
-    @Value("${pdf.logo.path:static/image/logo.png}")
-    private String logoPath;
-
-    @Value("${pdf.watermark.path:static/image/identity.png}")
-    private String watermarkPath;
-
     private static final DecimalFormat PRICE_FORMAT;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    private static final DeviceRgb GRIS_ENTETE = new DeviceRgb(200, 200, 200);
+    private static final DeviceRgb TRANSPARENT = new DeviceRgb(255, 255, 255);
 
     static {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.getDefault());
@@ -56,20 +56,56 @@ public class PdfDocumentService {
         PRICE_FORMAT = new DecimalFormat("#,##0", symbols);
     }
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
-    //    private static final DeviceRgb JAUNE_CLAIR = new DeviceRgb(255, 255, 200);
-    private static final DeviceRgb GRIS_ENTETE = new DeviceRgb(200, 200, 200);
-    private static final DeviceRgb TRANSPARENT = new DeviceRgb(255, 255, 255);
     private final ResponseMapper responseMapper;
     private final ProformaDao proformaDao;
     private final BorderauDao borderauDao;
     private final FactureDao factureDao;
+    @Value("${pdf.logo.path:static/image/logo.png}")
+    private String logoPath;
+    @Value("${pdf.watermark.path:static/image/identity.png}")
+    private String watermarkPath;
 
     public PdfDocumentService(ResponseMapper responseMapper, ProformaDao proformaDao, BorderauDao borderauDao, FactureDao factureDao) {
         this.responseMapper = responseMapper;
         this.proformaDao = proformaDao;
         this.borderauDao = borderauDao;
         this.factureDao = factureDao;
+    }
+
+    /**
+     * Prépare le HTML avec les balises nécessaires et les styles
+     */
+    private static String prepareHtml(String htmlContent) {
+
+        String html = "<!DOCTYPE html>" +
+                "<html>" +
+                "<head>" +
+                "<meta charset='UTF-8'>" +
+                "<style>" +
+                // Styles CSS pour le formatage
+                "body { font-family: Helvetica, Arial, sans-serif; font-size: 12pt; }" +
+                "p { margin: 5px 0; }" +
+                "ul, ol { margin: 10px 0; padding-left: 20px; }" +
+                "li { margin: 3px 0; }" +
+                "strong, b { font-weight: bold; }" +
+                "em, i { font-style: italic; }" +
+                "u { text-decoration: underline; }" +
+                "h1 { font-size: 16pt; font-weight: bold; margin: 10px 0; }" +
+                "h2 { font-size: 14pt; font-weight: bold; margin: 8px 0; }" +
+                "h3 { font-size: 12pt; font-weight: bold; margin: 6px 0; }" +
+                "table { border-collapse: collapse; width: 100%; margin: 10px 0; }" +
+                "td, th { border: 1px solid #ddd; padding: 8px; }" +
+                "th { background-color: #f2f2f2; font-weight: bold; }" +
+                "</style>" +
+                "</head>" +
+                "<body>" +
+
+                // Ajouter le contenu HTML
+                htmlContent +
+                "</body>" +
+                "</html>";
+
+        return html;
     }
 
     public byte[] generateReport(String numero) throws IOException {
@@ -91,8 +127,6 @@ public class PdfDocumentService {
         };
     }
 
-    // ==================== GÉNÉRATION DES DOCUMENTS ====================
-
     /**
      * Génère une facture proforma
      */
@@ -107,6 +141,8 @@ public class PdfDocumentService {
         return genererDocument(data, "BORDEREAU DE LIVRAISON", false, false);
     }
 
+    // ==================== COMPOSANTS RÉUTILISABLES ====================
+
     /**
      * Génère une facture simple
      */
@@ -117,19 +153,18 @@ public class PdfDocumentService {
     /**
      * Méthode générique pour générer un document
      */
-    private byte[] genererDocument(DocumentReportDTO data, String titre,
-                                   boolean avecMontants, boolean avecConditions) throws IOException {
+    private byte[] genererDocument(DocumentReportDTO data, String titre, boolean avecMontants, boolean avecConditions) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc);
-
+        pdfDoc.setDefaultPageSize(PageSize.A4);
         // Marges
         document.setMargins(40, 40, 40, 40);
 
         // Ajouter filigrane sur toutes les pages
         ajouterFiligraneMultiPages(pdfDoc);
-
+        ajouterPiedDePageMultiPages(pdfDoc);
         // Construire le document
         ajouterLogo(document);
         ajouterClientADroite(document, data.client());
@@ -149,13 +184,11 @@ public class PdfDocumentService {
         }
 
         ajouterSignature(document, data.signby(), data.role());
-        ajouterPiedDePage(document);
+
 
         document.close();
         return baos.toByteArray();
     }
-
-    // ==================== COMPOSANTS RÉUTILISABLES ====================
 
     /**
      * Ajoute le logo en haut à gauche
@@ -170,16 +203,10 @@ public class PdfDocumentService {
             document.add(logo);
         } catch (Exception e) {
             // Fallback : texte si le logo n'est pas trouvé
-            Paragraph fallback = new Paragraph("SOOSMART")
-                    .setFontSize(24)
-                    .setBold()
-                    .setFontColor(new DeviceRgb(0, 120, 200));
+            Paragraph fallback = new Paragraph("SOOSMART").setFontSize(24).setBold().setFontColor(new DeviceRgb(0, 120, 200));
             document.add(fallback);
 
-            Paragraph group = new Paragraph("Group")
-                    .setFontSize(20)
-                    .setFontColor(new DeviceRgb(100, 200, 50))
-                    .setMarginTop(-10);
+            Paragraph group = new Paragraph("Group").setFontSize(20).setFontColor(new DeviceRgb(100, 200, 50)).setMarginTop(-10);
             document.add(group);
         }
     }
@@ -219,12 +246,7 @@ public class PdfDocumentService {
      * Ajoute le titre du document
      */
     public void ajouterTitre(Document document, String titre) {
-        Paragraph titreParagraph = new Paragraph(titre)
-                .setFontSize(13)
-                .setBold()
-                .setTextAlignment(TextAlignment.LEFT)
-                .setMarginTop(15)
-                .setMarginBottom(8);
+        Paragraph titreParagraph = new Paragraph(titre).setFontSize(13).setBold().setTextAlignment(TextAlignment.LEFT).setMarginTop(15).setMarginBottom(8);
         document.add(titreParagraph);
     }
 
@@ -256,9 +278,7 @@ public class PdfDocumentService {
      * Ajoute le tableau des articles
      */
     public void ajouterTableauArticles(Document document, DocumentReportDTO data, boolean avecMontants) {
-        float[] columnWidths = avecMontants ?
-                new float[]{0.8f, 6, 1.5f, 1, 2} :
-                new float[]{0.8f, 6, 1.5f, 1.5f, 2};
+        float[] columnWidths = avecMontants ? new float[]{0.8f, 6, 1.5f, 1, 2} : new float[]{0.8f, 6, 1.5f, 1.5f, 2};
 
         Table table = new Table(columnWidths);
         table.setWidth(UnitValue.createPercentValue(100));
@@ -283,34 +303,39 @@ public class PdfDocumentService {
 
         for (ArticleQuantiteDTO article : data.articleQuantiteslist()) {
 
-            table.addCell(creerCellule(String.valueOf(index))
-                    .setTextAlignment(TextAlignment.CENTER));
+            table.addCell(creerCellule(String.valueOf(index)).setTextAlignment(TextAlignment.CENTER));
 
             // Désignation avec description
             Paragraph designation = new Paragraph();
             if (article.article() != null) {
-                designation.add(new Text(article.article()).setBold());
+                designation.add(new Text(article.article() + "\n"));
             }
             if (article.description() != null && !article.description().isEmpty()) {
 //                designation.add("\n" + article.description());
                 try {
+                    String html = prepareHtml(article.description());
+                    ConverterProperties props = new ConverterProperties();
                     // Convertir le HTML en éléments iText
-//                    List<IElement> elements = HtmlConverter.convertToElements(article.description());
+                    List<IElement> elements = HtmlConverter.convertToElements(new ByteArrayInputStream(html.getBytes(StandardCharsets.UTF_8)), props);
 
-                    System.out.println("1");
                     // Créer un conteneur pour les éléments
-                    Div container = new Div();
-                    System.out.println(2);
-//                    for (IElement element : elements) {
-//                        container.add((IBlockElement) element);
-//                    }
-                    System.out.println("fin");
+                    Div container = new Div().setPaddingLeft(10).setPaddingRight(1);
+                    for (IElement element : elements) {
+                        if (element instanceof IBlockElement) {
+
+                            container.add((IBlockElement) element);
+                        }
+                    }
+
 
                     designation.add(container);
                 } catch (Exception e) {
                     // Fallback
-                    System.out.println("caath");
-//                    designation.add("\n" + cleanHtmlText(article.description()));
+                    System.err.println("Erreur lors de la conversion HTML: " + e.getMessage());
+                    e.printStackTrace();
+                    // En cas d'erreur, ajouter le texte brut
+                    document.add(new Paragraph("Erreur de formatage. Contenu: " + article.description()));
+
                 }
             }
 
@@ -318,16 +343,11 @@ public class PdfDocumentService {
             table.addCell(creerCellule("").add(designation));
 
             if (avecMontants) {
-                table.addCell(creerCellule(formatPrice(article.prix_article()))
-                        .setTextAlignment(TextAlignment.RIGHT));
-                table.addCell(creerCellule(String.valueOf(article.quantite()))
-                        .setTextAlignment(TextAlignment.CENTER));
-                table.addCell(creerCellule(
-                        formatPrice(article.prix_article() * article.quantite()))
-                        .setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(creerCellule(formatPrice(article.prix_article())).setTextAlignment(TextAlignment.RIGHT));
+                table.addCell(creerCellule(String.valueOf(article.quantite())).setTextAlignment(TextAlignment.CENTER));
+                table.addCell(creerCellule(formatPrice(article.prix_article() * article.quantite())).setTextAlignment(TextAlignment.RIGHT));
             } else {
-                table.addCell(creerCellule(String.valueOf(article.quantite()))
-                        .setTextAlignment(TextAlignment.CENTER));
+                table.addCell(creerCellule(String.valueOf(article.quantite())).setTextAlignment(TextAlignment.CENTER));
                 table.addCell(creerCellule(""));
                 table.addCell(creerCellule(""));
             }
@@ -373,9 +393,7 @@ public class PdfDocumentService {
         if (montant == null) return;
 
         String montantEnLettres = NumberToWords.convertNumberToWords((double) Math.round(montant));
-        Paragraph montantParagraph = new Paragraph(
-                "Arrêté la présente facture à la somme de " + montantEnLettres + " francs CFA"
-        ).setFontSize(10).setItalic();
+        Paragraph montantParagraph = new Paragraph("Arrêté la présente facture à la somme de " + montantEnLettres + " francs CFA").setFontSize(10).setItalic();
 
         document.add(montantParagraph);
         document.add(new Paragraph("\n"));
@@ -385,13 +403,10 @@ public class PdfDocumentService {
      * Ajoute les conditions standards
      */
     public void ajouterConditionsStandards(Document document) {
-        Paragraph titre = new Paragraph("Termes et conditions standards:")
-                .setFontSize(9)
-                .setBold();
+        Paragraph titre = new Paragraph("Termes et conditions standards:").setFontSize(12).setUnderline().setStrokeWidth(5f);
         document.add(titre);
 
-        document.add(new Paragraph("Payement : 60% à la commande").setFontSize(9));
-        document.add(new Paragraph("           40% à la livraison").setFontSize(9));
+        document.add(new Paragraph("Payement : 60% à la commande, 40% à la livraison").setFontSize(9));
         document.add(new Paragraph("Délai de livraison : 2 semaines").setFontSize(9));
         document.add(new Paragraph("Validité de l'offre : 90 jours").setFontSize(9));
         document.add(new Paragraph("\n"));
@@ -404,31 +419,124 @@ public class PdfDocumentService {
         if (nom == null) nom = "SOO Nabédé Akiesso";
         if (role == null) role = "Directeur";
 
-        Paragraph signature = new Paragraph()
-                .add(new Text(nom + "\n").setBold())
-                .add(new Text(role).setItalic())
-                .setTextAlignment(TextAlignment.RIGHT)
-                .setFontSize(10);
+        Paragraph signature = new Paragraph().add(new Text(nom + "\n").setBold()).add(new Text(role).setItalic()).setTextAlignment(TextAlignment.RIGHT).setFontSize(10);
 
         document.add(signature);
         document.add(new Paragraph("\n"));
     }
 
+    // ==================== UTILITAIRES ====================
+    /**
+     * Ajoute le pied de page sur toutes les pages
+     */
+    public void ajouterPiedDePageMultiPages(PdfDocument pdfDoc) {
+        pdfDoc.addEventHandler(com.itextpdf.kernel.events.PdfDocumentEvent.END_PAGE,
+                new com.itextpdf.kernel.events.IEventHandler() {
+                    @Override
+                    public void handleEvent(com.itextpdf.kernel.events.Event event) {
+                        com.itextpdf.kernel.events.PdfDocumentEvent docEvent =
+                                (com.itextpdf.kernel.events.PdfDocumentEvent) event;
+                        PdfDocument pdfDocument = docEvent.getDocument();
+                        com.itextpdf.kernel.geom.Rectangle pageSize = docEvent.getPage().getPageSize();
+
+                        PdfCanvas canvas = new PdfCanvas(
+                                docEvent.getPage().newContentStreamBefore(),
+                                docEvent.getPage().getResources(),
+                                pdfDocument
+                        );
+
+                        // Créer un document temporaire pour le pied de page
+                        Document tempDoc = new Document(pdfDocument);
+
+                        // Couleurs définies
+                        DeviceRgb bleuClair = new DeviceRgb(156, 186, 214);
+                        DeviceRgb vert = new DeviceRgb(139, 195, 74);
+
+                        float leftMargin = 40;
+                        float rightMargin = pageSize.getWidth() - 40;
+                        float width = rightMargin - leftMargin;
+
+                        // Première ligne - Adresse
+                        Paragraph ligne1 = new Paragraph()
+                                .setTextAlignment(TextAlignment.RIGHT)
+                                .setFontSize(8)
+                                .setWidth(width);
+                        ligne1.add(new Text("AGOE LEGBASSITO, QTE AHONKPOE, 50M DU MARCHÉ BELGIQUE, G.277888 – 1.168199")
+                                .setFontColor(bleuClair));
+                        ligne1.setFixedPosition(leftMargin, 40, width);
+                        tempDoc.add(ligne1);
+
+                        // Deuxième ligne - Contact
+                        Paragraph ligne2 = new Paragraph()
+                                .setTextAlignment(TextAlignment.RIGHT)
+                                .setFontSize(8)
+                                .setWidth(width);
+                        ligne2.add(new Text("T: ").setFontColor(vert).setBold());
+                        ligne2.add(new Text("(+228) 93 94 44 44").setFontColor(bleuClair));
+                        ligne2.add(new Text(", E: ").setFontColor(vert).setBold());
+                        ligne2.add(new Text("CONTACT@SOOSMART.GROUP").setFontColor(bleuClair));
+                        ligne2.add(new Text(", W: ").setFontColor(vert).setBold());
+                        ligne2.add(new Text("WWW.SOOSMART.GROUP").setFontColor(bleuClair));
+                        ligne2.setFixedPosition(leftMargin, 30, width);
+                        tempDoc.add(ligne2);
+
+                        // Troisième ligne - Informations légales
+                        Paragraph ligne3 = new Paragraph()
+                                .setTextAlignment(TextAlignment.RIGHT)
+                                .setFontSize(8)
+                                .setWidth(width);
+                        ligne3.add(new Text("RC: ").setFontColor(vert).setBold());
+                        ligne3.add(new Text("TG-LOM 2020 B 0394").setFontColor(bleuClair));
+                        ligne3.add(new Text(", NIF: ").setFontColor(vert).setBold());
+                        ligne3.add(new Text("1001652884").setFontColor(bleuClair));
+                        ligne3.setFixedPosition(leftMargin, 20, width);
+                        tempDoc.add(ligne3);
+                    }
+                });
+    }
     /**
      * Ajoute le pied de page
      */
     public void ajouterPiedDePage(Document document) {
-        Paragraph pied = new Paragraph(
-                "RCCM : XXXXXXXXXXXXX | IFU XXXXXXXXX SCIN LE MARCHÉ OFFICIEL N°77B888 - LOMÉ\n" +
-                        "T: +228 XX XX XX XX | CONTACT@SOSMART.GROUP | WWW.SOSMART.GROUP\n" +
-                        "RC: TGLON 2020 X XXXX | NIF: XXXXXXXXX"
-        )
-                .setFontSize(7)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setFontColor(ColorConstants.GRAY)
-                .setFixedPosition(40, 20, 515);
+        // Couleurs définies
+        DeviceRgb bleuClair = new DeviceRgb(156, 186, 214); // Couleur bleue claire
+        DeviceRgb vert = new DeviceRgb(139, 195, 74);       // Couleur verte
 
-        document.add(pied);
+        // Première ligne - Adresse
+        Paragraph ligne1 = new Paragraph()  .setTextAlignment(TextAlignment.RIGHT)
+                .setFontSize(5);
+
+        ligne1.add(new Text("AGOE LEGBASSITO, QTE AHONKPOE, 50M DU MARCHÉ BELGIQUE, G.277888 – 1.168199").setFontColor(bleuClair));
+
+        // Deuxième ligne - Contact
+        Paragraph ligne2 = new Paragraph()  .setTextAlignment(TextAlignment.RIGHT)
+                .setFontSize(5);
+
+        ligne2.add(new Text("T: ").setFontColor(vert).setBold());
+        ligne2.add(new Text("(+228) 93 94 44 44").setFontColor(bleuClair));
+        ligne2.add(new Text(", E: ").setFontColor(vert).setBold());
+        ligne2.add(new Text("CONTACT@SOOSMART.GROUP").setFontColor(bleuClair));
+        ligne2.add(new Text(", W: ").setFontColor(vert).setBold());
+        ligne2.add(new Text("WWW.SOOSMART.GROUP").setFontColor(bleuClair));
+
+        // Troisième ligne - Informations légales
+        Paragraph ligne3 = new Paragraph().setTextAlignment(TextAlignment.RIGHT)
+                .setFontSize(5);
+
+        ligne3.add(new Text("RC: ").setFontColor(vert).setBold());
+        ligne3.add(new Text("TG-LOM 2020 B 0394").setFontColor(bleuClair));
+        ligne3.add(new Text(", NIF: ").setFontColor(vert).setBold());
+        ligne3.add(new Text("1001652884").setFontColor(bleuClair));
+
+        // Ajouter les paragraphes au document
+        // Position fixe pour être en bas de page
+        ligne1.setFixedPosition(40, 50, 515);
+        ligne2.setFixedPosition(40, 35, 515);
+        ligne3.setFixedPosition(40, 20, 515);
+
+        document.add(ligne1);
+        document.add(ligne2);
+        document.add(ligne3);
     }
 
     /**
@@ -439,92 +547,89 @@ public class PdfDocumentService {
             ClassPathResource resource = new ClassPathResource(watermarkPath);
             ImageData imageData = ImageDataFactory.create(resource.getURL());
 
-            pdfDoc.addEventHandler(com.itextpdf.kernel.events.PdfDocumentEvent.END_PAGE,
-                    new com.itextpdf.kernel.events.IEventHandler() {
-                        @Override
-                        public void handleEvent(com.itextpdf.kernel.events.Event event) {
-                            com.itextpdf.kernel.events.PdfDocumentEvent docEvent =
-                                    (com.itextpdf.kernel.events.PdfDocumentEvent) event;
-                            PdfCanvas canvas = new PdfCanvas(
-                                    docEvent.getPage().newContentStreamBefore(),
-                                    docEvent.getPage().getResources(),
-                                    docEvent.getDocument()
-                            );
+            pdfDoc.addEventHandler(com.itextpdf.kernel.events.PdfDocumentEvent.END_PAGE, new com.itextpdf.kernel.events.IEventHandler() {
+                @Override
+                public void handleEvent(com.itextpdf.kernel.events.Event event) {
+                    Image watermark = new Image(imageData);
 
-                            // Définir la transparence
-                            PdfExtGState gs = new PdfExtGState();
-                            gs.setFillOpacity(0.15f);
-                            canvas.saveState();
-                            canvas.setExtGState(gs);
+                    com.itextpdf.kernel.events.PdfDocumentEvent docEvent = (com.itextpdf.kernel.events.PdfDocumentEvent) event;
 
-                            // Position au centre de la page
-                            float x = docEvent.getPage().getPageSize().getWidth() / 2;
-                            float y = docEvent.getPage().getPageSize().getHeight() / 2;
+                    PdfCanvas canvas = new PdfCanvas(docEvent.getPage().newContentStreamBefore(), docEvent.getPage().getResources(), docEvent.getDocument());
 
-                            try {
-                                canvas.addImageAt(imageData, x - 100, y - 100, false);
-                            } catch (Exception e) {
-                                // Si l'image échoue, ne rien faire
-                            }
 
-                            canvas.restoreState();
-                        }
-                    });
+                    // Obtenir les dimensions de la page
+                    Rectangle pageSize = docEvent.getPage().getPageSize();
+                    float pageWidth = pageSize.getWidth();
+                    float pageHeight = pageSize.getHeight();
+
+                    // --- Redimensionner l'image et la centrer ---
+                    // Par exemple, pour qu'elle occupe 70% de la largeur de la page
+                    float imageWidth = watermark.getImageWidth();
+                    float imageHeight;
+
+                    float desiredWidth = pageWidth * 0.7f;
+                    float scaleFactor = desiredWidth / imageWidth;
+
+                    watermark.scale(scaleFactor, scaleFactor);
+                    // Mettre à jour les dimensions de l'image après redimensionnement
+                    imageWidth = watermark.getImageScaledWidth();
+                    imageHeight = watermark.getImageScaledHeight();
+
+                    // Calculer les coordonnées pour centrer l'image
+                    float x = ((pageWidth / 2) - (imageWidth / 2));
+                    float y = ((pageHeight / 2) - (imageHeight / 2));
+
+                    // Définir la transparence
+                    PdfExtGState gs = new PdfExtGState().setFillOpacity(0.2f);
+                    // --- Appliquer le filigrane au canvas ---
+                    canvas.saveState();
+                    canvas.setExtGState(gs);
+                    try {
+
+
+                        canvas.addImageWithTransformationMatrix(imageData, imageWidth, 0.0F, 0.0F, imageHeight, x, y);
+
+                    } catch (Exception e) {
+                        // Si l'image échoue, ne rien faire
+                    }
+
+                    canvas.restoreState();
+                }
+            });
         } catch (Exception e) {
             // Filigrane optionnel - continuer sans si erreur
         }
+
     }
 
-    // ==================== UTILITAIRES ====================
-
     private Cell creerCelluleEntete(String text) {
-        return new Cell().add(new Paragraph(text).setBold().setFontSize(9))
-                .setBackgroundColor(GRIS_ENTETE)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setPadding(1);
+        return new Cell().add(new Paragraph(text).setBold().setFontSize(9)).setBackgroundColor(GRIS_ENTETE).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setPadding(1);
     }
 
     private Cell creerCelluleEntete(Paragraph paragraph) {
-        return new Cell().add(paragraph)
-                .setBackgroundColor(GRIS_ENTETE)
-                .setTextAlignment(TextAlignment.CENTER)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setPadding(1);
+        return new Cell().add(paragraph).setBackgroundColor(GRIS_ENTETE).setTextAlignment(TextAlignment.CENTER).setVerticalAlignment(VerticalAlignment.MIDDLE).setPadding(1);
     }
 
     private Cell creerCellule(String text) {
-        return new Cell().add(new Paragraph(text).setFontSize(9))
-                .setPaddingLeft(5)
-                .setPadding(5);
+        return new Cell().add(new Paragraph(text).setFontSize(10)).setPaddingLeft(5)
+//                .setPadding(5)
+                .setVerticalAlignment(VerticalAlignment.MIDDLE);
     }
 
     private Cell creerCellule(String text, TextAlignment alignment) {
-        return new Cell().add(new Paragraph(text).setTextAlignment(alignment).setFontSize(9))
-                .setPadding(1);
+        return new Cell().add(new Paragraph(text).setTextAlignment(alignment).setFontSize(9)).setPadding(1);
     }
 
     private Cell creerCelluleAvecFond(String text, DeviceRgb color) {
-        return new Cell().add(new Paragraph(text).setFontSize(9))
-                .setBackgroundColor(color)
-                .setPadding(5);
+        return new Cell().add(new Paragraph(text).setFontSize(9)).setBackgroundColor(color).setPadding(5);
     }
 
     private Cell creerCelluleTotaux(String text, DeviceRgb color, TextAlignment alignment) {
-        return new Cell().add(new Paragraph(text).setFontSize(10))
-                .setBackgroundColor(color)
-                .setTextAlignment(alignment)
-                .setPaddingLeft(2)
-                .setPaddingRight(2)
-                .setPadding(1);
+        return new Cell().add(new Paragraph(text).setFontSize(10)).setBackgroundColor(color).setTextAlignment(alignment).setPaddingLeft(2).setPaddingRight(2).setPadding(1);
     }
 
     private String formatPrice(double price) {
         return PRICE_FORMAT.format(price);
     }
 
-    private String cleanHtmlText(String html) {
-        if (html == null || html.isEmpty()) return "";
-        return Jsoup.parse(html).text();
-    }
 }
