@@ -233,7 +233,7 @@ public class ProformaImpl implements ProformaService {
     @Override
     public CustomPageResponse<ProformaDTO> getProformasNotAdopted(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalse(
+                this.proformaRepository.findAllByDeletedIsFalseAndAdoptedIsFalseAndOldversionIsFalse(
                         PageMapperUtils.createPageableWithoutSearch(paginatedRequest)),
                 this.responseMapper::responseProformaDTO);
     }

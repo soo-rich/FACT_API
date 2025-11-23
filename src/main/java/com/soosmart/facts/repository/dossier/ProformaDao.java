@@ -23,7 +23,7 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
 
     Page<Proforma> findAllByDeletedIsFalse(Pageable pageable);
 
-    Page<Proforma> findAllByDeletedIsFalseAndAdoptedIsFalse(Pageable pageable);
+    Page<Proforma> findAllByDeletedIsFalseAndAdoptedIsFalseAndOldversionIsFalse(Pageable pageable);
 
     Page<Proforma> findAllByReference(Pageable pageable, String reference);
 
