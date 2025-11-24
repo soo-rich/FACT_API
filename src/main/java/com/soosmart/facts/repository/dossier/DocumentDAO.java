@@ -13,6 +13,9 @@ import java.util.UUID;
 public interface DocumentDAO extends JpaRepository<Document, UUID> {
     @Query(value = "SELECT d.numero AS numero, d.createdat AS date, d.total_ttc AS total_ttc " +
             "FROM document d " +
+            "LEFT JOIN proforma p ON d.id = p.id " +
+            "LEFT JOIN facture f ON d.id = f.id " +
+            "LEFT JOIN bordereau b ON d.id = b.id " +
             "WHERE d.deleted=false " +
             "ORDER BY d.createdat DESC " +
             "LIMIT :limit OFFSET :offset",
