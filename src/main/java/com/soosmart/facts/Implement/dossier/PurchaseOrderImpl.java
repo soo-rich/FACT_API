@@ -62,6 +62,7 @@ public class PurchaseOrderImpl implements PurchaseOrderService {
                     .total_ttc(save.getTotal_ttc())
                     .total_ht(save.getTotal_ht())
                     .total_tva(save.getTotal_tva())
+                    .uniqueIdDossier(save.getUniqueIdDossier())
                     .build();
 
             Bordereau b = this.borderauRepository.save(bordereau);

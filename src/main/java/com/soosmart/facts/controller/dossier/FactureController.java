@@ -42,6 +42,12 @@ public class FactureController {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesNumereList(new PaginatedRequest(page,pagesize, search)));
     }
 
+    @GetMapping("/tree/{id}")
+    public ResponseEntity<?> getFacturesTree(@PathVariable UUID id) {
+        // return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesByDossier(id));
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @PostMapping("{id_borderau}")
     public ResponseEntity<FactureDto> saveFacture(@PathVariable UUID id_borderau) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.factureService.saveFacture(id_borderau));
