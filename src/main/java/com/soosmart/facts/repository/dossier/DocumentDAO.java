@@ -26,4 +26,7 @@ public interface DocumentDAO extends JpaRepository<Document, UUID> {
 
     @Query(value = "SELECT document_type AS DocumentType, COUNT(*) AS total FROM document GROUP BY document_type", nativeQuery = true)
     List<Object[]> countDocumentTypes();
+
+    //    @Query(value = "SELECT * FROM document WHERE unique_id_dossier = :uniqueIdDossier AND deleted = false", nativeQuery = true)
+    List<Document> findByUniqueIdDossierAndDeletedIsFalse(UUID uniqueIdDossier);
 }

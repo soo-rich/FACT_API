@@ -1,5 +1,6 @@
 package com.soosmart.facts.controller.dossier;
 
+import com.soosmart.facts.dto.dossier.TreeNodeDto;
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
@@ -42,10 +43,10 @@ public class FactureController {
         return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesNumereList(new PaginatedRequest(page,pagesize, search)));
     }
 
-    @GetMapping("/tree/{id}")
-    public ResponseEntity<?> getFacturesTree(@PathVariable UUID id) {
-        // return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesByDossier(id));
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @GetMapping("/tree/{numero}")
+    public ResponseEntity<TreeNodeDto> getFacturesTree(@PathVariable String numero) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.factureService.getFacturesByDossier(numero));
+//        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("{id_borderau}")

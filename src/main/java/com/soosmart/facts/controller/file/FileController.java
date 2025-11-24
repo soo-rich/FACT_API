@@ -2,13 +2,14 @@ package com.soosmart.facts.controller.file;
 
 import com.soosmart.facts.service.file.FileMetadataService;
 import com.soosmart.facts.service.file.FileStorageService;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
@@ -30,7 +31,9 @@ public class FileController {
     }
 
     @GetMapping(path = "presigned")
-    public ResponseEntity<String> pResponseEntity(@RequestParam("url") String url){
-        return ResponseEntity.status(HttpStatus.OK).body(this.fileStorageService.generateSignedUrl(url, 10));
+    public ResponseEntity<Map<String, String>> pResponseEntity(@RequestParam("url") String url) {
+        Map<String, String> map = new HashMap<>();
+        map.put("presigned", this.fileStorageService.generateSignedUrl(url, 10));
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 }

@@ -17,9 +17,9 @@ import com.soosmart.facts.exceptions.user.UsernameExiste;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.persistence.EntityExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-// import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -135,6 +135,15 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(value = {EntityNotFound.class})
     public @ResponseBody
     ExceptionDto entityNotFoundException(final EntityNotFound exception) {
+        return new ExceptionDto(
+                NOT_FOUND,
+                exception.getMessage()
+        );
+    }
+
+    @ResponseStatus(NOT_FOUND)
+    @ExceptionHandler(value = EntityExistsException.class)
+    public @ResponseBody ExceptionDto entityExistsException(final EntityExistsException exception) {
         return new ExceptionDto(
                 NOT_FOUND,
                 exception.getMessage()

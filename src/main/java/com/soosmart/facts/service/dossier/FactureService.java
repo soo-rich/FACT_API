@@ -1,5 +1,6 @@
 package com.soosmart.facts.service.dossier;
 
+import com.soosmart.facts.dto.dossier.TreeNodeDto;
 import com.soosmart.facts.dto.dossier.facture.FactureDto;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
@@ -23,4 +24,6 @@ public interface FactureService {
     FactureDto signerFactureWithNumner(String numero, String who_signed);
 
     Boolean paid(UUID id_facture);
+
+    TreeNodeDto getFacturesByDossier(String numero);
 }

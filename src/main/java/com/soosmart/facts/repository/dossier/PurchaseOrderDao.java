@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface PurchaseOrderDao extends JpaRepository<PurchaseOrder, UUID> {
     Page<PurchaseOrder> findAllBySupprimerIsFalse(Pageable pageable);
+
+    PurchaseOrder findByBordereau_Id(UUID bordereauId);
 }

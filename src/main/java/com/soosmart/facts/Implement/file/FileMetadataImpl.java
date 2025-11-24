@@ -84,7 +84,7 @@ public class FileMetadataImpl implements FileMetadataService {
                 .storageProvider(provider)
                 .fileSize(file.getSize())
                 .originalFileName(file.getOriginalFilename())
-                .fileName(filename)
+                .fileName(uniqueFileName)
                 .contentType(file.getContentType())
                 .uploadedBy(username)
                 .build());

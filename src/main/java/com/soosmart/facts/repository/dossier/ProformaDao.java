@@ -19,7 +19,10 @@ public interface ProformaDao extends JpaRepository<Proforma, UUID> {
     Long countProformasCreateToday(@Param("startOfDay") Instant startOfDay, @Param("endOfDay") Instant endOfDay);
 
     Optional<Proforma> findByNumero(String numero);
-        Optional<Proforma> findByUniqueIdDossier(UUID uniqueIdDossier);
+
+    Proforma findByReferenceAndDeletedIsFalseAndOldversionIsFalse(String reference);
+
+    Optional<Proforma> findByUniqueIdDossier(UUID uniqueIdDossier);
 
     Page<Proforma> findAllByDeletedIsFalse(Pageable pageable);
 
