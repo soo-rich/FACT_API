@@ -417,7 +417,8 @@ public class PdfDocumentService {
      */
     public void ajouterSignature(Document document, String nom, String role) {
         if (nom == null) nom = "SOO Nabédé Akiesso";
-        if (role == null) role = "Directeur";
+        // if (role == null) role = "Directeur";
+        role = "Directeur";
 
         Paragraph signature = new Paragraph().add(new Text(nom + "\n").setBold()).add(new Text(role).setItalic()).setTextAlignment(TextAlignment.RIGHT).setFontSize(10);
 
