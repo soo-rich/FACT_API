@@ -24,7 +24,7 @@ public interface ProformaService {
     CustomPageResponse<String> getProformasNumereList(PaginatedRequest paginatedRequest);
     ProformaDTO signerProforma(UUID id, String who_signed);
 
-    ProformaDTO signerProformaWithNumner(String number, String who_signed);
+    ProformaDTO signerProformaWithNumner(String number, String who_signed, String signedByRole);
     ProformaDTO signedbywhoconnectProforma(UUID id);
     Proforma getProformaEntity(String numero);
 }

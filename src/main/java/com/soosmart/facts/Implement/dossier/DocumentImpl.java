@@ -14,11 +14,11 @@ public class DocumentImpl implements DocumentService {
 
 
     @Override
-    public Boolean signeDocument(String numero, String signedBy) {
+    public Boolean signeDocument(String numero, String signedBy, String signedByRole) {
         String type = numero.substring(0, 2);
         return switch (type) {
-            case "FP" -> this.proformaService.signerProformaWithNumner(numero, signedBy) != null;
-            case "FA" -> this.factureService.signerFactureWithNumner(numero, signedBy) != null;
+            case "FP" -> this.proformaService.signerProformaWithNumner(numero, signedBy, signedByRole) != null;
+            case "FA" -> this.factureService.signerFactureWithNumner(numero, signedBy, signedByRole) != null;
             default -> throw new IllegalArgumentException("Invalid document type: " + numero);
         };
     }

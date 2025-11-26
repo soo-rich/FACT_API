@@ -160,7 +160,11 @@ public class ResponseMapper {
             return null;
         }
 
+
         if (document instanceof Proforma p) {
+            if (p.getSignedBy().contains("null") || p.getSignedBy().isEmpty()) {
+                p.setSignedBy(null);
+            }
             return new DocumentReportDTO(
                     p.getReference(),
                     p.getNumero(),
@@ -176,6 +180,9 @@ public class ResponseMapper {
 
         }
         if (document instanceof Bordereau b) {
+             if (b.getSignedBy().contains("null") || b.getSignedBy().isEmpty()) {
+                b.setSignedBy(null);
+            }
             return new DocumentReportDTO(
                     b.getReference(),
                     b.getNumero(),
@@ -189,18 +196,21 @@ public class ResponseMapper {
                     b.getTotal_ttc().doubleValue()
             );
         }
-        if (document instanceof Facture b) {
+        if (document instanceof Facture f) {
+            if (f.getSignedBy().contains("null") || f.getSignedBy().isEmpty()) {
+                f.setSignedBy(null);
+            }
             return new DocumentReportDTO(
-                    b.getReference(),
-                    b.getNumero(),
-                    Date.from(b.getCreatedat()),
-                    b.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
-                    this.responseClientDTO(b.getBordereau().getProforma().getClient()),
-                    b.getRole(),
-                    b.getSignedBy(),
-                    b.getTotal_ht().doubleValue(),
-                    b.getTotal_tva().doubleValue(),
-                    b.getTotal_ttc().doubleValue()
+                    f.getReference(),
+                    f.getNumero(),
+                    Date.from(f.getCreatedat()),
+                    f.getBordereau().getProforma().getArticleQuantiteList().stream().map(this::responseArticleQuantiteDTO).toList(),
+                    this.responseClientDTO(f.getBordereau().getProforma().getClient()),
+                    f.getRole(),
+                    f.getSignedBy(),
+                    f.getTotal_ht().doubleValue(),
+                    f.getTotal_tva().doubleValue(),
+                    f.getTotal_ttc().doubleValue()
             );
         }
         throw new IllegalArgumentException("Type de document non reconnu");

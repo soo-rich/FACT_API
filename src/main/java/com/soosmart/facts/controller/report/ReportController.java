@@ -42,8 +42,8 @@ public class ReportController {
 
 
     @PatchMapping("signe/{numero}")
-    public ResponseEntity<Boolean> signeDocument(@PathVariable String numero, @RequestParam(required = true) String signedBy) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.documentService.signeDocument(numero, signedBy));
+    public ResponseEntity<Boolean> signeDocument(@PathVariable String numero, @RequestParam(required = true) String signedBy,@RequestParam(required = false) String signedByRole) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.documentService.signeDocument(numero, signedBy, signedByRole));
     }
 
     /**

@@ -16,7 +16,7 @@ spring:
         format_sql: true
   shell:
     interactive:
-      enabled: true
+      enabled: false
     script:
       enabled: true
   mail:

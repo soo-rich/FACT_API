@@ -1,6 +1,5 @@
 package com.soosmart.facts.controller.dossier;
 
-import com.soosmart.facts.dto.articleQuantite.SaveArticleQuantiteDTO;
 import com.soosmart.facts.dto.dossier.proforma.ProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaWithArticleDTO;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController

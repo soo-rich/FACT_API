@@ -67,7 +67,8 @@ public class ReportImpl implements ReportService {
                         this.responseMapper.responseClientDTO(pr.getClient()),
                         pr.getCreatedat(),
                         false,
-                        pr.getSignedBy()
+                        pr.getSignedBy(),
+                        pr.getRole()
                 );
             }
             case "BL" -> {
@@ -86,7 +87,8 @@ public class ReportImpl implements ReportService {
                         this.responseMapper.responseClientDTO(br.getProforma().getClient()),
                         br.getCreatedat(),
                         false,
-                        br.getSignedBy()
+                        br.getSignedBy(),
+                        br.getRole()
                 );
 
             }
@@ -106,7 +108,8 @@ public class ReportImpl implements ReportService {
                         this.responseMapper.responseClientDTO(facture.getBordereau().getProforma().getClient()),
                         facture.getCreatedat(),
                         facture.getIsPaid(),
-                        facture.getSignedBy()
+                        facture.getSignedBy(),
+                        facture.getRole()
                 );
             }
             default -> throw new IllegalArgumentException("Type de Document non reconnu");

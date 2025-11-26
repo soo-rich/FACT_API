@@ -150,7 +150,7 @@ public class ProformaImpl implements ProformaService {
                     }).toList();
             Proforma proformanew = Proforma.builder()
                     .numero(this.numeroGenerateur.GenerateproformaNumero())
-                    .reference(oldprofoma.getReference())
+                    .reference(saveProformaDTO.reference())
                     .projet(oldprofoma.getProjet())
                     .client(oldprofoma.getClient())
                     .uniqueIdDossier(oldprofoma.getUniqueIdDossier())
@@ -258,10 +258,11 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public ProformaDTO signerProformaWithNumner(String number, String who_signed) {
+    public ProformaDTO signerProformaWithNumner(String number, String who_signed, String who_signedRole) {
         Optional<Proforma> proforma = this.proformaRepository.findByNumero(number);
         if (proforma.isPresent()) {
             proforma.get().setSignedBy(who_signed);
+            proforma.get().setRole(who_signedRole);
             return this.responseMapper.responseProformaDTO(this.proformaRepository.save(proforma.get()));
         } else {
             throw new EntityExistsException("Proforma not found with number: " + number);

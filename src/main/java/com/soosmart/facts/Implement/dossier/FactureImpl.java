@@ -17,8 +17,6 @@ import com.soosmart.facts.utils.NumeroGenerateur;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import jakarta.persistence.EntityExistsException;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class FactureImpl implements FactureService {
-    private static final Logger log = LoggerFactory.getLogger(FactureImpl.class);
+
     private final FactureDao factureDao;
     private final BorderauDao borderauDao;
     private final ProformaDao proformaRepository;
@@ -114,10 +112,11 @@ public class FactureImpl implements FactureService {
     }
 
     @Override
-    public FactureDto signerFactureWithNumner(String numero, String who_signed) {
+    public FactureDto signerFactureWithNumner(String numero, String who_signed, String signedByRole) {
         Optional<Facture> facture = this.factureDao.findByNumero(numero).stream().findFirst();
         if (facture.isPresent()) {
             facture.get().setSignedBy(who_signed);
+            facture.get().setRole(signedByRole);
             return this.responseMapper.responseFactureDto(this.factureDao.save(facture.get()));
         } else {
             throw new EntityExistsException("Facture not found");
@@ -203,7 +202,7 @@ public class FactureImpl implements FactureService {
                 TreeNodeType.FACTURE,
                 factureEntity.getNumero(),
                 factureEntity.getReference(),
-                factureEntity.getAdopted(),
+                true,
                 List.of(bordereauNode)
         );
     }

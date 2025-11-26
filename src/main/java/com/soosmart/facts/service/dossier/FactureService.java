@@ -21,7 +21,7 @@ public interface FactureService {
 
     FactureDto saveFacture(UUID id_borderau);
 
-    FactureDto signerFactureWithNumner(String numero, String who_signed);
+    FactureDto signerFactureWithNumner(String numero, String who_signed, String signedByRole);
 
     Boolean paid(UUID id_facture);
 

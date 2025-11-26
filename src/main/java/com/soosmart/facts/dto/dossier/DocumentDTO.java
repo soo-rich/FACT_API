@@ -19,6 +19,7 @@ public record DocumentDTO(
         ClientDTO client,
         Instant date,
         Boolean paied,
-        String signby
+        String signby,
+        String role
 ) {
 }

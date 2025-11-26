@@ -112,15 +112,21 @@ public class PdfDocumentService {
         String type = numero.substring(0, 2);
         return switch (type) {
             case "FP" -> {
-                Proforma proforma = this.proformaDao.findByNumero(numero).stream().findFirst().get();
+                Proforma proforma = this.proformaDao.findByNumero(numero).stream().findFirst().orElseThrow(
+                    ()-> new IllegalArgumentException("Proforma not found")
+                );
                 yield this.genererFactureProforma(this.responseMapper.responseDocumentReportDTO(proforma));
             }
             case "BL" -> {
-                Bordereau bordereau = this.borderauDao.findByNumero(numero).stream().findFirst().get();
+                Bordereau bordereau = this.borderauDao.findByNumero(numero).stream().findFirst().orElseThrow(
+                    ()-> new IllegalArgumentException("Bordereau not found")
+                );
                 yield this.genererBordereauLivraison(this.responseMapper.responseDocumentReportDTO(bordereau));
             }
             case "FA" -> {
-                Facture facture = this.factureDao.findByNumero(numero).stream().findFirst().get();
+                Facture facture = this.factureDao.findByNumero(numero).stream().findFirst().orElseThrow(
+                    ()-> new IllegalArgumentException("Facture not found")
+                );
                 yield this.genererFacture(this.responseMapper.responseDocumentReportDTO(facture));
             }
             default -> throw new IllegalArgumentException("Type de Document non reconnu");
@@ -221,10 +227,12 @@ public class PdfDocumentService {
         clientInfo.add("\n");
 
         if (client.nom() != null) {
-            clientInfo.add(new Text(client.nom()).setFontSize(10));
+            StringBuilder clientLine = new StringBuilder();
+            clientLine.append(client.nom());
             if (client.sigle() != null) {
-                clientInfo.add(" (" + client.sigle() + ")");
+                clientLine.append(" (").append(client.sigle()).append(")");
             }
+            clientInfo.add(new Text(clientLine.toString()).setFontSize(10));
             clientInfo.add("\n");
         }
 
@@ -267,7 +275,7 @@ public class PdfDocumentService {
         refTable.addCell(creerCellule(data.date() != null ? DATE_FORMAT.format(data.date()) : "", TextAlignment.CENTER));
 
         Cell refCell = creerCellule(data.reference() != null ? data.reference() : "", TextAlignment.CENTER);
-        refCell.setFontColor(ColorConstants.RED).setBold();
+        refCell.setFontColor(ColorConstants.RED);
         refTable.addCell(refCell);
 
         document.add(refTable);
@@ -417,8 +425,8 @@ public class PdfDocumentService {
      */
     public void ajouterSignature(Document document, String nom, String role) {
         if (nom == null) nom = "SOO Nabédé Akiesso";
-        // if (role == null) role = "Directeur";
-        role = "Directeur";
+        if (role == null) role = "Directeur";
+        // role = "Directeur";
 
         Paragraph signature = new Paragraph().add(new Text(nom + "\n").setBold()).add(new Text(role).setItalic()).setTextAlignment(TextAlignment.RIGHT).setFontSize(10);
 
@@ -440,11 +448,11 @@ public class PdfDocumentService {
                         PdfDocument pdfDocument = docEvent.getDocument();
                         com.itextpdf.kernel.geom.Rectangle pageSize = docEvent.getPage().getPageSize();
 
-                        PdfCanvas canvas = new PdfCanvas(
-                                docEvent.getPage().newContentStreamBefore(),
-                                docEvent.getPage().getResources(),
-                                pdfDocument
-                        );
+                        // PdfCanvas canvas = new PdfCanvas(
+                        //         docEvent.getPage().newContentStreamBefore(),
+                        //         docEvent.getPage().getResources(),
+                        //         pdfDocument
+                        // );
 
                         // Créer un document temporaire pour le pied de page
                         Document tempDoc = new Document(pdfDocument);
