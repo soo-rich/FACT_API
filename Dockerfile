@@ -1,98 +1,117 @@
 # syntax=docker/dockerfile:1
 
-# Comments are provided throughout this file to help you get started.
-# If you need more help, visit the Dockerfile reference guide at
-# https://docs.docker.com/go/dockerfile-reference/
-
-# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
-
+################################################################################
+# Dockerfile optimisé pour FACTS API - Spring Boot 3.3.5 / Java 17
+# Multi-stage build pour réduire la taille de l'image finale
 ################################################################################
 
-# Create a stage for resolving and downloading dependencies.
-FROM eclipse-temurin:17-jdk-jammy as deps
+# Stage 1: Résolution et téléchargement des dépendances
+FROM eclipse-temurin:17-jdk-jammy AS deps
+
+LABEL stage=builder
+LABEL description="Dependency resolution stage"
 
 WORKDIR /build
 
-# Copy the mvnw wrapper with executable permissions.
+# Copier le wrapper Maven avec permissions exécutables
 COPY --chmod=0755 mvnw mvnw
 COPY .mvn/ .mvn/
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
-# Leverage a cache mount to /root/.m2 so that subsequent builds don't have to
-# re-download packages.
+# Télécharger les dépendances (avec cache Docker pour optimiser les builds)
 RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 ./mvnw dependency:go-offline -DskipTests
+    --mount=type=cache,target=/root/.m2 \
+    ./mvnw dependency:go-offline -DskipTests
 
 ################################################################################
 
-# Create a stage for building the application based on the stage with downloaded dependencies.
-# This Dockerfile is optimized for Java applications that output an uber jar, which includes
-# all the dependencies needed to run your app inside a JVM. If your app doesn't output an uber
-# jar and instead relies on an application server like Apache Tomcat, you'll need to update this
-# stage with the correct filename of your package and update the base image of the "final" stage
-# use the relevant app server, e.g., using tomcat (https://hub.docker.com/_/tomcat/) as a base image.
-FROM deps as package
+# Stage 2: Build de l'application
+FROM deps AS package
+
+LABEL stage=builder
+LABEL description="Application build stage"
 
 WORKDIR /build
 
+# Copier le code source
 COPY ./src src/
+
+# Builder l'application (uber JAR) avec optimisations
 RUN --mount=type=bind,source=pom.xml,target=pom.xml \
     --mount=type=cache,target=/root/.m2 \
-    ./mvnw package -DskipTests && \
+    ./mvnw clean package -DskipTests -Dmaven.test.skip=true && \
     mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
 
 ################################################################################
 
-# Create a stage for extracting the application into separate layers.
-# Take advantage of Spring Boot's layer tools and Docker's caching by extracting
-# the packaged application into separate layers that can be copied into the final stage.
-# See Spring's docs for reference:
-# https://docs.spring.io/spring-boot/docs/current/reference/html/container-images.html
-FROM package as extract
+# Stage 3: Extraction en layers (optimisation du cache Docker)
+# Spring Boot Layer Tools permet de séparer l'application en couches
+# pour optimiser les rebuilds Docker (seules les couches modifiées sont reconstruites)
+FROM package AS extract
+
+LABEL stage=builder
+LABEL description="JAR extraction stage"
 
 WORKDIR /build
 
+# Extraire le JAR en layers séparés
 RUN java -Djarmode=layertools -jar target/app.jar extract --destination target/extracted
 
 ################################################################################
 
-# Create a new stage for running the application that contains the minimal
-# runtime dependencies for the application. This often uses a different base
-# image from the install or build stage where the necessary files are copied
-# from the install stage.
-#
-# The example below uses eclipse-turmin's JRE image as the foundation for running the app.
-# By specifying the "17-jre-jammy" tag, it will also use whatever happens to be the
-# most recent version of that tag when you build your Dockerfile.
-# If reproducibility is important, consider using a specific digest SHA, like
-# eclipse-temurin@sha256:99cede493dfd88720b610eb8077c8688d3cca50003d76d1d539b0efc8cca72b4.
+# Stage 4: Image finale de production (JRE seulement, image minimale)
 FROM eclipse-temurin:17-jre-jammy AS final
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
+# Metadata de l'image
+LABEL maintainer="SooSmart Team"
+LABEL application="FACTS API"
+LABEL version="0.0.1-SNAPSHOT"
+LABEL description="API de gestion des factures FACTS"
+LABEL java.version="17"
+LABEL spring-boot.version="3.3.5"
+
+# Installation de curl pour le healthcheck
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Créer un utilisateur non-privilégié pour la sécurité
 ARG UID=10001
-RUN adduser \
+ARG GID=10001
+RUN groupadd -g "${GID}" appgroup && \
+    adduser \
     --disabled-password \
     --gecos "" \
     --home "/nonexistent" \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
+    --gid "${GID}" \
     appuser
+
+# Créer le répertoire de travail avec les bonnes permissions
+WORKDIR /app
+RUN chown -R appuser:appgroup /app
+
 USER appuser
 
-# ⭐ AJOUTEZ CECI ⭐
-# Définit la variable d'environnement que Spring Boot lira au démarrage
-ENV SPRING_PROFILES_ACTIVE=prod
+# Variables d'environnement
+ENV SPRING_PROFILES_ACTIVE=prod \
+    JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC" \
+    SERVER_PORT=4000
 
-# Copy the executable from the "package" stage.
-COPY --from=extract build/target/extracted/dependencies/ ./
-COPY --from=extract build/target/extracted/spring-boot-loader/ ./
-COPY --from=extract build/target/extracted/snapshot-dependencies/ ./
-COPY --from=extract build/target/extracted/application/ ./
+# Copier les layers extraits (ordre optimisé pour le cache)
+COPY --from=extract --chown=appuser:appgroup /build/target/extracted/dependencies/ ./
+COPY --from=extract --chown=appuser:appgroup /build/target/extracted/spring-boot-loader/ ./
+COPY --from=extract --chown=appuser:appgroup /build/target/extracted/snapshot-dependencies/ ./
+COPY --from=extract --chown=appuser:appgroup /build/target/extracted/application/ ./
 
-EXPOSE 4000
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:4000/api/actuator/health || exit 1
+# Exposition du port
+EXPOSE ${SERVER_PORT}
 
-ENTRYPOINT [ "java", "org.springframework.boot.loader.launch.JarLauncher" ]
+# Healthcheck amélioré
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
+    CMD curl -f http://localhost:${SERVER_PORT}/api/actuator/health || exit 1
+
+# Point d'entrée avec support des variables JAVA_OPTS
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} org.springframework.boot.loader.launch.JarLauncher"]
