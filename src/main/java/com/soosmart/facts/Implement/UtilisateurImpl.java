@@ -93,7 +93,7 @@ public class UtilisateurImpl implements UtilisateurService {
     @Override
     public ResponseUtilisateur save(SaveUtilisateurDTO utilisateur) {
         Random rand = new Random();
-        String defaultPassword = utilisateur.nom() + rand.nextDouble();
+        String defaultPassword = utilisateur.username() + "@" + (1000 + rand.nextInt(9000));
         Utilisateur user = Utilisateur.builder()
                 .nom(utilisateur.nom())
                 .prenom(utilisateur.prenom())
