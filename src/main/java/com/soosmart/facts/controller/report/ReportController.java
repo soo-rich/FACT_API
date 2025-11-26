@@ -4,7 +4,7 @@ import com.soosmart.facts.Implement.report.PdfDocumentService;
 import com.soosmart.facts.dto.dossier.DocumentDTO;
 import com.soosmart.facts.service.dossier.DocumentService;
 import com.soosmart.facts.service.report.ReportService;
-import com.soosmart.facts.utils.report.PdfGeneration;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

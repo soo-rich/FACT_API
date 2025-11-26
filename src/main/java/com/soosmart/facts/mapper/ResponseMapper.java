@@ -162,7 +162,7 @@ public class ResponseMapper {
 
 
         if (document instanceof Proforma p) {
-            if (p.getSignedBy().contains("null") || p.getSignedBy().isEmpty()) {
+            if (p.getSignedBy()==null || p.getSignedBy().contains("null") || p.getSignedBy().isEmpty()) {
                 p.setSignedBy(null);
             }
             return new DocumentReportDTO(
@@ -180,7 +180,7 @@ public class ResponseMapper {
 
         }
         if (document instanceof Bordereau b) {
-             if (b.getSignedBy().contains("null") || b.getSignedBy().isEmpty()) {
+             if (b.getSignedBy()==null || b.getSignedBy().contains("null") || b.getSignedBy().isEmpty()) {
                 b.setSignedBy(null);
             }
             return new DocumentReportDTO(
@@ -197,7 +197,7 @@ public class ResponseMapper {
             );
         }
         if (document instanceof Facture f) {
-            if (f.getSignedBy().contains("null") || f.getSignedBy().isEmpty()) {
+            if (f.getSignedBy()==null || f.getSignedBy().contains("null") || f.getSignedBy().isEmpty()) {
                 f.setSignedBy(null);
             }
             return new DocumentReportDTO(
