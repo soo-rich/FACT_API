@@ -70,7 +70,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("forget-password")
+    @GetMapping("forget-password")
     public ResponseEntity<Boolean> forgetPassword(@RequestParam("email") String email) {
         return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.forgetPassword(email));
     }
