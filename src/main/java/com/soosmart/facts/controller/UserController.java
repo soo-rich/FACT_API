@@ -69,4 +69,9 @@ public class UserController {
         this.utilisateurService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @PostMapping("forget-password")
+    public ResponseEntity<Boolean> forgetPassword(@RequestParam("email") String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.utilisateurService.forgetPassword(email));
+    }
 }

@@ -25,6 +25,6 @@ public interface UtilisateurService extends UserDetailsService {
     Boolean activateUser(UUID id);
     ResponseUtilisateur userconnecte();
     UserDetails loadUserByUsername(String username);
-
+    Boolean forgetPassword(String email);
     Boolean changePassword(@Valid ChangePasswordDTO changePasswordDTO);
 }

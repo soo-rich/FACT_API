@@ -233,4 +233,21 @@ public class UtilisateurImpl implements UtilisateurService {
         this.utilisateurDAO.save(utilisateur);
         return true;
     }
+
+    @Override
+    public Boolean forgetPassword(String email) {
+        Optional<Utilisateur> user = this.utilisateurDAO.findByEmail(email);
+        if (user.isPresent()) {
+            Utilisateur utilisateur = user.get();
+            Random rand = new Random();
+            String newPassword = utilisateur.getUsername() + "@" + (1000 + rand.nextInt(9000));
+            utilisateur.setMdp(passwordEncoder.encode(newPassword));
+            this.utilisateurDAO.save(utilisateur);
+            // Send new password email
+            this.emailService.sendForgotPasswordEmail(utilisateur.getEmail(), newPassword);
+            return true;
+        } else {
+            throw new EntityNotFound("Utilisateur non trouvé");
+        }
+    }
 }
