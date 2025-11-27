@@ -12,6 +12,7 @@ public record ResponseUtilisateur(
         String username,
         String role,
         Instant dateCreation,
-        Boolean actif
+        Boolean actif,
+        String image
 ) {
 }

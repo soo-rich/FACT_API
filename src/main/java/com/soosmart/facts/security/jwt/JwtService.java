@@ -97,6 +97,7 @@ public class JwtService {
                 "email", utilisateur.getEmail() != null ? utilisateur.getEmail() : "",
                 "numero", utilisateur.getNumero() != null ? utilisateur.getNumero() : "",
                 "role", utilisateur.getRole().getLibelle(),
+                "image", utilisateur.getImage() != null ? utilisateur.getImage() : "",
                 Claims.EXPIRATION, new Date(expirationTime), // date d'expiration
                 Claims.SUBJECT, utilisateur.getUsername(), // sujet
                 Claims.ISSUER, "soosmart"// emetteur

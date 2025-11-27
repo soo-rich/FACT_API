@@ -19,6 +19,7 @@ import com.soosmart.facts.mapper.ResponseMapper;
 import com.soosmart.facts.repository.UtilisateurDAO;
 import com.soosmart.facts.security.user.UtilisateurConnecteServie;
 import com.soosmart.facts.service.UtilisateurService;
+import com.soosmart.facts.service.file.FileStorageService;
 import com.soosmart.facts.utils.EmailService;
 import com.soosmart.facts.utils.pagination.PageMapperUtils;
 import lombok.AllArgsConstructor;
@@ -26,11 +27,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
+
+import static com.soosmart.facts.utils.FileUtlis.generateUniqueFileName;
+import static com.soosmart.facts.utils.FileUtlis.getFileExtension;
 
 @Service
 @AllArgsConstructor
@@ -41,6 +46,7 @@ public class UtilisateurImpl implements UtilisateurService {
     private BCryptPasswordEncoder passwordEncoder;
     private final UtilisateurConnecteServie utilisateurConnecteServie;
     private final EmailService emailService;
+    private final FileStorageService fileStorageService;
 
     @Override
     public void createSuprerAdmin(String email, String username, String password) {
@@ -69,7 +75,8 @@ public class UtilisateurImpl implements UtilisateurService {
     @Override
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
-                this.utilisateurDAO.findByRole_LibelleNotIn(PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN)),
+                this.utilisateurDAO.findByRole_LibelleNotIn(
+                        PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN)),
                 this.responseMapper::responseUtilisateur);
     }
 
@@ -91,7 +98,7 @@ public class UtilisateurImpl implements UtilisateurService {
     }
 
     @Override
-    public ResponseUtilisateur save(SaveUtilisateurDTO utilisateur) {
+    public ResponseUtilisateur save(SaveUtilisateurDTO utilisateur, MultipartFile image) {
         Random rand = new Random();
         String defaultPassword = utilisateur.username() + "@" + (1000 + rand.nextInt(9000));
         Utilisateur user = Utilisateur.builder()
@@ -103,38 +110,31 @@ public class UtilisateurImpl implements UtilisateurService {
                 .mdp(passwordEncoder.encode(defaultPassword))
                 .role(
                         utilisateur.role().name().isBlank()
-                                ?
-                                Role.builder()
+                                ? Role.builder()
                                         .libelle(TypeDeRole.USER)
                                         .build()
-                                :
-                                Role.builder()
+                                : Role.builder()
                                         .libelle(utilisateur.role())
-                                        .build()
-                )
+                                        .build())
+                .image(image!=null ? this.fileStorageService.uploadFileToSubFolder(image,
+                        String.format("/%s/%s", "user",
+                                generateUniqueFileName(
+                                       String.format("%s_%s_%s", utilisateur.nom(),utilisateur.nom() , UUID.randomUUID().toString()),
+                                        getFileExtension(image.getOriginalFilename())))) : null)
                 .build();
 
         if (this.verifierUtilisateurEmail(user)) {
             Utilisateur save = this.utilisateurDAO.save(user);
             // Send default password email
             this.emailService.sendDefaultPasswordMail(save.getEmail(), defaultPassword, save.getUsername());
-            return new ResponseUtilisateur(
-                    save.getId(),
-                    save.getNom(),
-                    save.getPrenom(),
-                    save.getNumero(),
-                    save.getEmail(),
-                    save.getUsername(),
-                    save.getRole().getLibelle().name(),
-                    save.getCreatedat(),
-                    save.getActif());
+            return this.responseMapper.responseUtilisateur(save);
         } else {
             throw new BadEmail("Email invalide");
         }
     }
 
     @Override
-    public ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur) {
+    public ResponseUtilisateur update(UUID id, UpdateUtilisateurDTO utilisateur, MultipartFile image) {
 
         if (!utilisateur.id().toString().equals(id.toString())) {
             throw new NotSameId("Id invalide");
@@ -147,15 +147,18 @@ public class UtilisateurImpl implements UtilisateurService {
                 userUpdate.setPrenom(utilisateur.prenom());
                 userUpdate.setEmail(utilisateur.email());
                 userUpdate.setNumero(utilisateur.numero());
+                userUpdate.setImage(image!=null ? this.fileStorageService.uploadFileToSubFolder(image,
+                        String.format("/%s/%s", "user",
+                                generateUniqueFileName(
+                                       String.format("%s_%s_%s", utilisateur.nom(),utilisateur.nom() , UUID.randomUUID().toString()),
+                                        getFileExtension(image.getOriginalFilename())))) : null
+                );
                 userUpdate.setRole(
                         utilisateur.role().name().equals(userUpdate.getRole().getLibelle().name())
-                                ?
-                                userUpdate.getRole()
-                                :
-                                Role.builder()
+                                ? userUpdate.getRole()
+                                : Role.builder()
                                         .libelle(utilisateur.role())
-                                        .build()
-                );
+                                        .build());
 
                 return this.responseMapper.responseUtilisateur(this.utilisateurDAO.save(userUpdate));
             } else {

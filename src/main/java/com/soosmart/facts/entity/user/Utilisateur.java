@@ -39,6 +39,10 @@ public class Utilisateur implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     private Role role;
 
+    private String image;
+
+
+
 
     @CreationTimestamp
     @Column(updatable = false, name = "createdat")

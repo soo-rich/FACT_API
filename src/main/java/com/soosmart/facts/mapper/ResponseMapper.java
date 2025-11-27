@@ -24,7 +24,7 @@ import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.entity.dossierexterne.PurchaseOrder;
 import com.soosmart.facts.entity.file.FileMetadata;
 import com.soosmart.facts.entity.user.Utilisateur;
-import com.soosmart.facts.enumpack.TypeDeRole;
+// import com.soosmart.facts.enumpack.TypeDeRole;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -36,13 +36,13 @@ public class ResponseMapper {
             return null;
         }
 
-        if (utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
-            return null;
-        }
+        // if (utilisateur.getRole().getLibelle().equals(TypeDeRole.SUPER_ADMIN)) {
+        //     return null;
+        // }
 
         return new ResponseUtilisateur(utilisateur.getId(), utilisateur.getNom(), utilisateur.getPrenom(),
                 utilisateur.getNumero(), utilisateur.getEmail(), utilisateur.getUsername(),
-                utilisateur.getRole().getLibelle().name(), utilisateur.getCreatedat(), utilisateur.getActif());
+                utilisateur.getRole().getLibelle().name(), utilisateur.getCreatedat(), utilisateur.getActif(), utilisateur.getImage());
     }
 
     public ArticleDTO responseArticleDTO(Article article) {
