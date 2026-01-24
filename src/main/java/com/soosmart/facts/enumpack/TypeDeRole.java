@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 public enum TypeDeRole {
-    SUPER_ADMIN(
+    SYS_ADMIN(
             Set.of(
-                    TypePermission.SUPER_ADMINISTRATEUR_CREATE,
-                    TypePermission.SUPER_ADMINISTRATEUR_READ,
-                    TypePermission.SUPER_ADMINISTRATEUR_UPDATE,
-                    TypePermission.SUPER_ADMINISTRATEUR_DELETE,
+                    TypePermission.SYS_ADMIN_CREATE,
+                    TypePermission.SYS_ADMIN_READ,
+                    TypePermission.SYS_ADMIN_UPDATE,
+                    TypePermission.SYS_ADMIN_DELETE,
 
                     TypePermission.ADMINISTRATEUR_CREATE,
                     TypePermission.ADMINISTRATEUR_READ,

@@ -50,7 +50,7 @@ public class UtilisateurImpl implements UtilisateurService {
 
     @Override
     public void createSuprerAdmin(String email, String username, String password) {
-        Optional<Utilisateur> superAdmin = this.utilisateurDAO.findByRole_Libelle(TypeDeRole.SUPER_ADMIN);
+        Optional<Utilisateur> superAdmin = this.utilisateurDAO.findByRole_Libelle(TypeDeRole.SYS_ADMIN);
         if (superAdmin.isPresent()) {
             throw new SuperAdminExeciste("Super Admin Existe");
         } else {
@@ -60,7 +60,7 @@ public class UtilisateurImpl implements UtilisateurService {
                     .mdp(passwordEncoder.encode(password))
                     .role(
                             Role.builder()
-                                    .libelle(TypeDeRole.SUPER_ADMIN)
+                                    .libelle(TypeDeRole.SYS_ADMIN)
                                     .build())
                     .actif(true)
                     .build();
@@ -76,7 +76,7 @@ public class UtilisateurImpl implements UtilisateurService {
     public CustomPageResponse<ResponseUtilisateur> findAll(PaginatedRequest paginatedRequest) {
         return PageMapperUtils.toPageResponse(
                 this.utilisateurDAO.findByRole_LibelleNotIn(
-                        PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SUPER_ADMIN)),
+                        PageMapperUtils.createPageableWithoutSearch(paginatedRequest), List.of(TypeDeRole.SYS_ADMIN)),
                 this.responseMapper::responseUtilisateur);
     }
 
