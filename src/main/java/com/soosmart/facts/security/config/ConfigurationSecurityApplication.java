@@ -47,7 +47,8 @@ public class  ConfigurationSecurityApplication {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                                .requestMatchers("/actuator/**").permitAll()
+                                .requestMatchers("/actuator/health").permitAll()
+                                .requestMatchers("/actuator/**").hasRole("SYS_ADMIN")
                                 .requestMatchers(SWAGGER_LIST).permitAll()
                                 .anyRequest().authenticated()
                 ).sessionManagement(
