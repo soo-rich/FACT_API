@@ -18,7 +18,7 @@ function Write-ColorOutput {
 Write-ColorOutput "🚀 Début du déploiement..." "Cyan"
 
 # Revenir au répertoire parent
-Set-Location ..
+# Set-Location ..+
 
 # 1. Build l'application Spring Boot
 Write-ColorOutput "`n📦 Build de l'application Spring Boot..." "Cyan"

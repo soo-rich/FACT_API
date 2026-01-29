@@ -48,6 +48,13 @@ public enum TypeDeRole {
                     TypePermission.UTILISATEUR_READ,
                     TypePermission.UTILISATEUR_UPDATE
             )
+    ),
+    CLIENT(
+            Set.of(
+                    TypePermission.UTILISATEUR_CREATE,
+                    TypePermission.UTILISATEUR_READ,
+                    TypePermission.UTILISATEUR_UPDATE
+            )
     );
 
     final Set<TypePermission> permissions;

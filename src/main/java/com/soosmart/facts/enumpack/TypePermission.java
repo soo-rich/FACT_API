@@ -19,7 +19,9 @@ public enum TypePermission {
 
     UTILISATEUR_CREATE,
     UTILISATEUR_READ,
-    UTILISATEUR_UPDATE;
+    UTILISATEUR_UPDATE,
+
+    CLIENT_READ;
 
     private String libelle;
 }
