@@ -35,9 +35,8 @@ public class  ConfigurationSecurityApplication {
         return httpSecurity
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setAllowCredentials(false);
                     corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
-                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
                     corsConfiguration.setAllowedMethods(java.util.List.of("*"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                     corsConfiguration.setMaxAge(3600L);
