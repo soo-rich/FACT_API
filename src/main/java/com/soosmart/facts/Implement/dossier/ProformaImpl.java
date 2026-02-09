@@ -200,15 +200,21 @@ public class ProformaImpl implements ProformaService {
     }
 
     @Override
-    public void deleteProforma(String numero) {
-        Optional<Proforma> proforma = this.proformaRepository.findByNumero(numero);
-        if (proforma.isPresent()) {
+    public ProformaDTO deleteProforma(String numero) {
+        Proforma proforma = this.proformaRepository.findByNumero(numero).orElseThrow(() -> new EntityExistsException("Proforma not found with numero: " + numero));
+        if (proforma != null) {
             try {
-                proforma.get().setDeleted(true);
-                this.proformaRepository.save(proforma.get());
+                proforma
+                .setDeleted(true);
+               return  this.responseMapper
+                    .responseProformaDTO(this.proformaRepository.saveAndFlush(proforma));
             } catch (Exception exception) {
                 System.out.println("Cause -> \n" + exception.getCause() + "\nmessage ->\n" + exception.getMessage());
+                throw new EntityExistsException("Error deleting proforma with numero: " + numero);
             }
+        }
+        else {
+            throw new EntityExistsException("Proforma not found with numero: " + numero);
         }
     }
 

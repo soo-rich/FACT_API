@@ -17,7 +17,7 @@ public interface ProformaService {
     ProformaDTO update(UUID id, SaveProformaWithArticleDTO saveProformaDTO);
     String updateProformaReference(UUID id, String newReference);
     ProformaDTO updateProformaArticleQuantite(UUID id,  List<SaveArticleQuantiteDTO> articleQuantiteslist);
-    void deleteProforma(String numero);
+    ProformaDTO deleteProforma(String numero);
     ProformaDTO getProforma(String numero);
     CustomPageResponse<ProformaDTO> getProformas(PaginatedRequest paginatedRequest);
     CustomPageResponse<ProformaDTO> getProformasNotAdopted(PaginatedRequest paginatedRequest);

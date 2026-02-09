@@ -5,6 +5,7 @@ import com.soosmart.facts.dto.dossier.proforma.SaveProformaDTO;
 import com.soosmart.facts.dto.dossier.proforma.SaveProformaWithArticleDTO;
 import com.soosmart.facts.dto.pagination.CustomPageResponse;
 import com.soosmart.facts.dto.pagination.PaginatedRequest;
+import com.soosmart.facts.entity.dossier.Proforma;
 import com.soosmart.facts.service.dossier.ProformaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -63,9 +64,9 @@ public class proformaController {
 
 
     @DeleteMapping("{numero}")
-    public ResponseEntity<Void> deleteProforma(@PathVariable String numero) {
-        this.proformaService.deleteProforma(numero);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<ProformaDTO> deleteProforma(@PathVariable String numero) {
+        ProformaDTO proformaDTO = this.proformaService.deleteProforma(numero);
+        return ResponseEntity.status(HttpStatus.OK).body(proformaDTO);
     }
 
 
